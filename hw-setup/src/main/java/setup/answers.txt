@@ -4,15 +4,21 @@
 1. Why did Fibonacci fail the testThrowsIllegalArgumentException< test? What (if anything) did
 you have to do to fix it? If you did not have to change anything to fix this issue, explain why.
 
-
+    - The Fibonacci program failed the testThrowsIllegalArgumentException test because the program itself threw an
+    IllegalArgumentException for 0, which should be a valid number. To fix this, I had to get rid of the "=" part of the
+    "<=" boolean check at the beginning of the getFibTerm() method.
 
 2. Why did Fibonacci fail the testBaseCase test? What (if anything) did you have to do to fix
 it? If you did not have to change anything to fix this issue, explain why.
 
-
+    - The Fibonacci program did not actually fail the testBaseCase test. I didn't have to change anything because
+    the Fibonacci program provided both of the expected answers of 1 in both of the tests provided by testBaseCase.
 
 3.Why did Fibonacci fail the testInductiveCase test? What (if anything) did you have to do to
 fix it? If you did not have to change anything to fix this issue, explain why.
 
-
+    - The Fibonacci program failed the testInductiveCase test because the program returned 1 instead of the expected
+    number of 2 when getFibTerm(2) was attempted. This happened due to two distinct problems in the getFibTerm method.
+    I solved the first issue by changing the else-if's boolean check to not include 2, and solved the second by changing
+    the subtraction operator at the last return statement to an addition one.
 
