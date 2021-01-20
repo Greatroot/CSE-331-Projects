@@ -12,7 +12,10 @@
 package setup;
 
 import java.lang.Iterable;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This is a container can be used to contain Balls. The key
@@ -25,15 +28,15 @@ public class Box implements Iterable<Ball> {
      * ballContainer is used to internally store balls for this Box
      */
     private BallContainer ballContainer;
-
+    private final double MAX_VOLUME;
     /**
      * Constructor that creates a new box.
      *
      * @param maxVolume Total volume of balls that this box can contain.
      */
     public Box(double maxVolume) {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        ballContainer = new BallContainer();
+        this.MAX_VOLUME = maxVolume;
     }
 
     /**
@@ -64,8 +67,12 @@ public class Box implements Iterable<Ball> {
      * @spec.requires b != null.
      */
     public boolean add(Ball b) {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if(!ballContainer.contains(b) && ballContainer.getVolume() + b.getVolume() <= this.MAX_VOLUME)
+        {
+            ballContainer.add(b);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -77,8 +84,13 @@ public class Box implements Iterable<Ball> {
      * ascending size.
      */
     public Iterator<Ball> getBallsFromSmallest() {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        Iterator<Ball> unsortedBox = this.iterator();
+        Set<Ball> sortedBox = new TreeSet<Ball>(new BallComp());
+        while(unsortedBox.hasNext())
+        {
+            sortedBox.add(unsortedBox.next());
+        }
+        return sortedBox.iterator();
     }
 
     /**
