@@ -12,10 +12,7 @@
 package setup;
 
 import java.lang.Iterable;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * This is a container can be used to contain Balls. The key
@@ -85,11 +82,12 @@ public class Box implements Iterable<Ball> {
      */
     public Iterator<Ball> getBallsFromSmallest() {
         Iterator<Ball> unsortedBox = this.iterator();
-        Set<Ball> sortedBox = new TreeSet<Ball>(new BallComp());
+        List<Ball> sortedBox = new ArrayList<Ball>();
         while(unsortedBox.hasNext())
         {
             sortedBox.add(unsortedBox.next());
         }
+        sortedBox.sort(new BallComp());
         return sortedBox.iterator();
     }
 

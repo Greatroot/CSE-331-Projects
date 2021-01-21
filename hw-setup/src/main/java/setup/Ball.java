@@ -40,22 +40,4 @@ public class Ball {
         return this.volume;
     }
 
-    /**
-     * Compares two ball objects and returns true if they're equal and false
-     * if they are not.
-     *
-     * @return whether the two ball objects "equal.:
-     */
-    public boolean equals(Object o)
-    {
-        if(this == o)
-            return true;
-        if(o == null)
-            return false;
-        if(getClass() != o.getClass())
-            return false;
-        Ball other = (Ball) o;
-
-        return this.volume == other.volume;
-    }
 }
