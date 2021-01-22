@@ -147,4 +147,27 @@ public class Box implements Iterable<Ball> {
         return ballContainer.contains(b);
     }
 
+    private static class BallComp implements Comparator<Ball> {
+
+        /**
+         *
+         * @param b1 The first ball, which is being compared to the second.
+         * @param b2 The second ball, which is being compared to the first.
+         * @return Difference between two volumes
+         */
+        @Override
+        public int compare(Ball b1, Ball b2) {
+            if(b1.getVolume() - b2.getVolume() > 0) {
+                return 1;
+            } else if(b1.getVolume() - b2.getVolume() == 0) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+    }
+
 }
+
+
+
