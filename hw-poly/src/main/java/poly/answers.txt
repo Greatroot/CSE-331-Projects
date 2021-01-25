@@ -1,12 +1,58 @@
 ## CSE 331 hw-poly Questions
 ## Part 0
 ###########################################################################
+0. Addition Pseudocode = add(p, q), assuming p is a polynomial or a term and q is a polynomial or a term.
+r = p + q:
+    set r = q by making a term-by-term copy of all terms in q to r
+    {Inv: r = q + p_0 + p_1 + ... + p_i-1, where p_j is the jth term in p}
+    foreach term, t_p, in p:
+        if any term, t_r, in r has the same degree as t_p,
+        then replace t_r in r with the sum of t_p and tr
+        else insert t_p into r as a new term
 
-1. Multiplication Pseudocode
+Subtraction Pseudocode = sub(p, q), assuming p is a polynomial or a term and q is a polynomial or a term.
+add(p, q.negate()) // using q.negate() from RatNum.java
 
+1. Multiplication Pseudocode = multiply(p,q), assuming p is a polynomial or a term and q is a polynomial or a term.
+
+r = p * q:
+    set r to be empty
+    {Inv: r = q_0 * (p_0 + p_1 + ... + p_i-1) + q_1 * (p_0 + p_1 + ... + p_i-1) + ... + q_j-1 * (p_0 + p_1 + ... + p_i-1),
+    where p_i is the ith term in p and q_j is the jth term in q}
+    foreach term, t_q, in q:
+        foreach term, t_p, in p:
+            add(r, t_q * t_p)
 
 
 2. Division Pseudocode
+{pre: for polynomials p and q passed in, all terms must be unique in degree(cannot have 2+ terms sharing degrees)}
+r = p % q:
+    set r to be empty
+    set c_p to be empty
+    set c_q to be empty
+    for(int i = p.highest_degree; i > 0; i--) REPEAT i = 1 twice before ending loop (first two degrees are 1)
+        if i == p.expt
+            add current coefficient (num) to c_p
+        else
+            add new num to p with 0 coefficient.
+
+    for(int i = q.highest_degree; i > 0; i--) REPEAT i = 1 twice before ending loop (first two degrees are 1)
+            if i == q.expt
+                add current coefficient (num) to c_q
+            else
+                add new num to c_q with 0 coefficient.
+
+    //long division
+    {inv: 0 <= i < k <= c_p.size() -1 ^ c_q lies in between c_p[i] and c_p[k]}
+        int i = 0;
+        while(i + c_q.size() <= c_p.size())
+            add c_p[i] / c_q[i] to r // Building our answer.
+            for(int j = i; j < c_p.size(); j++)
+                if j => c_q.size() // still inside c_q
+                    multiply c_q[j] by (c_p[i] / c_q[i]) // comparing divisor to numerator and preparing divisor
+                    c_p[j] = sub(c_p[j], c_q[j]) // Doing the subtraction and storing in c_p
+
+
 
 
 

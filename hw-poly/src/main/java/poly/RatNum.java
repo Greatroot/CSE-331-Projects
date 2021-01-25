@@ -29,7 +29,7 @@ package poly;
 // contained in each instance is provided when it is created and is
 // fixed for the lifetime of the object.")
 
-public final class RatNum extends Number implements Comparable<RatNum> {
+public final class   RatNum extends Number implements Comparable<RatNum> {
 
     /**
      * Numerator of the rational number.
