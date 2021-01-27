@@ -45,12 +45,18 @@ r = p % q:
     //long division
     {inv: 0 <= i < k <= c_p.size() -1 ^ c_q lies in between c_p[i] and c_p[k]}
         int i = 0;
-        while(i + c_q.size() <= c_p.size())
+        while(i + c_q.size() <= c_p.size()) // i + c_q.size() = k
             add c_p[i] / c_q[i] to r // Building our answer.
-            for(int j = i; j < c_p.size(); j++)
-                if j => c_q.size() // still inside c_q
-                    multiply c_q[j] by (c_p[i] / c_q[i]) // comparing divisor to numerator and preparing divisor
-                    c_p[j] = sub(c_p[j], c_q[j]) // Doing the subtraction and storing in c_p
+            for(int j = 0; j < c_q.size(); j++) // j keeps track inside c_q; i + j keeps track inside c_p
+                multiply c_q[j] by (c_p[i] / c_q[i]) // comparing divisor to numerator and preparing divisor
+                int difference = sub(c_p[j], c_q[j]) // Doing the subtraction and storing in c_p
+                c_p[i + j] = difference
+
+            foreach num in c_p
+                if find first non-zero
+                    set i = num
+
+
 
 
 
@@ -66,15 +72,47 @@ r = p % q:
 
 1. Weakened Rep Invariant
 
+    a. You would first have to change the RatNum(int n, int d) constructor and remove the part where it finds the gcf and
+    divides n and d by it. This is advantageous since the constructor is now more succinct, efficient, and easier to
+    implement since less code and complication is required.
+
+    b. We would also have to change our checkRep() function since it doesn't need to uphold the assumptions that RatNum
+    is simplified. This easier to implement since it means less code is more efficent since we are running one less
+    method.
+
+    c. We would need to change the hashCode() method to include simplifying both the numer and demon using the gcf()
+    method. If this isn't done, then the hashcode will not match for fractions that are the same number but with
+    different numerators and denominators. This change is disadvantageous, since it adds more complexity and code to
+    implement inside this one function.
+
+    d. The equals method would also have to be changed since the same number can now have different numerators and
+    denominators. This ends up breaking the equals() since it assumes each number has a unique numer and denom.
+    Dividing the numer and denom by gcf(numer, denom) before the method checks if they're equal would
+    solve this issue. This change would be disadvantageous though, since it adds more complexity and code to
+    implement inside this one function.
+
+    e. The toString() method must be changed to divide the numer and denom by gcf(numer, denom) since the spec
+    requires the returned string be in reduced terms. Making this change would be disadvantageous since it adds
+    more complexity and implementation.
 
 
 2. Alternate add, sub, mul, div
 
+    a. For starters, it would violate the specification that a RatNum must be immutable, since our numer and denom fields
+    get changed every time one of these operation methods gets run.
 
+    b. We would also need to add an @spec.effects tag before each method since we are now modifying
+    this' concrete fields.
+
+    c. The div() method would also need to add to its @spec.requires that arg must not be negative, since that could
+     break our rep invariant for this by making the dominator negative.
 
 3. Constructor checkReps
 
-
+    It is sufficient to call checkRep() only at the end of the constructors because the object RatNum
+    and its fields are immutable, final, and none of RatNum's methods actually modify numer and denom (which is important since
+    the rep invariant depends on numer and denom). Changes to instances of RatNum are prevented through a combination of
+    using copying, final (immutability), and private.
 
 
 ## Part 2
