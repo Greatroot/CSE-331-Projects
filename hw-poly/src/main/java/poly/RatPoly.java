@@ -254,16 +254,48 @@ public final class RatPoly {
      */
     private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
         RatPoly lstPoly = new RatPoly(lst);
-        if(!lstPoly.isNaN()) // I'm excluding lsts that contain a NaN from this operation.
+        if(!lstPoly.isNaN() && !newTerm.equals(RatTerm.ZERO)) // I'm excluding lsts that contain a NaN from this operation.
         {
-            // First check if lst.containsDegree(), if so, we can skip to that index.
-            // Otherwise, we need to loop through lst to find where this term should be.
-
-            int index = lstPoly.getIndexOfTerm(newTerm.getExpt());
-            if(index != -1)
+            if(lst.isEmpty()) {
+//                ***System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
+//                ***System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
+                lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
+            } else if(lst.size() == 1)
             {
-                try {
-                    lst.get(index).add(lstPoly.getTerm(newTerm.getExpt()));
+                if(lst.get(0).getExpt() > newTerm.getExpt())
+                {
+                    System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
+                    System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
+                    lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
+                } else if(lst.get(0).getExpt() < newTerm.getExpt())
+                {
+                    lst.add(0, new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
+                } else
+                {
+                    lst.set(0, lst.get(0).add(newTerm));
+                }
+            } else
+            {
+                // {inv: newTerm is not within sorted(lst)[0...i-1]}
+                for(int i = 0; i < lst.size(); i++)
+                {
+                    RatTerm ratTerm = lst.get(i);
+                    if((ratTerm.getExpt() == newTerm.getExpt()))
+                    {
+                        //Make sure to just get rid of the current element in lst if the sum is some RatTerm w/ coeff = 0
+                        RatTerm sum = lst.get(i).add(newTerm);
+                        if(sum.getCoeff().equals(RatNum.ZERO))
+                        {
+                            lst.remove(i);   
+                        } else
+                        {
+                            lst.set(i, sum);
+                        }
+                    }
+                    else if(i != 0 && ratTerm.getExpt() < newTerm.getExpt() && newTerm.getExpt() < lst.get(i-1).getExpt())
+                    {
+                        lst.add(i, new RatTerm(lst.get(i).getCoeff(), lst.get(i).getExpt()));
+                    }
                 }
             }
         }
@@ -338,7 +370,18 @@ public final class RatPoly {
      * @return a RatPoly equal to "0 - this"; if this.isNaN(), returns some r such that r.isNaN()
      */
     public RatPoly negate() {
-
+        this.checkRep();
+        if(this.isNaN())
+        {
+            return RatPoly.NaN;
+        }
+        List<RatTerm> negatedTerms = new ArrayList<RatTerm>();
+        for(int i = 0; i < this.terms.size(); i++)
+        {
+            negatedTerms.add(this.terms.get(i).negate());
+        }
+        this.checkRep();
+        return new RatPoly(negatedTerms);
     }
 
     /**
@@ -350,8 +393,26 @@ public final class RatPoly {
      * @spec.requires p != null
      */
     public RatPoly add(RatPoly p) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.add() is not yet implemented");
+        this.checkRep();
+        if(this.isNaN() || p.isNaN())
+        {
+            return RatPoly.NaN;
+        }
+        List<RatTerm> r = new ArrayList<RatTerm>();
+        for(RatTerm rt : this.terms)
+        {
+            r.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
+        }
+        System.out.println("this: " + this);
+        System.out.println("p: " + p);
+        System.out.println("r: " + r);
+        for(RatTerm rt : p.terms)
+        {
+                RatPoly.sortedInsert(r, rt);
+        }
+        System.out.println("r_final: " + r);
+        this.checkRep();
+        return new RatPoly(r);
     }
 
     /**
@@ -363,8 +424,7 @@ public final class RatPoly {
      * @spec.requires p != null
      */
     public RatPoly sub(RatPoly p) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.sub() is not yet implemented");
+        return new RatPoly(this.add(p.negate()).terms);
     }
 
     /**
@@ -376,8 +436,27 @@ public final class RatPoly {
      * @spec.requires p != null
      */
     public RatPoly mul(RatPoly p) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.mul() is not yet implemented");
+        this.checkRep();
+        if(this.isNaN() || p.isNaN())
+        {
+            return RatPoly.NaN;
+        }
+        RatPoly r = new RatPoly();
+        System.out.println("this: " + this);
+        System.out.println("p: " + p);
+        System.out.println("r: " + r);
+        //{inv:
+        for(RatTerm qt : this.terms)
+        {
+            for(RatTerm pt : p.terms)
+            {
+                System.out.println(qt + " * " + pt);
+                r = r.add(new RatPoly(qt.mul(pt)));
+                System.out.println("this is the end.");
+            }
+        }
+        this.checkRep();
+        return r;
     }
 
     /**
@@ -494,6 +573,7 @@ public final class RatPoly {
      */
     @Override
     public String toString() {
+//        ***System.out.println("this.terms.size(): "  + this.terms.size());
         if(terms.size() == 0) {
             return "0";
         }
@@ -527,7 +607,7 @@ public final class RatPoly {
      * <p>Valid inputs include "0", "x-10", and "x^3-2*x^2+5/3*x+3", and "NaN".
      */
     public static RatPoly valueOf(String polyStr) {
-
+//        ***System.out.println("\nBeginning of valueOf(" + polyStr + "):");
         List<RatTerm> parsedTerms = new ArrayList<>();
 
         // First we decompose the polyStr into its component terms;
@@ -553,6 +633,7 @@ public final class RatPoly {
                 }
 
                 // accumulate terms of polynomial in 'parsedTerms'
+//                ***System.out.println("\tInstance of calling sortedInsert(" + parsedTerms + ", " + term.getCoeff() + ", " + term.getExpt() + ")");
                 sortedInsert(parsedTerms, term);
             }
         }
