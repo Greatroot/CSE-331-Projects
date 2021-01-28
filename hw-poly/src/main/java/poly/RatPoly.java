@@ -253,10 +253,84 @@ public final class RatPoly {
      * cofind(lst,newTerm.getExpt()) + newTerm.getCoeff())
      */
     private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        // Note: Some of the provided code in this class relies on this method working as-specified.
-        throw new RuntimeException("RatPoly.sortedInsert() is not yet implemented");
+        RatPoly lstPoly = new RatPoly(lst);
+        if(!lstPoly.isNaN()) // I'm excluding lsts that contain a NaN from this operation.
+        {
+            // First check if lst.containsDegree(), if so, we can skip to that index.
+            // Otherwise, we need to loop through lst to find where this term should be.
+
+            int index = lstPoly.getIndexOfTerm(newTerm.getExpt());
+            if(index != -1)
+            {
+                try {
+                    lst.get(index).add(lstPoly.getTerm(newTerm.getExpt()));
+                }
+            }
+        }
     }
+
+//    /**
+//     * Inserts a term into a sorted sequence of terms, preserving the sorted nature of the sequence.
+//     * If a term with the given degree already exists, adds their coefficients (helper procedure).
+//     *
+//     * <p>Definitions: Let a "Sorted List<RatTerm>" be a List<RatTerm> V such that [1] V is sorted in
+//     * descending exponent order && [2] there are no two RatTerms with the same exponent in V && [3]
+//     * there is no RatTerm in V with a coefficient equal to zero
+//     *
+//     * <p>For a Sorted List<RatTerm> V and integer e, let cofind(V, e) be either the coefficient for a
+//     * RatTerm rt in V whose exponent is e, or zero if there does not exist any such RatTerm in V.
+//     * (This is like the coeff function of RatPoly.) We will write sorted(lst) to denote that lst is a
+//     * Sorted List<RatTerm>, as defined above.
+//     *
+//     * @param lst     the list into which newTerm should be inserted
+//     * @param newTerm the term to be inserted into the list
+//     * @spec.requires lst != null && sorted(lst)
+//     * @spec.modifies lst
+//     * @spec.effects sorted(lst_post) && (cofind(lst_post,newTerm.getExpt()) =
+//     * cofind(lst,newTerm.getExpt()) + newTerm.getCoeff())
+//     */
+//    private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
+//        RatPoly lstPoly = new RatPoly(lst);
+//        if(!lstPoly.isNaN()) // I'm excluding lsts that contain a NaN from this operation.
+//        {
+//            // First check if lst.containsDegree(), if so, we can skip to that index.
+//            // Otherwise, we need to loop through lst to find where this term should be.
+//
+//            int index = lstPoly.getIndexOfTerm(newTerm.getExpt());
+//            if(index != -1)
+//            {
+//                try {
+//                    lst.get(index).add(lstPoly.getTerm(newTerm.getExpt()));
+//                }
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Returns the index of the term within this that has the specified degree.
+//     *
+//     * @param degree the degree of a term we want to find within lstPoly.
+//     * @return the index of the term with the specified degree within lstPoly. If a term of that degree DNE,
+//     * then return the index where a term of that index could be placed.
+//     */
+//    private int getIndexOfTerm(int degree)
+//    {
+//        // {inv: newTerm is not within sorted(lst)[0...i-1]}
+//        for(int i = 0; i < this.terms.size(); i++)
+//        {
+//            RatTerm ratTerm = this.terms.get(i);
+//            if((ratTerm.getExpt() == degree) || (this.terms.size() == 1) ||  ratTerm.getExpt() < degree
+//                    && degree < this.terms.get(i-1).getExpt())
+//            { // If there is no term that has degree, then the newTerm should be put in the index where the current ratTerm is.
+//                return i;
+//            }
+////            else if(ratTerm.getExpt() < degree && degree < lstPoly.terms.get(i - 1).getExpt())
+////            { // If there is no term that has degree and this term is in the index where our newTerm should be.
+////                return i;
+////            }
+//        }
+//        return -1;
+//    }
 
     /**
      * Return the additive inverse of this RatPoly.
@@ -264,8 +338,7 @@ public final class RatPoly {
      * @return a RatPoly equal to "0 - this"; if this.isNaN(), returns some r such that r.isNaN()
      */
     public RatPoly negate() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.negate() is not yet implemented");
+
     }
 
     /**
