@@ -120,19 +120,47 @@ r = p % q:
 
 1. Calls to checkRep in RatTerm
 
-
+    -I included calls to checkRep() at the beginning and end of all public methods/operations inside RatTerm except for
+  the constuctor, within which I only used checkRep() at the end (since the instance isn't initalized at the beginning).
 
 2. Weakened Rep Invariant
 
+    a. To start, we would need to first change the RatTerm constructor to not change expt to 0 if coefficient = 0. This
+    is advantageous in the constructor since we can simply reduce code and complexity by remvoing the if statement
+    and boolean check.
 
+    b. We also need to change toString() to check if the coefficient itself is zero and not just the exponent before
+    returning "0". This is disadvantageous to us, the implementer, since we have to add another if else statement to
+    now cover this extra case in where the coefficient is 0 and the expt is n (for int n < 0 < n).
+
+    c. The equals() method also needs to be altered so that if both coefficients == 0, then the two RatTerms are considered
+    equal regardless of their exponents. This is disadvantageous since we now need to add more boolean checks since
+    we now know less about the state of both RatTerms (this and the argument passed) coming into the method.
+
+    d. The checkRep() method would also have to be changed since there are less rep invariants to uphold. For the
+    method itself, this is advantageous since checkRep() would then include less code and less tasks to complete.
 
 3. Alternate Rep Invariant
 
+    a. The constructor would have to be modified to include making this.expt = 0 in the case that this.coeff is NaN.
+    Making this addition to the method would be disadvantageous since we are having to add more code, complexity,
+    are overall reducing efficiency (even just by a tiny bit).
 
+    b. The checkRep() function would also have to be modified to include checking in the case that this.coeff is NaN,
+    this.expt is == 0. This is disadvantageous since our checkRep() method now has more time and code complexity.
+
+    Other than those two, nothing else really needs to be changed since I already decided in all of my methods
+    that any NaN RatTerm returned should have a coeff of NaN and an expt of 0 and thus implemented all of my meth
+    ods
+    with this already in mind.
 
 4. Preferred Invariants
 
-
+    - I personally prefer to only have the second invariant (coeff.equals(RatNum.ZERO) => expt=0) due to the fact that
+    the second invariant allows us to worry less about edge cases, meaning some of our method implementations
+    can be less complicated and thorough. The second invariant just allows us to get closer to the abstract idea of
+    algebra with less effort/complication. The first invariant on the other hand doesn't really do much since it never
+    really matters in our operations what the exponent for a NaN RatTerm is.
 
 
 ## Part 3

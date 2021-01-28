@@ -11,6 +11,7 @@
 
 package poly;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -87,8 +88,13 @@ public final class RatPoly {
      * @spec.effects Constructs a new Poly equal to "rt". If rt.isZero(), constructs a "0" polynomial.
      */
     public RatPoly(RatTerm rt) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly constructor is not yet implemented");
+        terms = new ArrayList<RatTerm>();
+        if(rt.isZero())
+        {
+            this.terms.add(RatTerm.ZERO);
+        }
+        terms.add(rt);
+        this.checkRep();
     }
 
     /**
@@ -99,8 +105,12 @@ public final class RatPoly {
      * polynomial.
      */
     public RatPoly(int c, int e) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly constructor is not yet implemented");
+        this();
+        if(c != 0)
+        {
+            this.terms.add(new RatTerm(new RatNum(c), e));
+        }
+        this.checkRep();
     }
 
     /**
@@ -122,8 +132,15 @@ public final class RatPoly {
      * @spec.requires !this.isNaN()
      */
     public int degree() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.degree() is not yet implemented");
+        this.checkRep();
+        int degree;
+        if(this.terms.isEmpty())
+        {
+            degree = 0;
+        }
+        degree = this.terms.get(0).getExpt();
+        this.checkRep();
+        return degree;
     }
 
     /**
@@ -135,8 +152,17 @@ public final class RatPoly {
      * @spec.requires !this.isNaN()
      */
     public RatTerm getTerm(int deg) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.getTerm() is not yet implemented");
+        this.checkRep();
+        for(RatTerm ratTerm : this.terms)
+        {
+            if(ratTerm.getExpt() == deg)
+            {
+                this.checkRep();
+                return new RatTerm(ratTerm.getCoeff(), ratTerm.getExpt());
+            }
+        }
+        this.checkRep();
+        return RatTerm.ZERO;
     }
 
     /**
@@ -144,9 +170,18 @@ public final class RatPoly {
      *
      * @return true if and only if this has some coefficient = "NaN"
      */
-    public boolean isNaN() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.isNaN() is not yet implemented");
+    public boolean isNaN() { // I assume that a RatPoly can have multiple NaN RatTerms.
+        this.checkRep();
+        for(RatTerm ratTerm : this.terms)
+        {
+            if(ratTerm.isNaN())
+            {
+                this.checkRep();
+                return true;
+            }
+        }
+        this.checkRep();
+        return false;
     }
 
     /**
@@ -161,9 +196,16 @@ public final class RatPoly {
      * @see RatTerm regarding (C . E) notation
      */
     private static void scaleCoeff(List<RatTerm> lst, RatNum scalar) {
-        // TODO: Fill in this method as specified, modify it to your liking, or remove it.
-        // Do not leave this method as-is. You must either use it somehow or remove it.
-        throw new RuntimeException("RatPoly.scaleCoeff() is not yet implemented");
+        // I'm assuming that this operation can be done to any lst with NaN RatTerms within.
+        RatNum scaledCoeff;
+        for(int i = 0; i < lst.size(); i++)
+        {
+            RatTerm ratTerm = lst.get(i);
+            if(!ratTerm.isNaN())
+            {
+                lst.set(i, new RatTerm(ratTerm.getCoeff().mul(scalar), ratTerm.getExpt()));
+            }
+        }
     }
 
     /**
@@ -178,9 +220,16 @@ public final class RatPoly {
      * @see RatTerm regarding (C . E) notation
      */
     private static void incremExpt(List<RatTerm> lst, int degree) {
-        // TODO: Fill in this method as specified, modify it to your liking, or remove it.
-        // Do not leave this method as-is. You must either use it somehow or remove it.
-        throw new RuntimeException("RatPoly.incremExpt() is not yet implemented");
+        // I'm assuming that this operation can be done to any lst with NaN RatTerms within.
+        RatNum scaledCoeff;
+        for(int i = 0; i < lst.size(); i++)
+        {
+            RatTerm ratTerm = lst.get(i);
+            if(!ratTerm.isNaN())
+            {
+                lst.set(i, new RatTerm(ratTerm.getCoeff(), ratTerm.getExpt() + degree));
+            }
+        }
     }
 
     /**
