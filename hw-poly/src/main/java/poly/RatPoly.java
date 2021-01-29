@@ -430,7 +430,7 @@ public final class RatPoly {
 //            ***System.out.println("\tAddition instance of calling sortedInsert(" + r + ", " + rt.getCoeff() + ", " + rt.getExpt() + ")");
             RatPoly.sortedInsert(r, rt);
         }
-        System.out.println("r_final: " + r);
+//        ***System.out.println("r_final: " + r);
         this.checkRep();
         return new RatPoly(r);
     }
@@ -471,7 +471,7 @@ public final class RatPoly {
         {
             for(RatTerm pt : p.terms)
             {
-                System.out.println(qt + " * " + pt);
+//                ***System.out.println(qt + " * " + pt);
                 r = r.add(new RatPoly(qt.mul(pt)));
             }
         }
@@ -514,7 +514,41 @@ public final class RatPoly {
      */
     public RatPoly div(RatPoly p) {
         // c_p and c_q could be ArrayLists of RatTerms?
+        // I won't need to do the first part where I insert placeholders for empty parts, since RatPoly.sub() can handle it.
+        // Use my helper methods to get the bottom polynomial ready for subtraction.
+        // while(r.degree()) >= 0? Our remainder should be the first polynomial where r.degree() < p.degree().
+        //Need to keep a copy of original q
+        // r.sub(p.mul(first term of r / first term of original q))?
 
+        RatPoly result = new RatPoly();
+        RatPoly r = new RatPoly();
+        for(RatTerm rt : this.terms)
+        {
+            r.terms.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
+        }
+        System.out.println("r.terms: " + r.terms);
+        System.out.println("p.terms: " + p.terms);
+        // u/v = q ^ u = q * v + r
+        // {inv: r.degree() >= 0 ^ r.degree() < v.degree() ^ q.degree <= u.degree() ^ q.degree() >= 0}
+        while(r.degree() >= p.degree())
+        {
+//            System.out.println("r.terms: " + r.terms);
+//            System.out.println("p.terms: " + p.terms);
+            RatNum coeffScalar = r.terms.get(0).getCoeff().div(p.terms.get(0).getCoeff());
+            int exptScalar = r.terms.get(0).getExpt() - p.terms.get(0).getExpt();
+//            System.out.println("coeffScalar: " + coeffScalar);
+//            System.out.println("exptScalar: " + exptScalar);
+//            System.out.println(new RatTerm(coeffScalar, exptScalar));
+            List<RatTerm> scaledTerms = new ArrayList<RatTerm>(p.terms);
+            result.add(new RatPoly(new RatTerm(coeffScalar, exptScalar))); // Maybe I should change this and result to a List<RatTerm>, the idea here is to account for duplicate degrees. Will that ever happen?
+            RatPoly.scaleCoeff(scaledTerms, coeffScalar);
+            RatPoly.incremExpt(scaledTerms, exptScalar);
+//            System.out.println("r: " + r + " - " + scaledTerms + " = ");
+            r = r.sub(new RatPoly(scaledTerms));
+//            System.out.println(r);
+        }
+        System.out.println("Result: " + result);
+        return result;
     }
 
     /**

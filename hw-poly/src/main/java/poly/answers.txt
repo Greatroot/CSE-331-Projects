@@ -25,6 +25,7 @@ r = p * q:
 
 
 2. Division Pseudocode
+// Outdated/old version of my pseudocode. *** NOTE: THIS IS NOT MY ANSWER FOR DIVISION. THE FINAL VERSION OF DIVISION IS BELOW ***
 {pre: for polynomials p and q passed in, all terms must be unique in degree(cannot have 2+ terms sharing degrees)}
 r = p % q:
     set r to be empty
@@ -58,13 +59,50 @@ r = p % q:
                 if find first non-zero
                     set i = num
 
+************* THIS IS MY ACTUAL DIVISION PSEUDOCODE **********************
+// Updated version of my pseudocode. *** NOTE: THIS IS MY ANSWER FOR DIVISION ***
+{pre: for polynomials u and v passed in, all terms must be unique in degree(cannot have 2+ terms sharing degrees)}
+q = u % v ^ u = q * v + r:
+    set result to be empty
+    set r to be a copy of u
 
-
-
+    //long division
+    {inv: r.degree() && q.degree >= 0 ^ r.degree() < v.degree() ^ q.degree <= u.degree() ^ q.degree() >= 0}
+            while(r.degree() >= v.degree())
+                add (r.highest_degree_term / v.highest_degree_term) to result // Building our result
+                scaled_v = copy of v
+                foreach term in scaled_v
+                    multiply each term by (r.highest_degree_term / v.highest_degree_term) // comparing divisor to numerator and preparing divisor
+                r = sub(r, scaled_v) // I defined polynomial subtraction above.
 
 
 
 3. Division Example: (x3+x-1) / (x+1) = x2-x+2
+
+u = (x^3 + x - 1)
+v = (x + 1)
+r = copy of u = (x^3 + x - 1)
+while(r.degree() >= v.degree())
+    Iteration 1: x^3 >= x^1 YES
+    add (r.highest_degree_term / v.highest_degree_term) to result : result = [(x^3 / x = x^2)]
+    scaled_v = copy of v : scaled_v = {x + 1}
+    foreach term in scaled_v : v = {x + 1}
+        multiply each term by (r.highest_degree_term / v.highest_degree_term) : scaled_v = {(x*(x^3/x^1)=x^3), (1*x^2 = x^2)}
+    r = sub(r, scaled_v) // I defined polynomial subtraction above : r = {x^3 + x - 1} - {x^3, x^2} => -x^2 + x - 1
+    Iteration 2: -x^2 >= x^1 YES
+        add (r.highest_degree_term / v.highest_degree_term) to result : result = [x^2, (-x^2 / x = -x)]
+        scaled_v = copy of v : scaled_v = {x + 1}
+        foreach term in scaled_v : v = {x + 1}
+            multiply each term by (r.highest_degree_term / v.highest_degree_term) : scaled_v = {(x*(-x^2/x^1)=-x^2), (1*-x^1 = -x^1)}
+        r = sub(r, scaled_v) // I defined polynomial subtraction above : r = {-x^2 + x - 1} - {-x^2 -x} => 2x - 1
+        Iteration 3: x^1 >= x^1 YES
+                add (r.highest_degree_term / v.highest_degree_term) to result : result = [x^2, -x, (2x / x = 2)]
+                scaled_v = copy of v : scaled_v = {x + 1}
+                foreach term in scaled_v : v = {x + 1}
+                    multiply each term by (r.highest_degree_term / v.highest_degree_term) : scaled_v = {(x*(2x/x)=2x), (1*2 = 2)}
+                r = sub(r, scaled_v) // I defined polynomial subtraction above : r = {2x - 1} - {2x + 2} => -1
+We are done!!! result = x^2 - x + 2
+
 
 
 
