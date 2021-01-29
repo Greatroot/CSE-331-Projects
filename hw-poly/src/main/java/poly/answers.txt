@@ -208,9 +208,14 @@ We are done!!! result = x^2 - x + 2
 
 1. Calls to checkRep in RatPoly
 
-
+    -I included calls to checkRep() at the beginning and end of all public methods/operations inside RatPoly except for
+  the constructors, within which I only used checkRep() at the end (since the instance isn't initialized at the beginning).
 
 2. Alternate Representation
 
-
+    - I personally prefer the RatTerm implementation since it helps us bridge that gap of abstraction between the terms
+    and the polynomial a lot better. I'd imagine a RatPoly implementation using two seperate lists would
+    not require a RatTerm object to exist, which would mean we would lose the nice level of abstraction that we
+    get in the form of all the operations that RatTerm can do. Without those abstracted operations, those operations
+    would have to be implemented in the RatPoly class, adding more complexity to the already complicated object.
 

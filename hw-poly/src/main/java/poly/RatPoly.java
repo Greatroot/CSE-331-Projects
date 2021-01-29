@@ -88,12 +88,11 @@ public final class RatPoly {
      * @spec.effects Constructs a new Poly equal to "rt". If rt.isZero(), constructs a "0" polynomial.
      */
     public RatPoly(RatTerm rt) {
-        terms = new ArrayList<RatTerm>();
-        if(rt.isZero())
+        this.terms = new ArrayList<RatTerm>();
+        if(!rt.isZero())
         {
-            this.terms.add(RatTerm.ZERO);
+            this.terms.add(rt);
         }
-        terms.add(rt);
         this.checkRep();
     }
 
@@ -263,8 +262,9 @@ public final class RatPoly {
             if(lst.isEmpty()) {
 //                ***System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
 //                ***System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
+
                 lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
-                System.out.println("lst result: " + lst);
+//                ***System.out.println("lst result: " + lst);
             } else if(lst.size() == 1)
             {
                 if(lst.get(0).getExpt() > newTerm.getExpt())
@@ -522,6 +522,11 @@ public final class RatPoly {
         // while(r.degree()) >= 0? Our remainder should be the first polynomial where r.degree() < p.degree().
         //Need to keep a copy of original q
         // r.sub(p.mul(first term of r / first term of original q))?
+        this.checkRep();
+        if(p.terms.isEmpty() || this.isNaN() || p.isNaN())
+        {
+            return RatPoly.NaN;
+        }
 
         RatPoly result = new RatPoly();
         RatPoly r = new RatPoly();
@@ -529,13 +534,13 @@ public final class RatPoly {
         {
             r.terms.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
         }
-//        System.out.println("r.terms: " + r.terms);
-//        System.out.println("p.terms: " + p.terms);
+        System.out.println("r.terms: " + r.terms);
+        System.out.println("p.terms: " + p.terms);
         // u/v = q ^ u = q * v + r
         // {inv: r.degree() >= 0 ^ r.degree() < v.degree() ^ q.degree <= u.degree() ^ q.degree() >= 0}
-        while(r.degree() > p.degree() || (r.degree() == p.degree() && !(r.terms.get(0).sub(p.terms.get(0)).getCoeff().isNegative())))
+        while(r.degree() >= p.degree())
         {
-            System.out.println("r.terms.get(0).sub(p.terms.get(0)).getCoeff() = " + r.terms.get(0).sub(p.terms.get(0)).getCoeff());
+//            System.out.println("r.terms.get(0).sub(p.terms.get(0)).getCoeff() = " + r.terms.get(0).sub(p.terms.get(0)).getCoeff());
 //            RatNum coeffScalar = r.terms.get(0).getCoeff().div(p.terms.get(0).getCoeff());
 //            int exptScalar = r.terms.get(0).getExpt() - p.terms.get(0).getExpt();
             System.out.println("r.terms: " + r.terms);
@@ -556,8 +561,14 @@ public final class RatPoly {
             System.out.println("scaled_p = " + scaled_p);
             r = r.sub(scaled_p);
             System.out.println("remainder = " + r);
+            if(r.terms.isEmpty())
+            {
+                break;
+            }
+            //(r.degree() == p.degree() && r.terms.get(0).sub(p.terms.get(0)).getCoeff().isNegative()
         }
         System.out.println("Result: " + result);
+        this.checkRep();
         return result;
     }
 
@@ -569,8 +580,22 @@ public final class RatPoly {
      * <p>The derivative of a polynomial is the sum of the derivative of each term.
      */
     public RatPoly differentiate() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.differentiate() is not yet implemented");
+        this.checkRep();
+        if(this.isNaN())
+        {
+            return RatPoly.NaN;
+        }
+
+        System.out.println("this.terms = " + this.terms);
+        RatPoly derivative = new RatPoly();
+        for(RatTerm rt : this.terms)
+        {
+            System.out.println("rt.getCoeff(): " + rt.getCoeff());
+            System.out.println("rt.getExpt(): " + rt.getExpt());
+            derivative = derivative.add(new RatPoly(rt.differentiate()));
+        }
+        this.checkRep();
+        return derivative;
     }
 
     /**
@@ -585,8 +610,19 @@ public final class RatPoly {
      * @spec.requires integrationConstant != null
      */
     public RatPoly antiDifferentiate(RatNum integrationConstant) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.antiDifferentiate() unimplemented!");
+        if(this.isNaN() || integrationConstant.isNaN())
+        {
+            return RatPoly.NaN;
+        }
+
+        RatPoly indefiniteIntegral = new RatPoly();
+        RatTerm integrationCons = new RatTerm(integrationConstant, 0);
+        for(RatTerm rt : this.terms)
+        {
+            indefiniteIntegral = indefiniteIntegral.add(new RatPoly(rt.antiDifferentiate()));
+        }
+        indefiniteIntegral = indefiniteIntegral.add(new RatPoly(integrationCons));
+        return indefiniteIntegral;
     }
 
     /**
@@ -603,8 +639,20 @@ public final class RatPoly {
      * Double.NaN, return Double.NaN.
      */
     public double integrate(double lowerBound, double upperBound) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.integrate() is not yet implemented");
+        this.checkRep();
+        if(this.isNaN() || Double.isNaN(lowerBound) || Double.isNaN(upperBound))
+        {
+            return Double.NaN;
+        }
+
+        double definiteIntegral = 0;
+        RatPoly indefiniteIntegral = this.antiDifferentiate(RatNum.ZERO);
+        double F_a = indefiniteIntegral.eval(lowerBound);
+        double F_b = indefiniteIntegral.eval(upperBound);
+
+        definiteIntegral += F_b - F_a;
+        this.checkRep();
+        return definiteIntegral;
     }
 
     /**
@@ -615,8 +663,19 @@ public final class RatPoly {
      * is 5, and "x^2-x" evaluated at 3 is 6. If (this.isNaN() == true), return Double.NaN.
      */
     public double eval(double d) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.eval() is not yet implemented");
+        this.checkRep();
+        if(this.isNaN())
+        {
+            return Double.NaN;
+        }
+
+        double answer = 0;
+        for(RatTerm rt : this.terms)
+        {
+            answer += rt.getCoeff().doubleValue() * Math.pow(d, rt.getExpt());
+        }
+        this.checkRep();
+        return answer;
     }
 
     /**
