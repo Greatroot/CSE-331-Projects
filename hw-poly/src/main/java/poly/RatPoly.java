@@ -137,8 +137,10 @@ public final class RatPoly {
         if(this.terms.isEmpty())
         {
             degree = 0;
+        } else
+        {
+            degree = this.terms.get(0).getExpt();
         }
-        degree = this.terms.get(0).getExpt();
         this.checkRep();
         return degree;
     }
@@ -264,17 +266,25 @@ public final class RatPoly {
             {
                 if(lst.get(0).getExpt() > newTerm.getExpt())
                 {
-                    System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
-                    System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
+//                    ***System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
+//                    ***System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
                     lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
                 } else if(lst.get(0).getExpt() < newTerm.getExpt())
                 {
                     lst.add(0, new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
                 } else
                 {
-                    lst.set(0, lst.get(0).add(newTerm));
+                    //Make sure to just get rid of the current element in lst if the sum is some RatTerm w/ coeff = 0
+                    RatTerm sum = lst.get(0).add(newTerm);
+                    if(sum.getCoeff().equals(RatNum.ZERO))
+                    {
+                        lst.remove(0);
+                    } else
+                    {
+                        lst.set(0, sum);
+                    }
                 }
-            } else
+            } else // lst has 2 or more RatTerms in it.
             {
                 // {inv: newTerm is not within sorted(lst)[0...i-1]}
                 for(int i = 0; i < lst.size(); i++)
@@ -286,7 +296,7 @@ public final class RatPoly {
                         RatTerm sum = lst.get(i).add(newTerm);
                         if(sum.getCoeff().equals(RatNum.ZERO))
                         {
-                            lst.remove(i);   
+                            lst.remove(i);
                         } else
                         {
                             lst.set(i, sum);
@@ -295,6 +305,9 @@ public final class RatPoly {
                     else if(i != 0 && ratTerm.getExpt() < newTerm.getExpt() && newTerm.getExpt() < lst.get(i-1).getExpt())
                     {
                         lst.add(i, new RatTerm(lst.get(i).getCoeff(), lst.get(i).getExpt()));
+                    } else if(i == 0 && ratTerm.getExpt() < newTerm.getExpt()) // if we are on i == 0
+                    {
+
                     }
                 }
             }
@@ -403,6 +416,7 @@ public final class RatPoly {
         {
             r.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
         }
+        System.out.println("Addition");
         System.out.println("this: " + this);
         System.out.println("p: " + p);
         System.out.println("r: " + r);
@@ -442,17 +456,16 @@ public final class RatPoly {
             return RatPoly.NaN;
         }
         RatPoly r = new RatPoly();
-        System.out.println("this: " + this);
-        System.out.println("p: " + p);
-        System.out.println("r: " + r);
+//        System.out.println("this: " + this);
+//        System.out.println("p: " + p);
+//        System.out.println("r: " + r);
         //{inv:
         for(RatTerm qt : this.terms)
         {
             for(RatTerm pt : p.terms)
             {
-                System.out.println(qt + " * " + pt);
+//                System.out.println(qt + " * " + pt);
                 r = r.add(new RatPoly(qt.mul(pt)));
-                System.out.println("this is the end.");
             }
         }
         this.checkRep();
@@ -633,7 +646,7 @@ public final class RatPoly {
                 }
 
                 // accumulate terms of polynomial in 'parsedTerms'
-//                ***System.out.println("\tInstance of calling sortedInsert(" + parsedTerms + ", " + term.getCoeff() + ", " + term.getExpt() + ")");
+                System.out.println("\tInstance of calling sortedInsert(" + parsedTerms + ", " + term.getCoeff() + ", " + term.getExpt() + ")");
                 sortedInsert(parsedTerms, term);
             }
         }

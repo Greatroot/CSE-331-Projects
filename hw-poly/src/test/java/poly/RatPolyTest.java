@@ -113,6 +113,7 @@ public final class RatPolyTest {
     public void setUp() {
         // poly1 = 1*x^1 + 2*x^2 + 3*x^3 + 4*x^4 + 5*x^5
         poly1 = RatPoly.valueOf("1*x^1+2*x^2+3*x^3+4*x^4+5*x^5");
+        System.out.println("poly1: " + poly1);
 
         // neg_poly1 = -1*x^1 + -2*x^2 + -3*x^3 + -4*x^4 + -5*x^5
         neg_poly1 = poly1.negate();
