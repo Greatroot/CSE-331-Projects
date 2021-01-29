@@ -286,7 +286,7 @@ public final class RatPoly {
                 }
             } else // lst has 2 or more RatTerms in it.
             {
-                // {inv: newTerm is not within sorted(lst)[0...i-1]}
+                // {inv: newTerm should not be within sorted(lst)[0...i-1]}
                 for(int i = 0; i < lst.size(); i++)
                 {
                     RatTerm ratTerm = lst.get(i);
@@ -301,13 +301,18 @@ public final class RatPoly {
                         {
                             lst.set(i, sum);
                         }
+                        break;
                     }
-                    else if(i != 0 && ratTerm.getExpt() < newTerm.getExpt() && newTerm.getExpt() < lst.get(i-1).getExpt())
+                    else if(ratTerm.getExpt() < newTerm.getExpt())
                     {
-                        lst.add(i, new RatTerm(lst.get(i).getCoeff(), lst.get(i).getExpt()));
-                    } else if(i == 0 && ratTerm.getExpt() < newTerm.getExpt()) // if we are on i == 0
-                    {
+//                        ***System.out.println("ratTerm.getExpt() " + ratTerm.getExpt() + " < newTerm.getExpt() " + newTerm.getExpt());
+                        lst.add(i, new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
+                        break;
 
+                    } else if(i == lst.size() - 1)
+                    {
+                        lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
+                        break;
                     }
                 }
             }
@@ -416,13 +421,14 @@ public final class RatPoly {
         {
             r.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
         }
-        System.out.println("Addition");
-        System.out.println("this: " + this);
-        System.out.println("p: " + p);
-        System.out.println("r: " + r);
+//        ***System.out.println("Addition");
+//        System.out.println("this: " + this);
+//        System.out.println("p: " + p);
+//        System.out.println("r: " + r);
         for(RatTerm rt : p.terms)
         {
-                RatPoly.sortedInsert(r, rt);
+//            ***System.out.println("\tAddition instance of calling sortedInsert(" + r + ", " + rt.getCoeff() + ", " + rt.getExpt() + ")");
+            RatPoly.sortedInsert(r, rt);
         }
         System.out.println("r_final: " + r);
         this.checkRep();
@@ -456,6 +462,7 @@ public final class RatPoly {
             return RatPoly.NaN;
         }
         RatPoly r = new RatPoly();
+//        ***System.out.println("Multiplication: ");
 //        System.out.println("this: " + this);
 //        System.out.println("p: " + p);
 //        System.out.println("r: " + r);
@@ -464,7 +471,7 @@ public final class RatPoly {
         {
             for(RatTerm pt : p.terms)
             {
-//                System.out.println(qt + " * " + pt);
+                System.out.println(qt + " * " + pt);
                 r = r.add(new RatPoly(qt.mul(pt)));
             }
         }
@@ -506,8 +513,8 @@ public final class RatPoly {
      * @spec.requires p != null
      */
     public RatPoly div(RatPoly p) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatPoly.div() is not yet implemented");
+        // c_p and c_q could be ArrayLists of RatTerms?
+
     }
 
     /**
@@ -646,7 +653,7 @@ public final class RatPoly {
                 }
 
                 // accumulate terms of polynomial in 'parsedTerms'
-                System.out.println("\tInstance of calling sortedInsert(" + parsedTerms + ", " + term.getCoeff() + ", " + term.getExpt() + ")");
+//                ***System.out.println("\tInstance of calling sortedInsert(" + parsedTerms + ", " + term.getCoeff() + ", " + term.getExpt() + ")");
                 sortedInsert(parsedTerms, term);
             }
         }

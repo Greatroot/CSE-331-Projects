@@ -21,7 +21,7 @@ r = p * q:
     where p_i is the ith term in p and q_j is the jth term in q}
     foreach term, t_q, in q:
         foreach term, t_p, in p:
-            add(r, t_q * t_p)
+            add(r, t_q * t_p) *** MUST FIX!!!
 
 
 2. Division Pseudocode
@@ -30,14 +30,16 @@ r = p % q:
     set r to be empty
     set c_p to be empty
     set c_q to be empty
-    for(int i = p.highest_degree; i > 0; i--) REPEAT i = 1 twice before ending loop (first two degrees are 1)
-        if i == p.expt
+    // Making a list of all coefficients in p; includes filling in empty exponents from p.highest_degree to 0 with placeholder 0x^i
+    for(int i = p.highest_degree; i > 0; i--)
+        if p.hasExponent of i
             add current coefficient (num) to c_p
         else
-            add new num to p with 0 coefficient.
+            add new num to c_p with 0 coefficient.
 
-    for(int i = q.highest_degree; i > 0; i--) REPEAT i = 1 twice before ending loop (first two degrees are 1)
-            if i == q.expt
+    // Making a list of all coefficients in q; includes filling in empty exponents from q.highest_degree to 0 with placeholder 0x^i
+    for(int i = q.highest_degree; i > 0; i--)
+            if p.hasExponent of i
                 add current coefficient (num) to c_q
             else
                 add new num to c_q with 0 coefficient.
