@@ -191,7 +191,7 @@ public final class RatTerm {
         RatTerm sum;
         if(this.isNaN() || arg.isNaN())
         {
-            sum = new RatTerm(RatNum.NaN, 0);
+            return new RatTerm(RatNum.NaN, 0);
         } else if(this.expt != arg.expt && !this.isZero() && !arg.isZero())
         {
             throw new IllegalArgumentException();
@@ -200,7 +200,6 @@ public final class RatTerm {
         if(this.expt != 0)
         {
             sum = new RatTerm(this.coeff.add(arg.getCoeff()), this.expt);
-//            ***System.out.println("sum = " + sum.getCoeff() + ", " + sum.getExpt());
         } else
         {
             sum = new RatTerm(this.coeff.add(arg.getCoeff()), arg.expt);
@@ -425,7 +424,6 @@ public final class RatTerm {
             // "R*x^N" or "x^N"
             expt = Integer.parseInt(termStr.substring(powIndex + 1));
         }
-//        ***System.out.println("coeff = " + coeff);
         return new RatTerm(coeff, expt);
     }
 

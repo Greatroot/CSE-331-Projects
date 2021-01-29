@@ -21,10 +21,10 @@ r = p * q:
     where p_i is the ith term in p and q_j is the jth term in q}
     foreach term, t_q, in q:
         foreach term, t_p, in p:
-            add(r, t_q * t_p) *** MUST FIX!!!
+            add to r (t_q * t_p)
 
 
-2. Division Pseudocode
+2. Division Pseudocode *********************** THIS IS NOT MY ACTUAL ANSWER *******************************
 // Outdated/old version of my pseudocode. *** NOTE: THIS IS NOT MY ANSWER FOR DIVISION. THE FINAL VERSION OF DIVISION IS BELOW ***
 {pre: for polynomials p and q passed in, all terms must be unique in degree(cannot have 2+ terms sharing degrees)}
 r = p % q:
@@ -161,7 +161,7 @@ We are done!!! result = x^2 - x + 2
 1. Calls to checkRep in RatTerm
 
     -I included calls to checkRep() at the beginning and end of all public methods/operations inside RatTerm except for
-  the constuctor, within which I only used checkRep() at the end (since the instance isn't initalized at the beginning).
+  the constructor, within which I only used checkRep() at the end (since the instance isn't initalized at the beginning).
 
 2. Weakened Rep Invariant
 

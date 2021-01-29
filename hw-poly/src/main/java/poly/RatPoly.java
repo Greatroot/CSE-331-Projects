@@ -257,20 +257,13 @@ public final class RatPoly {
         RatPoly lstPoly = new RatPoly(lst);
         if(!lstPoly.isNaN() && !newTerm.equals(RatTerm.ZERO)) // I'm excluding lsts that contain a NaN from this operation.
         {
-//            ***System.out.println("lst: " + lst);
-//            ***System.out.println("newTerm: " + newTerm);
             if(lst.isEmpty()) {
-//                ***System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
-//                ***System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
 
                 lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
-//                ***System.out.println("lst result: " + lst);
             } else if(lst.size() == 1)
             {
                 if(lst.get(0).getExpt() > newTerm.getExpt())
                 {
-//                    ***System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
-//                    ***System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
                     lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
                 } else if(lst.get(0).getExpt() < newTerm.getExpt())
                 {
@@ -308,7 +301,6 @@ public final class RatPoly {
                     }
                     else if(ratTerm.getExpt() < newTerm.getExpt())
                     {
-//                        ***System.out.println("ratTerm.getExpt() " + ratTerm.getExpt() + " < newTerm.getExpt() " + newTerm.getExpt());
                         lst.add(i, new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
                         break;
 
@@ -321,69 +313,6 @@ public final class RatPoly {
             }
         }
     }
-
-//    /**
-//     * Inserts a term into a sorted sequence of terms, preserving the sorted nature of the sequence.
-//     * If a term with the given degree already exists, adds their coefficients (helper procedure).
-//     *
-//     * <p>Definitions: Let a "Sorted List<RatTerm>" be a List<RatTerm> V such that [1] V is sorted in
-//     * descending exponent order && [2] there are no two RatTerms with the same exponent in V && [3]
-//     * there is no RatTerm in V with a coefficient equal to zero
-//     *
-//     * <p>For a Sorted List<RatTerm> V and integer e, let cofind(V, e) be either the coefficient for a
-//     * RatTerm rt in V whose exponent is e, or zero if there does not exist any such RatTerm in V.
-//     * (This is like the coeff function of RatPoly.) We will write sorted(lst) to denote that lst is a
-//     * Sorted List<RatTerm>, as defined above.
-//     *
-//     * @param lst     the list into which newTerm should be inserted
-//     * @param newTerm the term to be inserted into the list
-//     * @spec.requires lst != null && sorted(lst)
-//     * @spec.modifies lst
-//     * @spec.effects sorted(lst_post) && (cofind(lst_post,newTerm.getExpt()) =
-//     * cofind(lst,newTerm.getExpt()) + newTerm.getCoeff())
-//     */
-//    private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
-//        RatPoly lstPoly = new RatPoly(lst);
-//        if(!lstPoly.isNaN()) // I'm excluding lsts that contain a NaN from this operation.
-//        {
-//            // First check if lst.containsDegree(), if so, we can skip to that index.
-//            // Otherwise, we need to loop through lst to find where this term should be.
-//
-//            int index = lstPoly.getIndexOfTerm(newTerm.getExpt());
-//            if(index != -1)
-//            {
-//                try {
-//                    lst.get(index).add(lstPoly.getTerm(newTerm.getExpt()));
-//                }
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Returns the index of the term within this that has the specified degree.
-//     *
-//     * @param degree the degree of a term we want to find within lstPoly.
-//     * @return the index of the term with the specified degree within lstPoly. If a term of that degree DNE,
-//     * then return the index where a term of that index could be placed.
-//     */
-//    private int getIndexOfTerm(int degree)
-//    {
-//        // {inv: newTerm is not within sorted(lst)[0...i-1]}
-//        for(int i = 0; i < this.terms.size(); i++)
-//        {
-//            RatTerm ratTerm = this.terms.get(i);
-//            if((ratTerm.getExpt() == degree) || (this.terms.size() == 1) ||  ratTerm.getExpt() < degree
-//                    && degree < this.terms.get(i-1).getExpt())
-//            { // If there is no term that has degree, then the newTerm should be put in the index where the current ratTerm is.
-//                return i;
-//            }
-////            else if(ratTerm.getExpt() < degree && degree < lstPoly.terms.get(i - 1).getExpt())
-////            { // If there is no term that has degree and this term is in the index where our newTerm should be.
-////                return i;
-////            }
-//        }
-//        return -1;
-//    }
 
     /**
      * Return the additive inverse of this RatPoly.
@@ -424,16 +353,10 @@ public final class RatPoly {
         {
             r.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
         }
-//        ***System.out.println("Addition");
-//        System.out.println("this: " + this);
-//        System.out.println("p: " + p);
-//        System.out.println("r: " + r);
         for(RatTerm rt : p.terms)
         {
-//            ***System.out.println("\tAddition instance of calling sortedInsert(" + r + ", " + rt.getCoeff() + ", " + rt.getExpt() + ")");
             RatPoly.sortedInsert(r, rt);
         }
-//        ***System.out.println("r_final: " + r);
         this.checkRep();
         return new RatPoly(r);
     }
@@ -465,16 +388,11 @@ public final class RatPoly {
             return RatPoly.NaN;
         }
         RatPoly r = new RatPoly();
-//        ***System.out.println("Multiplication: ");
-//        System.out.println("this: " + this);
-//        System.out.println("p: " + p);
-//        System.out.println("r: " + r);
-        //{inv:
+        // {Inv: r = q_0 * (p_0 + p_1 + ... + p_i-1) + q_1 * (p_0 + p_1 + ... + p_i-1) + ... + q_j-1 * (p_0 + p_1 + ... + p_i-1)
         for(RatTerm qt : this.terms)
         {
             for(RatTerm pt : p.terms)
             {
-//                ***System.out.println(qt + " * " + pt);
                 r = r.add(new RatPoly(qt.mul(pt)));
             }
         }
@@ -534,21 +452,12 @@ public final class RatPoly {
         {
             r.terms.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
         }
-        System.out.println("r.terms: " + r.terms);
-        System.out.println("p.terms: " + p.terms);
         // u/v = q ^ u = q * v + r
         // {inv: r.degree() >= 0 ^ r.degree() < v.degree() ^ q.degree <= u.degree() ^ q.degree() >= 0}
         while(r.degree() >= p.degree())
         {
-//            System.out.println("r.terms.get(0).sub(p.terms.get(0)).getCoeff() = " + r.terms.get(0).sub(p.terms.get(0)).getCoeff());
-//            RatNum coeffScalar = r.terms.get(0).getCoeff().div(p.terms.get(0).getCoeff());
-//            int exptScalar = r.terms.get(0).getExpt() - p.terms.get(0).getExpt();
-            System.out.println("r.terms: " + r.terms);
-            System.out.println("p.terms: " + p.terms);
             RatTerm multiple = r.terms.get(0).div(p.terms.get(0));
-            System.out.println("multiple: " + multiple);
             result = result.add(new RatPoly(multiple)); // Maybe I should change this and result to a List<RatTerm>, the idea here is to account for duplicate degrees. Will that ever happen?
-            System.out.println("result in while = " + result);
 
             RatPoly scaled_p = new RatPoly();
             for(RatTerm rt : p.terms)
@@ -556,18 +465,12 @@ public final class RatPoly {
                 scaled_p.terms.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
             }
             scaled_p = scaled_p.mul(new RatPoly(multiple));
-//            RatPoly.scaleCoeff(scaledTerms, coeffScalar);
-//            RatPoly.incremExpt(scaledTerms, exptScalar);
-            System.out.println("scaled_p = " + scaled_p);
             r = r.sub(scaled_p);
-            System.out.println("remainder = " + r);
             if(r.terms.isEmpty())
             {
                 break;
             }
-            //(r.degree() == p.degree() && r.terms.get(0).sub(p.terms.get(0)).getCoeff().isNegative()
         }
-        System.out.println("Result: " + result);
         this.checkRep();
         return result;
     }
@@ -586,12 +489,9 @@ public final class RatPoly {
             return RatPoly.NaN;
         }
 
-        System.out.println("this.terms = " + this.terms);
         RatPoly derivative = new RatPoly();
         for(RatTerm rt : this.terms)
         {
-            System.out.println("rt.getCoeff(): " + rt.getCoeff());
-            System.out.println("rt.getExpt(): " + rt.getExpt());
             derivative = derivative.add(new RatPoly(rt.differentiate()));
         }
         this.checkRep();
@@ -696,7 +596,6 @@ public final class RatPoly {
      */
     @Override
     public String toString() {
-//        ***System.out.println("this.terms.size(): "  + this.terms.size());
         if(terms.size() == 0) {
             return "0";
         }
@@ -730,7 +629,6 @@ public final class RatPoly {
      * <p>Valid inputs include "0", "x-10", and "x^3-2*x^2+5/3*x+3", and "NaN".
      */
     public static RatPoly valueOf(String polyStr) {
-//        ***System.out.println("\nBeginning of valueOf(" + polyStr + "):");
         List<RatTerm> parsedTerms = new ArrayList<>();
 
         // First we decompose the polyStr into its component terms;
@@ -756,7 +654,6 @@ public final class RatPoly {
                 }
 
                 // accumulate terms of polynomial in 'parsedTerms'
-//                ***System.out.println("\tInstance of calling sortedInsert(" + parsedTerms + ", " + term.getCoeff() + ", " + term.getExpt() + ")");
                 sortedInsert(parsedTerms, term);
             }
         }
