@@ -258,10 +258,13 @@ public final class RatPoly {
         RatPoly lstPoly = new RatPoly(lst);
         if(!lstPoly.isNaN() && !newTerm.equals(RatTerm.ZERO)) // I'm excluding lsts that contain a NaN from this operation.
         {
+//            ***System.out.println("lst: " + lst);
+//            ***System.out.println("newTerm: " + newTerm);
             if(lst.isEmpty()) {
 //                ***System.out.println("newTerm.getCoeff(): " + newTerm.getCoeff());
 //                ***System.out.println("newTerm.getExpt(): " + newTerm.getExpt());
                 lst.add(new RatTerm(newTerm.getCoeff(), newTerm.getExpt()));
+                System.out.println("lst result: " + lst);
             } else if(lst.size() == 1)
             {
                 if(lst.get(0).getExpt() > newTerm.getExpt())
@@ -526,26 +529,33 @@ public final class RatPoly {
         {
             r.terms.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
         }
-        System.out.println("r.terms: " + r.terms);
-        System.out.println("p.terms: " + p.terms);
+//        System.out.println("r.terms: " + r.terms);
+//        System.out.println("p.terms: " + p.terms);
         // u/v = q ^ u = q * v + r
         // {inv: r.degree() >= 0 ^ r.degree() < v.degree() ^ q.degree <= u.degree() ^ q.degree() >= 0}
-        while(r.degree() >= p.degree())
+        while(r.degree() > p.degree() || (r.degree() == p.degree() && !(r.terms.get(0).sub(p.terms.get(0)).getCoeff().isNegative())))
         {
-//            System.out.println("r.terms: " + r.terms);
-//            System.out.println("p.terms: " + p.terms);
-            RatNum coeffScalar = r.terms.get(0).getCoeff().div(p.terms.get(0).getCoeff());
-            int exptScalar = r.terms.get(0).getExpt() - p.terms.get(0).getExpt();
-//            System.out.println("coeffScalar: " + coeffScalar);
-//            System.out.println("exptScalar: " + exptScalar);
-//            System.out.println(new RatTerm(coeffScalar, exptScalar));
-            List<RatTerm> scaledTerms = new ArrayList<RatTerm>(p.terms);
-            result.add(new RatPoly(new RatTerm(coeffScalar, exptScalar))); // Maybe I should change this and result to a List<RatTerm>, the idea here is to account for duplicate degrees. Will that ever happen?
-            RatPoly.scaleCoeff(scaledTerms, coeffScalar);
-            RatPoly.incremExpt(scaledTerms, exptScalar);
-//            System.out.println("r: " + r + " - " + scaledTerms + " = ");
-            r = r.sub(new RatPoly(scaledTerms));
-//            System.out.println(r);
+            System.out.println("r.terms.get(0).sub(p.terms.get(0)).getCoeff() = " + r.terms.get(0).sub(p.terms.get(0)).getCoeff());
+//            RatNum coeffScalar = r.terms.get(0).getCoeff().div(p.terms.get(0).getCoeff());
+//            int exptScalar = r.terms.get(0).getExpt() - p.terms.get(0).getExpt();
+            System.out.println("r.terms: " + r.terms);
+            System.out.println("p.terms: " + p.terms);
+            RatTerm multiple = r.terms.get(0).div(p.terms.get(0));
+            System.out.println("multiple: " + multiple);
+            result = result.add(new RatPoly(multiple)); // Maybe I should change this and result to a List<RatTerm>, the idea here is to account for duplicate degrees. Will that ever happen?
+            System.out.println("result in while = " + result);
+
+            RatPoly scaled_p = new RatPoly();
+            for(RatTerm rt : p.terms)
+            {
+                scaled_p.terms.add(new RatTerm(rt.getCoeff(), rt.getExpt()));
+            }
+            scaled_p = scaled_p.mul(new RatPoly(multiple));
+//            RatPoly.scaleCoeff(scaledTerms, coeffScalar);
+//            RatPoly.incremExpt(scaledTerms, exptScalar);
+            System.out.println("scaled_p = " + scaled_p);
+            r = r.sub(scaled_p);
+            System.out.println("remainder = " + r);
         }
         System.out.println("Result: " + result);
         return result;
