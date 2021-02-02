@@ -8,28 +8,33 @@
     ### IntQueue1
 
     Abstraction Function:
-
-
+        The front of the queue (i.e. the least-recently-added item) = entries[0]
+        The back of the queue (i.e. the most-recently-added item) = entries[size-1]
 
     Representation Invariant:
-
-
+        Entries never contains null value
+        Items can only be removed from the front (defined in AF) of entries as entries[0]
+        Items can only be added to the back (defined in AF) of entries as entries[size-1]
 
 
     ### IntQueue2
 
     Abstraction Function:
-
+        The front of the queue (i.e. the least-recently-added item) = entries[front]
+        The back of the queue (i.e. the most-recently-added item) = entries[front + size-1]
 
 
     Representation Invariant:
-
-
+        Entries never contains null value between entries[front] and entries[front + size-1]
+        Items can only be removed from the front (defined in AF) of entries as entries[front]
+        Items can only be added to the back (defined in AF) of entries as entries[front + size-1]
 
 
 2. Group the snapshots of IntQueue2's internal state into groups that have the same abstract state.
 
-
+    - The front is the first element and size is smaller than all elements present: a and d
+    - Ring buffer format: b, c, f, g, and h.
+    - ASK!!!
 
 
 3. For each signature below, state and justify in 1-2 sentences (per part) whether the method or constructor
@@ -37,26 +42,37 @@ could possibly expose the representation, given the information available. Expla
 
     a. `public int solveEquations(int x, int y, int z)`
 
-
+        - This method should not expose the representation, since no detail about the equation itself is given and only
+        the result of the calcuation is given. Assuming that the representation consists of this equation used, having
+        the client only be able to see the inputs and outputs should not expose the equation itself.
 
     b. `public String[] decode(boolean slowly)`
 
-
+        - Assuming that whatever is being decoded is part of the representation, I would assume that whatever string
+        array is returned is exposing the representation, even though it isn't being shown in its original form.
 
     c. `private Date myBirthday()`
 
-
+        - Assuming myBirthday is a rep field, this method cannot expose the representation even though it
+        returns a rep field. This is because the method is private and thus can't be accessed outside the class.
 
     d. `public String toString()`
 
-
+        - I think it would depend on what you decide to print out in your toString() method. But assuming that
+        this toString is to be used similar to Object's toString, then this method will probably return a string
+        representation of rep fields and expose the representation.
 
     e. `public Iterator<Integer> elements()`
 
-
+        - Assuming that this method returns an iterator of a field representation's underlying elements,
+        this field definitely exposes the representation. This is due to the fact that iterators "allow the
+        caller to remove elements from the underlying collection."
 
     f. `public Deck(List<Card> cards)`
 
+        - It would depend. If the list of cards or any of its objects in memory are used by any of the Deck's field
+        reps, then yes, this method could expose the rep. But if the constructor makes a new copy of all of
+        the cards within the list before storing it, then there should be no rep exposure.
 
 
 
