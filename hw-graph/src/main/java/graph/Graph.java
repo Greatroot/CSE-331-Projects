@@ -24,9 +24,6 @@ import java.util.List;
  * between two nodes within a graph instance (and only within a graph instance) usually in terms of
  * parent and child (A.K.A. how they are connected via an edge/edges).
  *
- * @spec.specfield path : LinkedList<Edge> // An ordered sequence of edges (node1, node2), (node2, node3),
- *      (node3, node4), ... A path may traverse a particular edge any number of times.
- *
  * @spec.specfield neighbor : Node // a neighbor refers to a node that is either a child or parent of another node.
  *  So if Node A had Node B and Node C as parents (edges connected from (B, A) and (C, A)) and Node D as
  *  a child (edge connected from (A, D)), then Nodes B, C, and D are all neighbors of A.
@@ -110,7 +107,7 @@ public class Graph {
      *
      * @param nodeValue value of Node being added.
      * @spec.requires {@code nodeValue != null}
-     * @return true if and only if the node is successfully added && there was NOT a node with that value
+     * @return true if and only if the node is successfully added &and;&and; there was NOT a node with that value
      * already present in this graph.
      * @spec.modifies this
      * @spec.effects our collection of Nodes
@@ -126,7 +123,7 @@ public class Graph {
      *
      * @param node the Node being added.
      * @spec.requires {@code node != null}
-     * @return true if and only if the node is successfully added && there was NOT a node with that value
+     * @return true if and only if the node is successfully added &and;&and; there was NOT a node with that value
      * already present in this graph.
      * @spec.modifies this
      * @spec.effects our collection of Nodes
@@ -143,8 +140,8 @@ public class Graph {
      *
      * @param node node to be removed from this graph.
      * @spec.requires {@code node != null}
-     * @return true if and only if "node" is removed && if "node" was already present to begin with
-     * && if all neighbors and edges are modified accordingly.
+     * @return true if and only if "node" is removed &and;&and; if "node" was already present to begin with
+     * &and;&and; if all neighbors and edges are modified accordingly.
      * @spec.modifies this
      * @spec.effects the collection of Nodes in this.
      */
@@ -168,7 +165,7 @@ public class Graph {
      *
      * @param edge the edge being added.
      * @spec.requires {@code edge != null}
-     * @return true if and only if the edge is successfully added && there were no duplicate edges.
+     * @return true if and only if the edge is successfully added &and;&and; there were no duplicate edges.
      * @spec.modifies this
      * @spec.effects our collection of Edges
      * @see Edge for definition of a duplicate Edge.
@@ -190,8 +187,8 @@ public class Graph {
      *
      * @param edge Edge to be removed from this graph.
      * @spec.requires {@code edge != null}
-     * @return true if and only if "edge" is removed && if "edge" was already present to begin with
-     * && if both endpoints of "edge" are modified accordingly.
+     * @return true if and only if "edge" is removed &and;&and; if "edge" was already present to begin with
+     * &and;&and; if both endpoints of "edge" are modified accordingly.
      * @spec.modifies this
      * @spec.effects the collection of Edges in this.
      */
@@ -245,10 +242,10 @@ public class Graph {
         throw new RuntimeException("Graph.getEdge() is not yet implemented");
     }
 
-    /**
-     * //TODO: Fill in this Spec!!!
-     * @return
-     */
+//    /**
+//     * //TODO: Fill in this Spec!!!
+//     * @return
+//     */
     @Override
     public String toString() {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -282,7 +279,7 @@ public class Graph {
 
     /**
      * A <b>Node</b> represents a simple <b>immutable</b> data point on our Graph, and is made up of
-     * a single String value and connections (Lists<Node>) to their parent and children nodes.
+     * a single String value and connections (list of Nodes) to their parent and children nodes.
      *
      * <p> Each node can be connected one directionally via an edge. For example, node "A"
      * can be connected to node "B" by edge "E" and "B" is directly reachable from "A" (A, B). Because of one-way
@@ -315,7 +312,7 @@ public class Graph {
          *
          * @param newParent the parent node to be added.
          * @spec.requires {@code newParent != null}
-         * @return true if and only if the new parent node is successfully added && didn't previously
+         * @return true if and only if the new parent node is successfully added &and;&and; didn't previously
          * exist before.
          */
         private boolean addParent(Node newParent)
@@ -329,7 +326,7 @@ public class Graph {
          *
          * @param parent the parent node to be removed.
          * @spec.requires {@code parent != null}
-         * @return true if and only if parent was already present && was successfully removed.
+         * @return true if and only if parent was already present &and;&and; was successfully removed.
          */
         private boolean removeParent(Node parent)
         {
@@ -342,7 +339,7 @@ public class Graph {
          *
          * @param newChild the child node to be added.
          * @spec.requires {@code newChild != null}
-         * @return true if and only if the new child node is successfully added && didn't previously
+         * @return true if and only if the new child node is successfully added &and;&and; didn't previously
          * exist before.
          */
         private boolean addChild(Node newChild)
@@ -356,7 +353,7 @@ public class Graph {
          *
          * @param child the parent node to be removed.
          * @spec.requires {@code child != null}
-         * @return true if and only if parent was already present && was successfully removed.
+         * @return true if and only if parent was already present &and;&and; was successfully removed.
          */
         private boolean removeChild(Node child)
         {
@@ -369,7 +366,7 @@ public class Graph {
          *
          * @return a completely separate copy in memory of this Node's value.
          */
-        private String getValue()
+        public String getValue()
         {
             // Make sure to return a completely separate copy to keep this class immutable.
             // TODO: Fill in this method, then remove the RuntimeException
@@ -381,9 +378,10 @@ public class Graph {
          *
          * @return the list of Nodes parent to this. If there are no parents, returns empty list.
          */
-        private List<Node> getParents()
+        public List<Node> getParents()
         {
-            // Should not break immutability since the element Node is immutable.
+            //Should not break the immutability of Node since the underlying elements of List<Node>
+            // are immutable themselves.
             // TODO: Fill in this method, then remove the RuntimeException
             throw new RuntimeException("Node.getParents() is not yet implemented");
         }
@@ -393,8 +391,10 @@ public class Graph {
          *
          * @return a list of nodes child to this. If there are no children, returns empty list.
          */
-        private List<Node> getChildren()
+        public List<Node> getChildren()
         {
+            //Should not break the immutability of Node since the underlying elements of List<Node>
+            // are immutable themselves
             // TODO: Fill in this method, then remove the RuntimeException
             throw new RuntimeException("Node.getChildren() is not yet implemented");
         }
