@@ -1,0 +1,8 @@
+# Test adding two edges, both overlapping | should return
+true and add both edges
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2
+AddEdge graph n1 n2 e1
+AddEdge graph n1 n2 e2

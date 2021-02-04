@@ -1,0 +1,9 @@
+# Test adding two edges, both overlapping at parent
+ | should return true and add both edges
+
+ CreateGraph graph
+ AddNode graph n1
+ AddNode graph n2
+ AddNode graph n3
+ AddEdge graph n1 n2 e1
+ AddEdge graph n1 n3 e2

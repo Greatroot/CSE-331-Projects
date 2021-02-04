@@ -93,7 +93,7 @@ public class Graph {
      *
      * @param parent the parent node to test
      * @param child the child node to test
-     * @spec.requires {@code parent != null && child != null}
+     * @spec.requires {@code parent != null && child != null} and both Nodes must exists in the Graph.
      * @return true if and only if parent node is connected to a child node via an edge.
      */
     public boolean isAdjacent(Node parent, Node child)
@@ -134,22 +134,23 @@ public class Graph {
         throw new RuntimeException("Graph.addNode(Node node) is not yet implemented");
     }
 
-    /**
-     * Removes the Node "node" from this graph if it is already inside the graph. Also removes all edges
-     * that connect to or from "node" and modifies the relationship status between all neighbors of "node."
-     *
-     * @param node node to be removed from this graph.
-     * @spec.requires {@code node != null}
-     * @return true if and only if "node" is removed &and;&and; if "node" was already present to begin with
-     * &and;&and; if all neighbors and edges are modified accordingly.
-     * @spec.modifies this
-     * @spec.effects the collection of Nodes in this.
-     */
-    public boolean removeNode(Node node)
-    {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.removeNode() is not yet implemented");
-    }
+    // THIS IS BEING SAVED FOR POTENTIAL FUTURE DEVELOPMENT
+//    /**
+//     * Removes the Node "node" from this graph if it is already inside the graph. Also removes all edges
+//     * that connect to or from "node" and modifies the relationship status between all neighbors of "node."
+//     *
+//     * @param node node to be removed from this graph.
+//     * @spec.requires {@code node != null}
+//     * @return true if and only if "node" is removed &and;&and; if "node" was already present to begin with
+//     * &and;&and; if all neighbors and edges are modified accordingly.
+//     * @spec.modifies this
+//     * @spec.effects the collection of Nodes in this.
+//     */
+//    public boolean removeNode(Node node)
+//    {
+//        // TODO: Fill in this method, then remove the RuntimeException
+//        throw new RuntimeException("Graph.removeNode() is not yet implemented");
+//    }
 
 //    public boolean removeNode(String nodeValue) // Should work because each node has a unique value
 //    {
@@ -161,11 +162,13 @@ public class Graph {
 //        throw new RuntimeException("Graph constructor is not yet implemented");
 //    }
     /**
-     * Adds the Edge "edge" to this graph if there are no duplicates.
+     * Adds the Edge "edge" to this graph if there are no duplicates and both endpoints exist
+     * within this graph.
      *
      * @param edge the edge being added.
      * @spec.requires {@code edge != null}
      * @return true if and only if the edge is successfully added &and;&and; there were no duplicate edges.
+     * If the parent and/or child do not exist within the graph, return false and do not add the edge.
      * @spec.modifies this
      * @spec.effects our collection of Edges
      * @see Edge for definition of a duplicate Edge.
@@ -182,21 +185,22 @@ public class Graph {
 //        throw new RuntimeException("Graph constructor is not yet implemented");
 //    }
 
-    /**
-     * Removes the Edge "edge" from this graph if it is already inside the graph.
-     *
-     * @param edge Edge to be removed from this graph.
-     * @spec.requires {@code edge != null}
-     * @return true if and only if "edge" is removed &and;&and; if "edge" was already present to begin with
-     * &and;&and; if both endpoints of "edge" are modified accordingly.
-     * @spec.modifies this
-     * @spec.effects the collection of Edges in this.
-     */
-    public boolean removeEdge(Edge edge) // Uses Edge.equals() to check if labels and nodes are the same.
-    {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.removeEdge() is not yet implemented");
-    }
+    // THIS IS BEING SAVED FOR POTENTIAL FUTURE DEVELOPMENT
+//    /**
+//     * Removes the Edge "edge" from this graph if it is already inside the graph.
+//     *
+//     * @param edge Edge to be removed from this graph.
+//     * @spec.requires {@code edge != null}
+//     * @return true if and only if "edge" is removed &and;&and; if "edge" was already present to begin with
+//     * &and;&and; if both endpoints of "edge" are modified accordingly.
+//     * @spec.modifies this
+//     * @spec.effects the collection of Edges in this.
+//     */
+//    public boolean removeEdge(Edge edge) // Uses Edge.equals() to check if labels and nodes are the same.
+//    {
+//        // TODO: Fill in this method, then remove the RuntimeException
+//        throw new RuntimeException("Graph.removeEdge() is not yet implemented");
+//    }
 
     /**
      * Returns the Node with value "nodeValue" within this graph. If the node doesn't exist, returns null.
@@ -216,12 +220,15 @@ public class Graph {
      * new value.
      *
      * @param newValue the new value of a pre-existing or potentially new node.
+     * @param oldValue the value of the Node we want to change.
      * @spec.requires {@code newValue != null}
      * @spec.modifies this
      * @spec.effects collection of Nodes in this graph if Node with value "newValue" doesn't already exist.
      */
-    public void setNode(String newValue)
+    public void setNode(String newValue, String oldValue)
     {
+        // Since my Node class doesn't have a way to change its label, I will simply replace the
+        // old node with a new copy with the value newValue and same neighbors.
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.setNode() is not yet implemented");
     }
@@ -232,7 +239,8 @@ public class Graph {
      *
      * @param parentNode the parent Node of the Edges we want.
      * @param childNode the child Node of the Edges we want.
-     * @spec.requires {@code parentNode != null && childNode != null}
+     * @spec.requires {@code parentNode != null && childNode != null} and both parentNode and
+     * childNode must exist within this graph.
      * @return a list of Edges with the specified parentNode and childNode. If no Edges with those endpoints
      * exist, then return an empty list.
      */
@@ -242,39 +250,43 @@ public class Graph {
         throw new RuntimeException("Graph.getEdge() is not yet implemented");
     }
 
-//    /**
-//     * //TODO: Fill in this Spec!!!
-//     * @return
-//     */
+    /**
+     * Returns a string representation of this graph.
+     *
+     * @return a String representation of this graph in the form of the String representation of
+     * every individual Nodes within this graph followed by the String representation of every
+     * individual Edge within this graph.
+     *<p> There is a new blank line between each Node String and each Edge String.
+     */
     @Override
     public String toString() {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getEdge() is not yet implemented");
     }
 
-    /**
-     * Standard equality operation.
-     *
-     * @param obj the object to be compared for equality
-     * @return true if and only if 'obj' is an instance of a Graph and 'this' and 'obj' represent
-     * the same graph with the same Nodes and Edges.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.hashCode() is not yet implemented");
-    }
-
-    /**
-     * Standard hashCode function.
-     *
-     * @return an int that all objects equal to this will also return
-     */
-    @Override
-    public int hashCode() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.hashCode() is not yet implemented");
-    }
+//    /**
+//     * Standard equality operation.
+//     *
+//     * @param obj the object to be compared for equality
+//     * @return true if and only if 'obj' is an instance of a Graph and 'this' and 'obj' represent
+//     * the same graph with the same Nodes and Edges.
+//     */
+//    @Override
+//    public boolean equals(Object obj) {
+//        // TODO: Fill in this method, then remove the RuntimeException
+//        throw new RuntimeException("Graph.hashCode() is not yet implemented");
+//    }
+//
+//    /**
+//     * Standard hashCode function.
+//     *
+//     * @return an int that all objects equal to this will also return
+//     */
+//    @Override
+//    public int hashCode() {
+//        // TODO: Fill in this method, then remove the RuntimeException
+//        throw new RuntimeException("Graph.hashCode() is not yet implemented");
+//    }
 
 
     /**
@@ -295,6 +307,8 @@ public class Graph {
     public class Node {
         // Can be accessed and constructed by the client. But both Node and Edge are immutable,
         // so client can only construct
+
+        // To keep immutable, make all fields private.
 
         /**
          * @param value the value the Node is constructed with.
@@ -321,18 +335,19 @@ public class Graph {
             throw new RuntimeException("Node.addParent() is not yet implemented");
         }
 
-        /**
-         * Removes a parent node from this node's list of parents.
-         *
-         * @param parent the parent node to be removed.
-         * @spec.requires {@code parent != null}
-         * @return true if and only if parent was already present &and;&and; was successfully removed.
-         */
-        private boolean removeParent(Node parent)
-        {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Node.removeParent() is not yet implemented");
-        }
+        // THIS IS BEING SAVED FOR POTENTIAL FUTURE DEVELOPMENT
+//        /**
+//         * Removes a parent node from this node's list of parents.
+//         *
+//         * @param parent the parent node to be removed.
+//         * @spec.requires {@code parent != null}
+//         * @return true if and only if parent was already present &and;&and; was successfully removed.
+//         */
+//        private boolean removeParent(Node parent)
+//        {
+//            // TODO: Fill in this method, then remove the RuntimeException
+//            throw new RuntimeException("Node.removeParent() is not yet implemented");
+//        }
 
         /**
          * Adds a child node to this node's list of children.
@@ -348,18 +363,19 @@ public class Graph {
             throw new RuntimeException("Node.addChild() is not yet implemented");
         }
 
-        /**
-         * Removes a child node from this node's list of children.
-         *
-         * @param child the parent node to be removed.
-         * @spec.requires {@code child != null}
-         * @return true if and only if parent was already present &and;&and; was successfully removed.
-         */
-        private boolean removeChild(Node child)
-        {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Node.removeChild() is not yet implemented");
-        }
+        // THIS IS BEING SAVED FOR POTENTIAL FUTURE DEVELOPMENT
+//        /**
+//         * Removes a child node from this node's list of children.
+//         *
+//         * @param child the parent node to be removed.
+//         * @spec.requires {@code child != null}
+//         * @return true if and only if parent was already present &and;&and; was successfully removed.
+//         */
+//        private boolean removeChild(Node child)
+//        {
+//            // TODO: Fill in this method, then remove the RuntimeException
+//            throw new RuntimeException("Node.removeChild() is not yet implemented");
+//        }
 
         /**
          * Returns a copy of this Node's value.
@@ -458,7 +474,9 @@ public class Graph {
      */
     public class Edge {
         // Can be accessed and constructed by the client. But both Node and Edge are immutable,
-        // so client can only construct
+        // so client can only construct and get immutable members.
+
+        // To keep immutable, make all fields private.
 
         /**
          * Constructs an Edge with the specified "label," "parent," and "child."
@@ -466,7 +484,7 @@ public class Graph {
          * @param label the label for this Edge
          * @param parent the parent Node that this Edge starts at.
          * @param child the child Node that this Edge ends at.
-         * @spec.requires {@code label != null && parent != null && child != null}
+         * @spec.requires {@code label != null && parent != null && child != null && !parent.equals(child)}
          */
         public Edge(String label, Node parent, Node child)
         {

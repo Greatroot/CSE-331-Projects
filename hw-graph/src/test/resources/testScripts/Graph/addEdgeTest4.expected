@@ -1,0 +1,11 @@
+# Test adding three edges, two overlapping at parent
+and one overlapping at child | should return true and add both edges
+
+created graph graph
+added node n1 to graph
+added node n2 to graph
+added node n3 to graph
+added node n4 to graph
+added edge e1 from n1 to n2 in graph
+added edge e2 from n1 to n3 in graph
+added edge e3 from n3 to n4 in graph

@@ -1,0 +1,10 @@
+# Test adding two edges to two separate pairs
+ | should return true both time and add both edges.
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2
+AddNode graph n3
+AddNode graph n4
+AddEdge graph n1 n2 e1
+AddEdge graph n3 n4 e2

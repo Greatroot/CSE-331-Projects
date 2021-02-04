@@ -1,0 +1,6 @@
+# Test to see if building an empty graph results in no nodes
+# and no edges
+
+CreateGraph emptyGraph
+
+

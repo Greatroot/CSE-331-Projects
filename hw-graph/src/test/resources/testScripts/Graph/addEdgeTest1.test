@@ -1,0 +1,6 @@
+# Test adding one edge | should return true and add the edge
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2
+AddEdge graph n1 n2 e1
