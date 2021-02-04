@@ -1,0 +1,6 @@
+ # Test adding an edge that consists of a normal label and the same
+ node for both endpoints | should return true and add the edge.
+
+CreateGraph graph
+AddNode graph n1
+AddEdge graph n1 n1 e1

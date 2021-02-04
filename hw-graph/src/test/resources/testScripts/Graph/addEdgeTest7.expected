@@ -1,0 +1,6 @@
+ # Test adding an edge that consists of a normal label and the same
+ node for both endpoints | should return true and add the edge.
+
+created graph graph
+added node n1 to graph
+added edge e1 from n1 to n1 in graph

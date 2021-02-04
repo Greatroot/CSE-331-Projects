@@ -76,17 +76,17 @@ public class Graph {
         throw new RuntimeException("Graph(Node node) constructor is not yet implemented");
     }
 
-    /**
-     * @param nodes the collection of Nodes the new Graph is constructed with.
-     * @spec.requires {@code nodes != null}
-     * @spec.effects Constructs a new Graph with the given nodes. If nodes.isEmpty(), then generate
-     * a new Graph with no nodes.
-     */
-    public Graph(List<Node> nodes)
-    {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph(List<Node> nodes) constructor is not yet implemented");
-    }
+//    /**
+//     * @param nodes the collection of Nodes the new Graph is constructed with.
+//     * @spec.requires {@code nodes != null}
+//     * @spec.effects Constructs a new Graph with the given nodes. If nodes.isEmpty(), then generate
+//     * a new Graph with no nodes.
+//     */
+//    public Graph(List<Node> nodes)
+//    {
+//        // TODO: Fill in this method, then remove the RuntimeException
+//        throw new RuntimeException("Graph(List<Node> nodes) constructor is not yet implemented");
+//    }
 
     /**
      * Returns whether the parent node is connected to the child node via an edge.
@@ -248,6 +248,28 @@ public class Graph {
     {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getEdge() is not yet implemented");
+    }
+
+    /**
+     * Gets and returns all nodes in this graph.
+     *
+     * @return a copy of the list of all nodes in this graph.
+     */
+    public List<Node> getAllNodes()
+    {
+        // TODO: Fill in this method, then remove the RuntimeException
+        throw new RuntimeException("Graph.getAllNodes() is not yet implemented");
+    }
+
+    /**
+     * Gets and returns all edges in this graph.
+     *
+     * @return a copy of the list of all edges in this graph.
+     */
+    public List<Edge> getAllEdges()
+    {
+        // TODO: Fill in this method, then remove the RuntimeException
+        throw new RuntimeException("Graph.getAllEdges() is not yet implemented");
     }
 
     /**
@@ -484,7 +506,9 @@ public class Graph {
          * @param label the label for this Edge
          * @param parent the parent Node that this Edge starts at.
          * @param child the child Node that this Edge ends at.
-         * @spec.requires {@code label != null && parent != null && child != null && !parent.equals(child)}
+         * @spec.requires {@code label != null && parent != null && child != null}
+         *
+         * Note: an edge can start at a node and point to itself.
          */
         public Edge(String label, Node parent, Node child)
         {
