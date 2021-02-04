@@ -84,7 +84,22 @@ interface to a graph. If your design includes multiple classes or interfaces, ex
 included each one; if not, explain whether you considered additional classes and why you decided
 not to include them.
 
-    -
+    - To start with the biggest decision I made, I split the Graph ADT Graph, Node, and Edge each into their
+    own classes so that I could store multiple pieces of data into both a Node and Edge object. I wanted
+    each Node instance to keep track of its parents and children along with its String value. As for Edge,
+    I wanted each instance to keep track of its String label and its two endpoint Nodes. Both classes are
+    public so that I could make subclasses of them in the future and I made all of their methods private
+   (except for some of Node's getters, which retain immutability since they return immutable objects) to
+   ensure immutability. I plan on making the Node class and Edge class implement final fields to also
+   ensure immutability.
+
+   I included the capability for my graph to construct itself with no Nodes, with one Node via a String
+   parameter or Node parameter (to give client options; shouldn't be hard to implement), check if a specific
+   Node has a parent/child relationship to another Node, add a Node (two different ways to give options),
+   add an Edge, get an individual Node or Edge, set a pre-existing Node to a different value, and get
+   all Nodes or Edges in the graph. I feel this functionality is sufficient for my Graph ADT simply because
+   all of the operations I listed above combine to meet the outline of what a Abstract Graph with nodes and
+   edges is. The graph only needs to add and retrieve Nodes and Edges within the graph, and nothing more.
 
 
 ## Section 3
@@ -93,5 +108,8 @@ not to include them.
 What was your testing strategy for this assignment? How do your script tests and JUnit tests
 differ from each other (if they do), and why?
 
-
-
+    - My testing strategy basically consisted of compiling this long list on Google Docs (my actual hero)
+     of all the separate tests I could think of for each and every method in Graph.java. I then went through
+     and implemented all of the tests I could with script tests, which ended up being more broad and general,
+     and implemented the rest of those tests using JUnit. The JUnit tests allowed me to test specific
+     inputs and outputs a lot more precisely and effectively.
