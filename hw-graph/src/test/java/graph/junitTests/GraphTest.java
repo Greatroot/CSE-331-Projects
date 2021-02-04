@@ -23,12 +23,21 @@ public final class GraphTest {
     @Rule
     public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested.
 
-    Graph emptyGraph;
+    Graph emptyGraph, emptyStringedGraph, oneNodeGraph, twoNodeOneEdgeGraph;
 
     @Before
     public void setUp()
     {
         emptyGraph = new Graph();
+
+        emptyStringedGraph = new Graph("");
+
+        oneNodeGraph = new Graph("someValue");
+
+        twoNodeOneEdgeGraph = new Graph("n1");
+        twoNodeOneEdgeGraph.addNode("n2");
+        twoNodeOneEdgeGraph.addEdge();
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -43,4 +52,25 @@ public final class GraphTest {
         assertTrue("failure - graph is not empty, this graph has edges.",emptyGraph.getAllEdges().isEmpty());
     }
 
+    @Test void testGraphWithEmptyStringedNode()
+    {
+        assertTrue("failure - graph doesn't have one Node.", emptyStringedGraph.getAllEdges().size() == 1);
+        assertTrue("failure - graph's node isn not empty stringed.", emptyStringedGraph.getAllNodes().get(0).getValue().equals(""));
+    }
+
+    @Test void testConstructingGraphWithOneNode()
+    {
+        assertTrue("failure - graph doesn't have one Node.", oneNodeGraph.getAllEdges().size() == 1);
+        assertTrue("failure - graph's node isn not empty stringed.", oneNodeGraph.getAllNodes().get(0).getValue().equals("someValue"));
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////  isAdjacent()
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testAreTwoNodesAdjacent()
+    {
+
+    }
 }
