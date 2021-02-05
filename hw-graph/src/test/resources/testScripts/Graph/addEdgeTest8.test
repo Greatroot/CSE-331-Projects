@@ -1,0 +1,5 @@
+# Test pointing a node to itself | should return true and add the edge
+
+CreateGraph graph
+AddNode graph n1
+AddEdge graph n1 n1 e1

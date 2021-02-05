@@ -1,0 +1,5 @@
+# Test pointing a node to itself | should return true and add the edge
+
+created graph graph
+added node n1
+added edge e1 from n1 to n1 in graph
