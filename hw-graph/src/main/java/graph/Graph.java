@@ -45,6 +45,20 @@ import java.util.Set;
  */
 public class Graph {
 
+    // Abstraction Function:
+    // A Graph is made up of Nodes and Edges:
+    //
+    //  nodes in the graph =>
+    //  edges in the graph =>
+
+    // Representation Invariant for each Graph g:
+    //  g.nodes != null
+    //  g.nodes cannot contain duplicates.
+
+    //I use a set here to satisfy the RI.
+    private Set<Node> nodes;
+
+
     /**
      * @spec.effects Constructs a new Graph with no nodes.
      */
@@ -154,8 +168,8 @@ public class Graph {
      * @param childNode the child node of the edges we want.
      * @spec.requires {@code parentNode != null && childNode != null} and both parentNode and
      * childNode must exist within this graph.
-     * @return a list of edge labels with the specified parentNode and childNode. If no edges with those endpoints
-     * exist, then return an empty list.
+     * @return a list of edge labels with the specified parentNode and childNode.
+     * If no edges with those endpoints exist, then return an empty list.
      */
     public List<String> getEdge(String parentNode, String childNode)
     {
@@ -198,10 +212,314 @@ public class Graph {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getEdge() is not yet implemented");
     }
+
+    /**
+     * Throws an exception if the representation invariant is violated.
+     */
+    private void checkRep() {
+        //  g.nodes != null
+        assert (this.nodes != null);
+    }
+
+    /**
+     * A <b>Node</b> represents a simple <b>immutable</b> data point on our Graph, and is made up of
+     * a single String value and all of the edges pointing to and away from this node.
+     *
+     * <p> Each node can be connected one directionally via an edge. For example, node "A"
+     * can be connected to node "B" by edge "E" and "B" is directly reachable from "A" (A, B).
+     * Because of one-way directionality, "A" cannot be accessed by "B" using edge "E."
+     * A new edge must be made for this to happen.
+     *
+     *<p> This "one directionality" of how nodes are connected by edges is mainly kept track of by the
+     * Edge class and it instances itself, but nodes do keep track of these relationships as well
+     *
+     * <p> For the purposes of simplicity, it is invalid for a Node to have an empty String as a value.
+     *
+     */
+    private class Node {
+
+        // Abstract Function:
+        //
+        //  value =>
+        //  parent nodes =>
+        //  children nodes =>
+
+        // Representation Invariant for every Node n:
+        //  n.value && n.parent && n.children != null
+        //  n.value != empty string
+        //  There can't exist duplicate edges in n.parents.
+        //  There can't exist duplicate edges in n.children.
+
+
+
+        // I use sets to satisfy the RI.
+        private final String value; // The value of the node
+        private Set<Edge> parents; // All of the edges that point to this node.
+        private Set<Edge> children; // All of the edges that point away from this edge.
+
+        /**
+         * @param value the value the Node is constructed with.
+         * @spec.requires {@code value != null}
+         * @spec.effects Constructs a new Node instance with the value "value."
+         */
+        public Node(String value)
+        {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node constructor is not yet implemented");
+        }
+
+        /**
+         * Adds a parent node to this node's list of parents.
+         *
+         * @param newParent the parent node to be added.
+         * @spec.requires {@code newParent != null}
+         * @return true if and only if the new parent node is successfully added &and;&and; didn't previously
+         * exist before.
+         */
+        private boolean addParent(Node newParent)
+        {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.addParent() is not yet implemented");
+        }
+
+        /**
+         * Adds a child node to this node's list of children.
+         *
+         * @param newChild the child node to be added.
+         * @spec.requires {@code newChild != null}
+         * @return true if and only if the new child node is successfully added &and;&and; didn't previously
+         * exist before.
+         */
+        private boolean addChild(Node newChild)
+        {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.addChild() is not yet implemented");
+        }
+
+        /**
+         * Returns a copy of this Node's value.
+         *
+         * @return a completely separate copy in memory of this Node's value.
+         */
+        public String getValue()
+        {
+            // Make sure to return a completely separate copy to keep this class immutable.
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.getValue() is not yet implemented");
+        }
+
+        /**
+         * Returns all parents of this.
+         *
+         * @return the list of Nodes parent to this. If there are no parents, returns empty list.
+         */
+        public List<Node> getParents()
+        {
+            //Should not break the immutability of Node since the underlying elements of List<Node>
+            // are immutable themselves.
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.getParents() is not yet implemented");
+        }
+
+        /**
+         * returns all children of this.
+         *
+         * @return a list of nodes child to this. If there are no children, returns empty list.
+         */
+        public List<Node> getChildren()
+        {
+            //Should not break the immutability of Node since the underlying elements of List<Node>
+            // are immutable themselves
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.getChildren() is not yet implemented");
+        }
+
+        /**
+         * Returns a string representation of this Node.
+         *
+         * @return a String representation of this Node by printing out the value and the parent and children
+         * lists.
+         */
+        @Override
+        public String toString() {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.toString() is not yet implemented");
+        }
+
+        /**
+         * Standard equality operation.
+         *
+         * @param obj the object to be compared for equality
+         * @return true if and only if 'obj' is an instance of a Node and 'this' and 'obj' represent
+         * the same Node with the same value.
+         */
+        @Override
+        public boolean equals(Object obj) {
+            // In this current version of Graph, Node.equals() should only be used to prevent duplicates.
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.equals() is not yet implemented");
+        }
+
+        /**
+         * Standard hashCode function.
+         *
+         * @return an int that all objects equal to this will also return
+         */
+        @Override
+        public int hashCode() {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Node.hashCode() is not yet implemented");
+        }
+
+        /**
+         * Throws an exception if the representation invariant is violated.
+         */
+        private void checkRep() {
+            // n.value && n.parent && n.children != null
+            assert (this.value != null);
+            assert (this.parents != null);
+            assert (this.children != null);
+
+            // n.value != empty string
+            assert (!this.value.isEmpty());
+        }
+    }
+
+    /**
+     * A <b>Edge</b> represents an <b>immutable</b> one-directional edge connecting two Nodes on our graph,
+     * and is made up of a single String label and the edge's starting (parent) Node and ending (child) Node.
+     *
+     * <p> Each edge is one directional, meaning it represents a vector pointing FROM one Node TO another
+     * Node. For example, node "A" can be connected to node "B" by edge "E" and "B" is directly
+     * reachable from "A" (A, B). Because of one-way directionality, "A" cannot be accessed
+     * by "B" using edge "E." A new edge must be made for this to happen.
+     *
+     *<p> This "one directionality" of how nodes are connected by edges is mainly kept track of by the
+     * Edge class and it instances itself, but nodes do keep track of these relationships as well.
+     *
+     * For the purposes of simplicity, it is valid for an Edge to have an empty String as a label.
+     * An empty String also counts as a unique value for the purposes of comparing two Edges with the
+     * same parent and child nodes.
+     *
+     * @spec.specfield endpoint : Node // Either Node that makes up an edge. If Edge A has the parent Node B
+     * and the child Node C, then both Nodes B and C are endpoints of A.
+     */
+    private class Edge {
+
+        // Abstract Function:
+        //
+        // label =>
+        // parent node =>
+        // child node =>
+
+        // Representation Invariant for every Edge e:
+        //  e.label && e.parent && e.child != null
+        //  e.label != empty string
+
+
+        private final String label;
+        private final Node parent;
+        private final Node child;
+
+        /**
+         * Constructs an Edge with the specified "label," "parent," and "child."
+         *
+         * @param label the label for this Edge
+         * @param parent the parent Node that this Edge starts at.
+         * @param child the child Node that this Edge ends at.
+         * @spec.requires {@code label != null && parent != null && child != null}
+         *
+         * Note: an edge can start at a node and point to itself.
+         */
+        public Edge(String label, Node parent, Node child)
+        {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge constructor is not yet implemented");
+        }
+
+        /**
+         * Returns this Edge's label
+         *
+         * @return a separate copy of this Edge's label.
+         */
+        private String getLabel()
+        {
+            // Returns a copy to maintain immutability.
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge.getLabel() is not yet implemented");
+        }
+
+        /**
+         * Returns the parent Node.
+         *
+         * @return a separate copy of this Edge's parent Node.
+         */
+        private Node getParent()
+        {
+            // Returns a copy to maintain immutability.
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge.getParent() is not yet implemented");
+        }
+
+        /**
+         * Returns the child Node.
+         *
+         * @return a separate copy of this Edge's child Node.
+         */
+        private Node getChild()
+        {
+            // Returns a copy to maintain immutability.
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge.getChild() is not yet implemented");
+        }
+
+        /**
+         * Returns a string representation of this Edge.
+         *
+         * @return a String representation of this Node by printing out the label and the parent and children
+         * Nodes.
+         */
+        @Override
+        public String toString() {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge.toString() is not yet implemented");
+        }
+
+        /**
+         * Standard equality operation.
+         *
+         * @param obj the object to be compared for equality
+         * @return true if and only if 'obj' is an instance of an Edge and 'this' and 'obj' represent
+         * the same Edges with the same label and endpoints.
+         */
+        @Override
+        public boolean equals(Object obj) {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge.toString() is not yet implemented");
+        }
+
+        /**
+         * Standard hashCode function.
+         *
+         * @return an int that all objects equal to this will also return
+         */
+        @Override
+        public int hashCode() {
+            // TODO: Fill in this method, then remove the RuntimeException
+            throw new RuntimeException("Edge.toString() is not yet implemented");
+        }
+
+        /**
+         * Throws an exception if the representation invariant is violated.
+         */
+        private void checkRep() {
+            //  e.label && e.parent && e.child != null
+            assert (this.label != null);
+            assert (this.parent != null);
+            assert (this.child != null);
+
+            //  e.label != empty string
+            assert (!this.label.isEmpty());
+        }
+    }
 }
-
-
-    // ***************** I PLAN ON IMPLEMENTING A PRIVATE NODE CLASS *******************
-
-
-    // ***************** I PLAN ON IMPLEMENTING A PRIVATE EDGE CLASS *******************

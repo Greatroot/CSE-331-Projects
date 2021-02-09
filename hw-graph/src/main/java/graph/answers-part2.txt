@@ -16,15 +16,27 @@ A few examples of possible Graph representations:
 representations listed above (for example, in terms of runtime complexity, space
 complexity, or ease of implementation).
 
+    A: Relatively easy to implement, since you can easily access each edge in the Graph through a high abstraction.
+    Is at a disadvantage when it comes to searching nodes, since they will be hidden under a layer of abstraction.
 
+    B: Relatively fast at creating a graph and adding nodes and edges. This representation is
+    disadvantaged when it comes to removing vertices and edges though, since it needs to find all
+    vertices or edges.
 
+    C: Relatively fast at adding and removing edges, but very slow when it comes to adding and removing
+    nodes, since the matrix must be resized/copied every time.
 
 2. In two to three sentences, describe the representation you chose and explain why you
 chose it. If you chose to use a different representation than one of the three we described
 above, be sure to list its advantages and disadvantages, too.
 
-
-
+    - I originally decided on a mix between a collection of edges and an adjacency list. The choice to have both
+    is somewhat of an artifact from the previous version of my Graph, where I wanted nodes and edges
+    to be their own public objects that the user could create and manipulate separately. I wanted both
+    edges and nodes to store the information of their place in the graph separately, and so I implemented
+    both a collection of edges and an adjacency list. When I moved to make both of those inner classes
+    private, I moved my representation to just be an adjacency list where nodes store adjacent edges
+    instead of adjacent nodes because of its time complexity advantages with adding nodes and edges.
 
 ## Section 4
 ###########################################################################
@@ -34,7 +46,7 @@ above, be sure to list its advantages and disadvantages, too.
 1. Describe any new tests you added and why you added them, or why you feel that your original
 tests alone are sufficient.
 
-
+    -
 
 
 2. Did you make any changes to your specifications as you were implementing your Graph? (yes/no)
