@@ -2,6 +2,16 @@ package graph;
 
 import java.util.*;
 
+// Questions for Hal:
+//  *Should we return List<>() or ArrayList<>()?
+//  *Is an object immutable if the object itself can't be modified (ie. there are no accessible modifiers)?
+//  *Or do the pointers have to be immutable as well? Is it enough to just have no accessible modifiers?
+//  *Is there a way to getChildren() without it being in O(n) or O(n^2) time? It seems impossible to me.
+//  *Should I just keep my getAllEdges the way it is or should I make my private inner classes public just for
+//  data viewing purposes, where everything inside is private otherwise. If all the methods inside a public inner ADT
+//  are private, then is there any use putting specs on them?
+//  *What exactly does ListChildren even want? Does it want the user to pass in an edge label for a parent node
+//  * so that a child node can be found?
 /**
  * <b>Graph</b> represents a <b>mutable</b> directed labeled graph, which is a collection of
  * nodes and edges. A node is simply made up of a String value while an edge consists of a String label
@@ -46,7 +56,7 @@ public class Graph {
 
     // TODO: Add Exceptions to methods to replace @requires in my Graph methods.
 
-    // Abstraction Function:
+    // Abstraction Function: // TODO: Ask about my AF
     // A Graph is made up of Nodes and Edges:
     //      node in the graph => each Node in the nodes Set.
     //      edge in the graph => each Node in the nodes Set stores all of its incident Edges.
@@ -56,14 +66,14 @@ public class Graph {
     //  g.nodes cannot contain duplicates.
 
     //I use a set here to satisfy the RI.
-    private Set<Node> nodes;
+    private Map<Node, Set<Edge>> nodes; // Make sure to not expose the rep
 
     /**
      * @spec.effects Constructs a new Graph with no nodes.
      */
     public Graph()
     {
-        this.nodes = new HashSet<Node>();
+        this.nodes = new HashMap<Node, Set<Edge>>();
         checkRep();
     }
 
@@ -74,8 +84,8 @@ public class Graph {
      */
     public Graph(String nodeValue)
     {
-        this.nodes = new HashSet<Node>();
-        this.nodes.add(new Node(nodeValue));
+        this.nodes = new HashMap<Node, Set<Edge>>();
+        this.nodes.put(new Node(nodeValue), new HashSet<Edge>());
         checkRep();
     }
 
@@ -84,28 +94,30 @@ public class Graph {
      *
      * @param parent the parent node to test
      * @param child the child node to test
-     * @spec.requires {@code parent != null && child != null} and both Nodes must exist in the Graph.
      * @return true if and only if parent node is connected to a child node via an edge.
+     * Returns false otherwise, including if either node passed DNE within the graph.
+     * @throws IllegalArgumentException if parent or child are null.
      */
-    public boolean isAdjacent(String parent, String child)
+    public boolean isAdjacent(String parent, String child) throws IllegalArgumentException
     {
         this.checkRep();
-        Node parentNode = new Node(parent);
-        Edge childEdge = new Edge(child, parentNode, new Node(child));
-        // The parent node keeps track of its children through a Set of Edges.
-
-        // I can assume that both nodes do exist within the graph.
-        for(Node node : this.nodes)
+        if(parent == null || child == null)
         {
-            if(node.equals(parentNode))
+            throw new IllegalArgumentException();
+        }
+
+        Node parentNode = new Node(parent);
+        Set<Edge> childEdges = this.nodes.get(parentNode);
+
+        for(Edge childEdge : childEdges)
+        {
+            if(childEdge.getChild().getValue().equals(child))
             {
-                if(node.getChildren().contains(childEdge))
-                {
-                    this.checkRep();
-                    return true;
-                }
+                this.checkRep();
+                return true;
             }
         }
+
         this.checkRep();
         return false;
     }
@@ -173,7 +185,7 @@ public class Graph {
             {
                 if(node.equals(parent))
                 {
-                    node.addChild(new Edge(label, parent, child));
+                    node.addChild(new Edge(label, node, child));
                     this.checkRep();
                     return true;
                 }
@@ -211,21 +223,93 @@ public class Graph {
         return false;
     }
 
+    // TODO: Make tests to test returning null if either node isn't in the graph.
     /**
      * Returns a collection of edges that connect parentNode to childNode. If no such edges exist, returns
      * an empty list.
      *
      * @param parentNode the parent node of the edges we want.
      * @param childNode the child node of the edges we want.
-     * @spec.requires {@code parentNode != null && childNode != null} and both parentNode and
-     * childNode must exist within this graph.
      * @return a list of edge labels with the specified parentNode and childNode.
      * If no edges with those endpoints exist, then return an empty list.
+     * If either edge doesn't exist within the graph, then return null.
+     * @throws IllegalArgumentException if either parentNode or childNode are null
      */
     public List<String> getEdge(String parentNode, String childNode)
     {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getEdge() is not yet implemented");
+        // The client should have access to all three components of the edge: the label, the parent,
+        // and the child since they passed in the latter two.
+        this.checkRep();
+        if(parentNode == null || childNode == null)
+        {
+            throw new IllegalArgumentException();
+        }
+
+        Node parent = new Node(parentNode);
+        Node child = new Node(childNode);
+        if(!this.nodes.contains(parent) || !this.nodes.contains(child))
+        {
+            this.checkRep();
+            return null;
+        }
+
+        List<String> edgeLabels = new ArrayList<String>();
+        for(Node node : this.nodes)
+        {
+            if(node.equals(parent))
+            {
+                // Found the parent node, now I need to search for the child node.
+                for(Edge edge : node.getChildren())
+                {
+                    if(edge.getChild().equals(child))
+                    {
+                        edgeLabels.add(edge.getLabel());
+                    }
+                }
+            }
+        }
+
+        this.checkRep();
+        return edgeLabels;
+    }
+
+    /**
+     * returns all children nodes of the parent node.
+     *
+     * @param parent the value of the parent node whose children we want to retrieve.
+     * @return a list of child nodes. If there are no children, returns empty list.
+     * If parent doesn't exist within the graph, return null.
+     * @throws IllegalArgumentException if the String parent is null or empty.
+     */ // Perhaps I should return a Map<String, String> (edgeLabel, childNodeValue).
+    private List<String> getChildren(String parent) throws IllegalArgumentException
+    {
+        this.checkRep(); // Should I also pass in an edge label? Is that what ListChildren wants?
+        if(parent == null || parent.isEmpty())
+        {
+            throw new IllegalArgumentException();
+        }
+
+        Node parentNode = new Node(parent);
+        if(!this.nodes.contains(parentNode))
+        {
+            this.checkRep();
+            return null;
+        }
+
+        List<String> childrenNodes = new ArrayList<String>();
+        for(Node node : this.nodes)
+        {
+            if(node.equals(parentNode))
+            {
+                for(Edge edge : node.getChildren()) // Should I attempt to shorten this?
+                {
+                    childrenNodes.add(edge.getChild().value);
+                }
+            }
+        }
+
+        this.checkRep();
+        return childrenNodes;
     }
 
     /**
@@ -235,8 +319,15 @@ public class Graph {
      */
     public List<String> getAllNodes()
     {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getAllNodes() is not yet implemented");
+        this.checkRep();
+        List<String> nodeValues = new ArrayList<String>();
+        for(Node node : this.nodes)
+        {
+            nodeValues.add(node.getValue());
+        }
+
+        this.checkRep();
+        return nodeValues;
     }
 
     /**
@@ -246,8 +337,18 @@ public class Graph {
      */
     public List<String> getAllEdges()
     {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getAllEdges() is not yet implemented");
+        this.checkRep();
+        List<String> edgeLabels = new ArrayList<String>();
+        for(Node node : this.nodes)
+        {
+            for(Edge edge : node.getChildren())
+            {
+                edgeLabels.add(edge.getLabel());
+            }
+        }
+
+        this.checkRep();
+        return edgeLabels;
     }
 
     /**
@@ -312,11 +413,12 @@ public class Graph {
         //  There can't exist duplicate edges in n.children.
 
 
-
+        // TODO: Make sure I clean up these comments.
         // I use sets to satisfy the RI.
+        // Must be lists since node can have multiple edges going to one child.
         private final String value; // The value of the node
-        private Set<Edge> parents; // All of the edges that point to this node.
-        private Set<Edge> children; // All of the edges that point away from this edge.
+//        private final List<Edge> parents; // All of the edges that point to this node. // TODO: Remove this
+//        private final List<Edge> children; // All of the edges that point away from this edge.
 
 //        /**
 //         * @param value the value the Node is constructed with.
@@ -326,43 +428,38 @@ public class Graph {
         public Node(String value)
         {
             this.value = value;
-            this.parents = new HashSet<Edge>();
-            this.children = new HashSet<Edge>();
+            this.children = new ArrayList<Edge>();
             this.checkRep();
         }
 
-//        /**
-//         * Adds the edge that connects from the parent node to this node.
-//         *
-//         * @param newParent the edge to be added
-//         * @spec.requires {@code newParent != null}
-//         * @return true if and only if the new parent edge is successfully added &and;&and; didn't previously
-//         * exist before.
-//         */
-        private boolean addParent(Edge newParent)
-        {
-            this.checkRep();
-            boolean didAdd = this.parents.add(newParent);
-            this.checkRep();
-
-            return didAdd;
-        }
+////        /**
+////         * Adds the edge that connects from the parent node to this node.
+////         *
+////         * @param newParent the edge to be added
+////         * @spec.requires {@code newParent != null}
+////         * @return true if and only if the new parent edge is successfully added &and;&and; didn't previously
+////         * exist before.
+////         */
+//        private boolean addParent(Edge newParent)
+//        {
+//            this.checkRep();
+//            boolean didAdd = this.parents.add(newParent);
+//            this.checkRep();
+//
+//            return didAdd;
+//        }
 
 //        /**
 //         * Adds the edge that connects from this node to its child node.
 //         *
 //         * @param newChild the child edge to be added.
 //         * @spec.requires {@code newChild != null}
-//         * @return true if and only if the new edge is successfully added &and;&and; didn't previously
-//         * exist before.
 //         */
-        private boolean addChild(Edge newChild)
+        private void addChild(Edge newChild)
         {
             this.checkRep();
-            boolean didAdd = this.parents.add(newChild);
+            this.children.add(newChild);
             this.checkRep();
-
-            return didAdd;
         }
 
 //        /**
@@ -377,33 +474,33 @@ public class Graph {
             return this.value;
         }
 
-//        /**
-//         * Returns all parents of this.
-//         *
-//         * @return the list of Edges parent to this. If there are no parents, returns empty list.
-//         */
-        private Set<Edge> getParents()
-        {
-            //Should not break the immutability of Node since the underlying elements of List<Node>
-            // are immutable themselves.
-            this.checkRep();
-            Set<Edge> unmodset = Collections.unmodifiableSet(this.parents);
-            this.checkRep();
-
-            return unmodset;
-        }
+////        /**
+////         * Returns all parents of this.
+////         *
+////         * @return the list of Edges parent to this. If there are no parents, returns empty list.
+////         */
+//        private Set<Edge> getParents()
+//        {
+//            //Should not break the immutability of Node since the underlying elements of List<Node>
+//            // are immutable themselves.
+//            this.checkRep();
+//            Set<Edge> unmodset = Collections.unmodifiableSet(this.parents);
+//            this.checkRep();
+//
+//            return unmodset;
+//        }
 
 //        /**
 //         * returns all children of this.
 //         *
 //         * @return a list of Edges child to this. If there are no children, returns empty list.
 //         */
-        private Set<Edge> getChildren()
+        private List<Edge> getChildren()
         {
             //Should not break the immutability of Node since the underlying elements of List<Node>
             // are immutable themselves
             this.checkRep();
-            Set<Edge> unmodset = Collections.unmodifiableSet(this.children);
+            List<Edge> unmodset = Collections.unmodifiableList(this.children);
             this.checkRep();
 
             return unmodset;
@@ -417,8 +514,7 @@ public class Graph {
 //         */
         @Override
         public String toString() {
-            return "This Node " + this.value + " has " + this.parents.size() + " parent edges and "
-                    + this.children.size() + " children edges.";
+            return "This Node " + this.value + " has " + this.children.size() + " children edges.";
         }
 
 //        /**
@@ -458,9 +554,8 @@ public class Graph {
 //         * Throws an exception if the representation invariant is violated.
 //         */
         private void checkRep() {
-            // n.value && n.parent && n.children != null
+            // n.value && n.children != null
             assert (this.value != null);
-            assert (this.parents != null);
             assert (this.children != null);
 
             // n.value != empty string

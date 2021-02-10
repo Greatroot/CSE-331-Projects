@@ -71,7 +71,7 @@ public final class GraphTest {
     @Test
     public void testConstructingGraphWithOneNode()
     {
-        assertTrue("failure - graph doesn't have one Node.", oneNodeGraph.getAllEdges().size() == 1);
+        assertTrue("failure - graph doesn't have one Node.", oneNodeGraph.getAllNodes().size() == 1);
         assertTrue("failure - graph's node isn not empty stringed.", oneNodeGraph.getAllNodes().get(0).equals("n1"));
     }
 
@@ -85,7 +85,7 @@ public final class GraphTest {
         assertTrue("failure - neighbors should be adjacent", threeNodesOneEdgeGraph.isAdjacent("n1", "n2"));
         assertFalse("failure - The roles of two neighbors have been incorrectly reversed",
                 threeNodesOneEdgeGraph.isAdjacent("n2", "n1"));
-        assertTrue("failure - these nodes are not neighbors", threeNodesOneEdgeGraph.isAdjacent("n3", "n4"));
+        assertTrue("failure - these nodes are not neighbors", !threeNodesOneEdgeGraph.isAdjacent("n3", "n4"));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -117,76 +117,76 @@ public final class GraphTest {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    ////  getNode()
+    ////  containsNode()
     ///////////////////////////////////////////////////////////////////////////////////////
 
-    @Test
-    public void testGettingNodeDNE() // Test getting a node that DNE within the graph | should return null
-    {
-        assertNull("failure - expected a null", oneNodeGraph.getNode("DNE"));
-    }
+//    @Test
+//    public void testGettingNodeDNE() // Test getting a node that DNE within the graph | should return null
+//    {
+//        assertNull("failure - expected a null", oneNodeGraph.getNode("DNE"));
+//    }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ////  setNode()
     ///////////////////////////////////////////////////////////////////////////////////////
 
-    @Test // Test setting a node that exists to a new value | should change the node's value to new value.
-    public void testSettingNodeToNewValue()
-    {
-        String failMessage = "failure - setNode() did not correctly change value";
-        oneNodeGraph.setNode("n1", "newValue");
-        assertEquals(failMessage, "newValue", oneNodeGraph.getNode("newValue"));
-    }
-
-    @Test // Test setting a node that exists to a new value | should change the node's value to new value.
-    public void testSettingMultipleNodesNoEdgesToNewValue()
-    {
-        String failMessage = "failure - setNode() did not correctly change multiple values";
-        fourNodesGraph.setNode("n1", "newValue1");
-        fourNodesGraph.setNode("n4", "newValue4");
-        fourNodesGraph.setNode("n2", "newValue2");
-        assertEquals(failMessage, "newValue1", fourNodesGraph.getNode("newValue1"));
-        assertEquals(failMessage, "newValue4", fourNodesGraph.getNode("newValue4"));
-        assertEquals(failMessage, "newValue2", fourNodesGraph.getNode("newValue2"));
-    }
-
-    @Test
-    public void testSettingNodeToNewValueInMultipleGraphs()
-    {
-        String failMessage = "failure - setNode() did not work with multiple graphs.";
-        oneNodeGraph.setNode("n1", "newValue1");
-        fourNodesGraph.setNode("n3", "newValue3");
-        assertEquals(failMessage, "newValue1", oneNodeGraph.getNode("newValue1"));
-        assertEquals(failMessage, "newValue4", fourNodesGraph.getNode("newValue4"));
-    }
-
-    @Test
-    public void testSettingNodeToNewValueWithEdge()
-    {
-        String failMessage = "failure - setNode() did not work with an Edge in the graph.";
-        threeNodesOneEdgeGraph.setNode("n1", "newValue1");
-        assertEquals(failMessage, "newValue1", threeNodesOneEdgeGraph.getNode("newValue1"));
-    }
-
-    @Test
-    public void testSettingMultipleNodesWithEdge()
-    {
-        String failMessage = "failure - setNode() did not correctly change multiple values with edge";
-        threeNodesOneEdgeGraph.setNode("n1", "newValue1");
-        threeNodesOneEdgeGraph.setNode("n3", "newValue3");
-        threeNodesOneEdgeGraph.setNode("n2", "newValue2");
-        assertEquals(failMessage, "newValue1", threeNodesOneEdgeGraph.getNode("newValue1"));
-        assertEquals(failMessage, "newValue3", threeNodesOneEdgeGraph.getNode("newValue3"));
-        assertEquals(failMessage, "newValue2", threeNodesOneEdgeGraph.getNode("newValue2"));
-    }
-
-    @Test
-    public void testSettingNodeThatDNE()
-    {
-        String failMessage = "failure - setNode() didn't create a new node from one that DNE.";
-        oneNodeGraph.setNode("n2", "newValue2");
-        assertEquals(failMessage, "newValue2", oneNodeGraph.getNode("newValue2"));
-    }
+//    @Test // Test setting a node that exists to a new value | should change the node's value to new value.
+//    public void testSettingNodeToNewValue()
+//    {
+//        String failMessage = "failure - setNode() did not correctly change value";
+//        oneNodeGraph.setNode("n1", "newValue");
+//        assertEquals(failMessage, "newValue", oneNodeGraph.getNode("newValue"));
+//    }
+//
+//    @Test // Test setting a node that exists to a new value | should change the node's value to new value.
+//    public void testSettingMultipleNodesNoEdgesToNewValue()
+//    {
+//        String failMessage = "failure - setNode() did not correctly change multiple values";
+//        fourNodesGraph.setNode("n1", "newValue1");
+//        fourNodesGraph.setNode("n4", "newValue4");
+//        fourNodesGraph.setNode("n2", "newValue2");
+//        assertEquals(failMessage, "newValue1", fourNodesGraph.getNode("newValue1"));
+//        assertEquals(failMessage, "newValue4", fourNodesGraph.getNode("newValue4"));
+//        assertEquals(failMessage, "newValue2", fourNodesGraph.getNode("newValue2"));
+//    }
+//
+//    @Test
+//    public void testSettingNodeToNewValueInMultipleGraphs()
+//    {
+//        String failMessage = "failure - setNode() did not work with multiple graphs.";
+//        oneNodeGraph.setNode("n1", "newValue1");
+//        fourNodesGraph.setNode("n3", "newValue3");
+//        assertEquals(failMessage, "newValue1", oneNodeGraph.getNode("newValue1"));
+//        assertEquals(failMessage, "newValue4", fourNodesGraph.getNode("newValue4"));
+//    }
+//
+//    @Test
+//    public void testSettingNodeToNewValueWithEdge()
+//    {
+//        String failMessage = "failure - setNode() did not work with an Edge in the graph.";
+//        threeNodesOneEdgeGraph.setNode("n1", "newValue1");
+//        assertEquals(failMessage, "newValue1", threeNodesOneEdgeGraph.getNode("newValue1"));
+//    }
+//
+//    @Test
+//    public void testSettingMultipleNodesWithEdge()
+//    {
+//        String failMessage = "failure - setNode() did not correctly change multiple values with edge";
+//        threeNodesOneEdgeGraph.setNode("n1", "newValue1");
+//        threeNodesOneEdgeGraph.setNode("n3", "newValue3");
+//        threeNodesOneEdgeGraph.setNode("n2", "newValue2");
+//        assertEquals(failMessage, "newValue1", threeNodesOneEdgeGraph.getNode("newValue1"));
+//        assertEquals(failMessage, "newValue3", threeNodesOneEdgeGraph.getNode("newValue3"));
+//        assertEquals(failMessage, "newValue2", threeNodesOneEdgeGraph.getNode("newValue2"));
+//    }
+//
+//    @Test
+//    public void testSettingNodeThatDNE()
+//    {
+//        String failMessage = "failure - setNode() didn't create a new node from one that DNE.";
+//        oneNodeGraph.setNode("n2", "newValue2");
+//        assertEquals(failMessage, "newValue2", oneNodeGraph.getNode("newValue2"));
+//    }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ////  getEdge()
@@ -196,7 +196,7 @@ public final class GraphTest {
     public void testNoEdgesBetweenTwoNodes()
     {
         String failMessage = "failure - getEdge() did not return an empty list of edges.";
-        assertEquals(failMessage, new ArrayList<>(), fourNodesGraph.getEdge("DNE", "DNE2"));
+        assertEquals(failMessage, new ArrayList<>(), fourNodesGraph.getEdge("n1", "n2"));
     }
 
     @Test
@@ -211,7 +211,7 @@ public final class GraphTest {
     public void testMultipleEdgesBetweenTwoNodes()
     {
         edges.add("e1");
-        edges.add("e3");
+        edges.add("e2");
         String failMessage = "failure - getEdge() did not return the two edges.";
         assertEquals(failMessage, edges, threeNodesThreeEdgesGraph.getEdge("n1", "n2"));
     }
