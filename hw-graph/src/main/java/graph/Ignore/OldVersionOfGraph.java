@@ -209,21 +209,40 @@
 //    }
 //
 //    /**
-//     * Gives specified Node the new value "newValue." If no such Node exists, then create a new Node with
+//     * Gives specified node the new value "newValue." If no such node exists, then create a new node with
 //     * new value.
 //     *
 //     * @param newValue the new value of a pre-existing or potentially new node.
-//     * @param oldValue the value of the Node we want to change.
-//     * @spec.requires {@code newValue != null}
+//     * @param oldValue the value of the node we want to change.
+//     * @throws IllegalArgumentException if oldValue or newValue are null or if newValue
+//     * is an empty String.
 //     * @spec.modifies this
-//     * @spec.effects collection of Nodes in this graph if Node with value "newValue" doesn't already exist.
+//     * @spec.effects collection of nodes in this graph if node with value "newValue" doesn't already exist.
 //     */
-//    public void setNode(String newValue, String oldValue)
+//    public void setNode(String oldValue, String newValue)
 //    {
-//        // Since my Node class doesn't have a way to change its label, I will simply replace the
+//        // Since my Node class is immutable, I will simply replace the
 //        // old node with a new copy with the value newValue and same neighbors.
-//        // TODO: Fill in this method, then remove the RuntimeException
-//        throw new RuntimeException("Graph.setNode() is not yet implemented");
+//        this.checkRep();
+//        if(oldValue == null || newValue == null)
+//        {
+//            throw new IllegalArgumentException();
+//        }
+//
+//        Node oldNode = new Node(oldValue);
+//        Node newNode = new Node(newValue);
+//        if(this.nodes.contains(oldNode)) // Ask if using contains to search instead of just doing the for loop is double the work.
+//        {
+//            Iterator<Node> i = this.nodes.iterator();
+//            while(i.hasNext())
+//            {
+//                Node node = i.next();
+//                if(node.equals(oldNode))
+//                {
+//
+//                }
+//            }
+//        }
 //    }
 //
 //    /**
