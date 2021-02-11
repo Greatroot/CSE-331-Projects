@@ -64,6 +64,8 @@ public final class GraphTest {
     // TODO: Test Edge class methods?
     // TODO: Test to make sure all methods produce nulls when expected.
     // TODO: Test to make sure addNode and addEdge work with empty strings.
+    // TODO: Check HashSet and HashMap spec for proper equals and hashCode
+    // TODO: Make sure I write tests for Edge
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ////  Constructor

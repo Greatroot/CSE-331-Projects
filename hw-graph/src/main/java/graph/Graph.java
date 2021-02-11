@@ -298,7 +298,7 @@ public class Graph {
         return edgeLabels;
     }
 
-    /**
+    /** // TODO: make a version of getChildren that returns the edge labels.
      * returns all children nodes of the parent node.
      *
      * @param parentNode the value of the parent node whose children we want to retrieve.
