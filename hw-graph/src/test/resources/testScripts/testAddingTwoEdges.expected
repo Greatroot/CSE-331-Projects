@@ -1,5 +1,5 @@
 # Test adding two edges to two separate pairs
- | should return true both time and add both edges.
+ | should add both edges.
 
 created graph graph
 added node n1 to graph

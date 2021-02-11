@@ -1,0 +1,5 @@
+# Tests listing children for a one node graph | should return no children.
+
+created graph graph
+added node n1 to graph
+the children of n1 in graph are:

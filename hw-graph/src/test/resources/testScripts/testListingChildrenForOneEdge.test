@@ -1,0 +1,8 @@
+# Tests listing children for a node with one edge
+| Should return that one child
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2
+AddEdge graph n1 n2 e1
+ListChildren graph n1

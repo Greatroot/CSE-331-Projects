@@ -1,6 +1,0 @@
-#Test adding two nodes to graph | should return true and
-add the two nodes to graph.
-
-created graph graph
-added n1 to graph
-added n2 to graph

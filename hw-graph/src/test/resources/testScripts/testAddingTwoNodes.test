@@ -1,0 +1,5 @@
+#Test adding two nodes to graph | should add the two nodes to graph.
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2

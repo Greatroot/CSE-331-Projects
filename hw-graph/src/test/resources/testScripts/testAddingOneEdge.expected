@@ -1,4 +1,4 @@
-# Test adding one edge | should return true and add the edge
+# Test adding one edge | should add the edge
 
 created graph graph
 added node n1 to graph

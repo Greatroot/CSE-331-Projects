@@ -24,14 +24,18 @@ public final class GraphTest {
     @Rule
     public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested.
 
+    private final String EXPECTED_TRUE = "failure - expected true but was false";
+    private final String EXPECTED_FALSE = "failure - expected false but was true";
+
+
     Graph emptyGraph, oneNodeGraph, threeNodesOneEdgeGraph, fourNodesGraph, threeNodesThreeEdgesGraph;
     List<String> edges;
-    Set<String> nodes;
+    List<String> nodes;
 
     @Before
     public void setUp()
     {
-        nodes = new HashSet<String>();
+        nodes = new ArrayList<String>();
         edges = new ArrayList<String>();
 
         emptyGraph = new Graph();
@@ -56,6 +60,11 @@ public final class GraphTest {
         threeNodesThreeEdgesGraph.addEdge("e3", "n1", "n3");
     }
 
+    // TODO: Test ListChildren and ListNode.
+    // TODO: Test Edge class methods?
+    // TODO: Test to make sure all methods produce nulls when expected.
+    // TODO: Test to make sure addNode and addEdge work with empty strings.
+
     ///////////////////////////////////////////////////////////////////////////////////////
     ////  Constructor
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -64,8 +73,9 @@ public final class GraphTest {
     @Test
     public void testEmptyGraph()
     {
-        assertTrue("failure - graph is not empty, this graph has nodes.",emptyGraph.getAllNodes().isEmpty());
-        assertTrue("failure - graph is not empty, this graph has edges.",emptyGraph.getAllEdges().isEmpty());
+        assertTrue("failure - graph is not empty, this graph has nodes, nor edges" +
+                ".",emptyGraph.getAllNodes().isEmpty());
+        assertTrue("failure - graph is not empty, this graph has edges.",emptyGraph.getNumOfEdges() == 0);
     }
 
     @Test
@@ -97,7 +107,7 @@ public final class GraphTest {
     {
         assertFalse("failure - expected false but returned " + true,
                 oneNodeGraph.addEdge("e1", "DNE", "n1"));
-        assertTrue("failure - added an invalid edge", oneNodeGraph.getAllEdges().isEmpty());
+        assertTrue("failure - added an invalid edge", oneNodeGraph.getNumOfEdges() == 0);
     }
 
     @Test
@@ -105,7 +115,7 @@ public final class GraphTest {
     {
         assertFalse("failure - expected false but returned " + true,
                 oneNodeGraph.addEdge("e1", "n1", "DNE"));
-        assertTrue("failure - added an invalid edge", oneNodeGraph.getAllEdges().isEmpty());
+        assertTrue("failure - added an invalid edge", oneNodeGraph.getNumOfEdges() == 0);
     }
 
     @Test
@@ -113,86 +123,15 @@ public final class GraphTest {
     {
         assertFalse("failure - expected false but returned " + true,
                 emptyGraph.addEdge("e1", "n1DNE", "n2DNE"));
-        assertTrue("failure - added an invalid edge", oneNodeGraph.getAllEdges().isEmpty());
+        assertTrue("failure - added an invalid edge", oneNodeGraph.getNumOfEdges() == 0);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    ////  containsNode()
-    ///////////////////////////////////////////////////////////////////////////////////////
-
-//    @Test
-//    public void testGettingNodeDNE() // Test getting a node that DNE within the graph | should return null
-//    {
-//        assertNull("failure - expected a null", oneNodeGraph.getNode("DNE"));
-//    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////
-    ////  setNode()
-    ///////////////////////////////////////////////////////////////////////////////////////
-
-//    @Test // Test setting a node that exists to a new value | should change the node's value to new value.
-//    public void testSettingNodeToNewValue()
-//    {
-//        String failMessage = "failure - setNode() did not correctly change value";
-//        oneNodeGraph.setNode("n1", "newValue");
-//        assertEquals(failMessage, "newValue", oneNodeGraph.getNode("newValue"));
-//    }
-//
-//    @Test // Test setting a node that exists to a new value | should change the node's value to new value.
-//    public void testSettingMultipleNodesNoEdgesToNewValue()
-//    {
-//        String failMessage = "failure - setNode() did not correctly change multiple values";
-//        fourNodesGraph.setNode("n1", "newValue1");
-//        fourNodesGraph.setNode("n4", "newValue4");
-//        fourNodesGraph.setNode("n2", "newValue2");
-//        assertEquals(failMessage, "newValue1", fourNodesGraph.getNode("newValue1"));
-//        assertEquals(failMessage, "newValue4", fourNodesGraph.getNode("newValue4"));
-//        assertEquals(failMessage, "newValue2", fourNodesGraph.getNode("newValue2"));
-//    }
-//
-//    @Test
-//    public void testSettingNodeToNewValueInMultipleGraphs()
-//    {
-//        String failMessage = "failure - setNode() did not work with multiple graphs.";
-//        oneNodeGraph.setNode("n1", "newValue1");
-//        fourNodesGraph.setNode("n3", "newValue3");
-//        assertEquals(failMessage, "newValue1", oneNodeGraph.getNode("newValue1"));
-//        assertEquals(failMessage, "newValue4", fourNodesGraph.getNode("newValue4"));
-//    }
-//
-//    @Test
-//    public void testSettingNodeToNewValueWithEdge()
-//    {
-//        String failMessage = "failure - setNode() did not work with an Edge in the graph.";
-//        threeNodesOneEdgeGraph.setNode("n1", "newValue1");
-//        assertEquals(failMessage, "newValue1", threeNodesOneEdgeGraph.getNode("newValue1"));
-//    }
-//
-//    @Test
-//    public void testSettingMultipleNodesWithEdge()
-//    {
-//        String failMessage = "failure - setNode() did not correctly change multiple values with edge";
-//        threeNodesOneEdgeGraph.setNode("n1", "newValue1");
-//        threeNodesOneEdgeGraph.setNode("n3", "newValue3");
-//        threeNodesOneEdgeGraph.setNode("n2", "newValue2");
-//        assertEquals(failMessage, "newValue1", threeNodesOneEdgeGraph.getNode("newValue1"));
-//        assertEquals(failMessage, "newValue3", threeNodesOneEdgeGraph.getNode("newValue3"));
-//        assertEquals(failMessage, "newValue2", threeNodesOneEdgeGraph.getNode("newValue2"));
-//    }
-//
-//    @Test
-//    public void testSettingNodeThatDNE()
-//    {
-//        String failMessage = "failure - setNode() didn't create a new node from one that DNE.";
-//        oneNodeGraph.setNode("n2", "newValue2");
-//        assertEquals(failMessage, "newValue2", oneNodeGraph.getNode("newValue2"));
-//    }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ////  getEdge()
     ///////////////////////////////////////////////////////////////////////////////////////
 
-    @Test //Have no edges between the two nodes call getEdge() | should return an empty list.
+    @Test //Have no edges between the two nodes and call getEdge() | should return an empty list.
     public void testNoEdgesBetweenTwoNodes()
     {
         String failMessage = "failure - getEdge() did not return an empty list of edges.";
@@ -215,4 +154,251 @@ public final class GraphTest {
         String failMessage = "failure - getEdge() did not return the two edges.";
         assertEquals(failMessage, edges, threeNodesThreeEdgesGraph.getEdge("n1", "n2"));
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////  Test Adding Valid Input
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    // These are all paired with a script test to create a full suite.
+
+    @Test
+    public void testAddingEdgeBetweenOneNode()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n1"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.containsEdge("e1", "n1", "n1"));
+    }
+
+    @Test
+    public void testAddingOneEdge()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n2"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.containsEdge("e1", "n1", "n2"));
+    }
+
+    @Test
+    public void testAddingOneNode()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addNode("n5"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.containsNode("n5"));
+    }
+
+    @Test
+    public void testAddingThreeEdgesWithEndpointOverlap()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n2"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e2", "n1", "n3"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e3", "n3", "n4"));
+    }
+
+    @Test
+    public void testAddingTwoEdges()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n2"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e2", "n3", "n4"));
+    }
+
+    @Test
+    public void testAddingTwoEdgesOverlapAtParent()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n2"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e2", "n1", "n3"));
+    }
+
+    @Test
+    public void testAddingTwoEdgesOverlapAtChild()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n2"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e2", "n2", "n3"));
+    }
+
+    @Test
+    public void testAddingTwoNodes()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addNode("n5"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addNode("n6"));
+    }
+
+    @Test
+    public void testAddingTwoOverlappingEdges()
+    {
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e1", "n1", "n2"));
+        assertTrue(EXPECTED_TRUE, fourNodesGraph.addEdge("e2", "n1", "n2"));
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////  Test For Proper IllegalArgumentException
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullToConstructor()
+    {
+        Graph illegalGraph = new Graph(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullParentToIsAdjacent()
+    {
+        threeNodesThreeEdgesGraph.isAdjacent(null, "n2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullChildToIsAdjacent()
+    {
+        threeNodesThreeEdgesGraph.isAdjacent("n1", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullToAddNode()
+    {
+        threeNodesThreeEdgesGraph.addNode(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullLabelToAddEdge()
+    {
+        threeNodesThreeEdgesGraph.addEdge(null, "n1", "n2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullParentToAddEdge()
+    {
+        threeNodesThreeEdgesGraph.addEdge("e1", null, "n2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullChildToAddEdge()
+    {
+        threeNodesThreeEdgesGraph.addEdge("e1", "n1", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullToContainsNode()
+    {
+        threeNodesThreeEdgesGraph.containsNode(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullLabelToContainsEdge()
+    {
+        threeNodesThreeEdgesGraph.containsEdge(null, "n1", "n2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullParentToContainsEdge()
+    {
+        threeNodesThreeEdgesGraph.containsEdge("e1", null, "n2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullChildToContainsEdge()
+    {
+        threeNodesThreeEdgesGraph.containsEdge("e1", "n1", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullParentToGetEdge()
+    {
+        threeNodesThreeEdgesGraph.getEdge(null, "n2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullChildToGetEdge()
+    {
+        threeNodesThreeEdgesGraph.getEdge("n1", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullToGetChildren()
+    {
+        threeNodesThreeEdgesGraph.getChildren(null);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////  Test All Methods with Empty Graph
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testIsAdjacentWithEmptyGraph()
+    {
+        assertFalse(EXPECTED_FALSE, emptyGraph.isAdjacent("n1", "n2"));
+    }
+
+    @Test
+    public void testAddNodeWithEmptyGraph()
+    {
+        assertTrue(EXPECTED_TRUE, emptyGraph.addNode("n1"));
+        assertTrue(EXPECTED_TRUE, emptyGraph.containsNode("n1"));
+    }
+
+    @Test
+    public void testAddEdgeWithEmptyGraph()
+    {
+        assertFalse(EXPECTED_FALSE, emptyGraph.addEdge("e1", "n1", "n2"));
+        assertFalse(EXPECTED_FALSE, emptyGraph.containsEdge("e1", "n1", "n2"));
+    }
+
+    @Test
+    public void testContainsNodeWithEmptyGraph()
+    {
+        assertFalse(EXPECTED_FALSE, emptyGraph.containsNode("n1"));
+    }
+
+    @Test
+    public void testContainsEdgeWithEmptyGraph()
+    {
+        assertFalse(emptyGraph.containsEdge("e1", "n1", "n2"));
+    }
+
+    @Test
+    public void testGetEdgeWithEmptyGraph()
+    {
+        String failMessage = "failure - expected null";
+        assertNull(failMessage, emptyGraph.getEdge("n1", "n2"));
+    }
+
+    @Test
+    public void testGetChildrenWithEmptyGraph()
+    {
+        String failMessage = "failure - expected null";
+        assertNull(failMessage, emptyGraph.getChildren("n1"));
+    }
+
+    @Test
+    public void testGetAllNodesWithEmptyGraph()
+    {
+        String failMessage = "failure - expected empty List<String>";
+        assertEquals(failMessage, nodes, emptyGraph.getAllNodes());
+    }
+
+    @Test
+    public void testGetNumOfEdgesWithEmptyGraph()
+    {
+        String failMessage = "failure - expected 0";
+        assertEquals(failMessage, 0, emptyGraph.getNumOfEdges());
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////  Test Adding Duplicates
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    // Tests adding two nodes with the same value to the same Graph.
+    // Should not add the duplicate node.
+    @Test
+    public void testAddingDuplicateNodesToGraph()
+    {
+        assertFalse(EXPECTED_FALSE, threeNodesOneEdgeGraph.addNode("n1"));
+        assertFalse(EXPECTED_FALSE, threeNodesOneEdgeGraph.addNode("n1"));
+        assertFalse(EXPECTED_FALSE, oneNodeGraph.addNode("n1"));
+    }
+
+    @Test
+    public void testAddingDuplicateEdgesToGraph()
+    {
+        assertFalse(EXPECTED_FALSE, threeNodesOneEdgeGraph.addEdge("e1", "n1", "n2"));
+        assertFalse(EXPECTED_FALSE, threeNodesOneEdgeGraph.addEdge("e1", "n1", "n2"));
+        assertFalse(EXPECTED_FALSE, threeNodesThreeEdgesGraph.addEdge("e1", "n1", "n2"));
+    }
+
+
+
 }

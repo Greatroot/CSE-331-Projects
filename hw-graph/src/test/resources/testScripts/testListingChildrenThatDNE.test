@@ -1,0 +1,6 @@
+# Tests listing children for a one node graph with no edges
+ | should return no children.
+
+CreateGraph graph
+AddNode graph n1
+ListChildren graph n1

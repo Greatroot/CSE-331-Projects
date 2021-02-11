@@ -46,7 +46,15 @@ above, be sure to list its advantages and disadvantages, too.
 1. Describe any new tests you added and why you added them, or why you feel that your original
 tests alone are sufficient.
 
-    -
+    - Got rid of testing suite for setNode() and getNode() since I removed those methods/functionality.
+    - Added empty graph stuff.
+    - Added testing all of my @throws.
+    - Added testing for all methods returning true when expected.
+    - Added testing for all methods to throw IllegalArgumentException when expected.
+    - Added testing all methods with an empty graph to see if they return the expected output and behave
+        the correct way.
+    - Added testing for proper behavior when adding duplicate nodes and edges.
+
 
 
 2. Did you make any changes to your specifications as you were implementing your Graph? (yes/no)
