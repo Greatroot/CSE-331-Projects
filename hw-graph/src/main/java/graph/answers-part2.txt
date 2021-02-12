@@ -37,7 +37,7 @@ above, be sure to list its advantages and disadvantages, too.
     own object and both nodes and edges were stored as a key/value pair inside a Graph. So I chose an adjacency
     list as my rep so that adding nodes and edges can be O(1) time-complexity and chose to use a Map to
     link both node and edge so that there is enough coupling to keep their relationship without having so
-    much that I loose performance.
+    much that I loose performance
 
 ## Section 4
 ###########################################################################
@@ -52,8 +52,6 @@ tests alone are sufficient.
     - Added testing all of my methods to see if they properly throw IllegalArgumentException
         for passing in nulls.
 
-    - Added testing for all methods to see if they returned true when expected.
-
     - Added testing all methods with an empty graph to see if they return the expected output and behave
         the correct way.
 
@@ -62,6 +60,8 @@ tests alone are sufficient.
     - Added testing for proper behavior with ListNode and ListChildren
 
     - Added testing to see if my graph works properly with empty strings
+
+    - Added testing to ensure graph worked with a large graph and a circular graph.
 
 2. Did you make any changes to your specifications as you were implementing your Graph? (yes/no)
 If yes, describe your changes and why you made them.

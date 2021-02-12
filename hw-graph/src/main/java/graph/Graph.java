@@ -176,7 +176,6 @@ public class Graph {
             throws IllegalArgumentException
     {
         this.checkRep();
-        // Uses Edge.equals() to check if labels and nodes are the same.
         if(label == null || parentNode == null || childNode == null)
         {
             throw new IllegalArgumentException();
@@ -209,6 +208,7 @@ public class Graph {
         }
 
         boolean doesContain = this.nodes.containsKey(nodeValue);
+        System.out.println("this.nodes.containsKey(nodeValue): " + this.nodes.containsKey(""));
 
         this.checkRep();
         return doesContain;
@@ -249,11 +249,9 @@ public class Graph {
         return false;
     }
 
-
-    // TODO: Make tests to test returning null if either node isn't in the graph.
     /**
-     * Returns a collection of edges that connect parentNode to childNode. If no such edges exist, returns
-     * an empty list.
+     * Returns a collection of edge labels that connect parentNode to childNode.
+     * If no such edges exist, returns an empty list.
      *
      * @param parentNode the parent node of the edges we want.
      * @param childNode the child node of the edges we want.
@@ -263,7 +261,7 @@ public class Graph {
      * @throws IllegalArgumentException if either parentNode or childNode are null
      */
     public List<String> getEdge(String parentNode, String childNode) throws IllegalArgumentException
-    {
+    { // This retrieves edge labels of edges that sit between the two nodes.
         // The client should have access to all three components of the edge: the label, the parent,
         // and the child since they passed in the latter two.
         this.checkRep();
@@ -291,8 +289,7 @@ public class Graph {
         return edgeLabels;
     }
 
-    /** // TODO: make a version of getChildren that returns the edge labels. First ask if I need to/if there is a better way.
-     * // TODO: for now, I'm just going to go with mixing getChildren and getEdge.
+    /**
      * returns all children nodes of the parent node.
      *
      * @param parentNode the value of the parent node whose children we want to retrieve.
@@ -301,9 +298,10 @@ public class Graph {
      * @throws IllegalArgumentException if the String parent is null.
      */
     public List<String> getChildren(String parentNode) throws IllegalArgumentException
-    {
-        this.checkRep(); // Should I also pass in an edge label? Is that what ListChildren wants?
-        if(parentNode == null || parentNode.isEmpty())
+    { // This retrieves child nodes
+        this.checkRep();
+        if(parentNode == null
+        )
         {
             throw new IllegalArgumentException();
         }
@@ -533,11 +531,6 @@ public class Graph {
             assert (this.label != null);
             assert (this.parent != null);
             assert (this.child != null);
-
-            //  e.label && e.parent && e.child != empty string
-            assert (!this.label.isEmpty());
-            assert (!this.parent.isEmpty());
-            assert (!this.child.isEmpty());
         }
     }
 }

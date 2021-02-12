@@ -1,0 +1,12 @@
+# Test listing all nodes in a circular graph
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2
+AddNode graph n3
+AddNode graph n4
+AddEdge graph n1 n2 e1
+AddEdge graph n2 n3 e2
+AddEdge graph n3 n2 e3
+AddEdge graph n2 n1 e4
+ListNodes graph

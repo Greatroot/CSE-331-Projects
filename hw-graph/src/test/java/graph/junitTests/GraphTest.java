@@ -28,7 +28,8 @@ public final class GraphTest {
     private final String EXPECTED_FALSE = "failure - expected false but was true";
 
 
-    Graph emptyGraph, oneNodeGraph, threeNodesOneEdgeGraph, fourNodesGraph, threeNodesThreeEdgesGraph;
+    Graph emptyGraph, oneNodeGraph, threeNodesOneEdgeGraph, fourNodesGraph, threeNodesThreeEdgesGraph,
+            graphWithEmptyStringNode;
     List<String> edges;
     List<String> nodes;
 
@@ -58,14 +59,14 @@ public final class GraphTest {
         threeNodesThreeEdgesGraph.addEdge("e1", "n1", "n2");
         threeNodesThreeEdgesGraph.addEdge("e2", "n1", "n2");
         threeNodesThreeEdgesGraph.addEdge("e3", "n1", "n3");
+
+        graphWithEmptyStringNode = new Graph("");
+        graphWithEmptyStringNode.addNode("n1");
+        graphWithEmptyStringNode.addNode("n2");
+        graphWithEmptyStringNode.addEdge("e1", "", "n1");
+        graphWithEmptyStringNode.addEdge("", "n2", "");
     }
 
-    // TODO: Test ListChildren and ListNode.
-    // TODO: Test Edge class methods?
-    // TODO: Test to make sure all methods produce nulls when expected.
-    // TODO: Test to make sure addNode and addEdge work with empty strings.
-    // TODO: Check HashSet and HashMap spec for proper equals and hashCode
-    // TODO: Make sure I write tests for Edge
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ////  Constructor
@@ -228,7 +229,7 @@ public final class GraphTest {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    ////  Test For Proper IllegalArgumentException
+    ////  Test For Proper IllegalArgumentException AND Test that nulls are properly being returned
     ///////////////////////////////////////////////////////////////////////////////////////
 
     @Test(expected = IllegalArgumentException.class)
@@ -316,7 +317,7 @@ public final class GraphTest {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    ////  Test All Methods with Empty Graph
+    ////  Test All Methods with Empty Graph AND Test that nulls are properly being returned
     ///////////////////////////////////////////////////////////////////////////////////////
 
     @Test
@@ -401,6 +402,74 @@ public final class GraphTest {
         assertFalse(EXPECTED_FALSE, threeNodesThreeEdgesGraph.addEdge("e1", "n1", "n2"));
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////  Test each method with an empty string.
+    ///////////////////////////////////////////////////////////////////////////////////////
 
+    @Test
+    public void testConstructorWithEmptyString()
+    {
+        assertTrue(EXPECTED_TRUE, graphWithEmptyStringNode.containsNode(""));
+    }
 
+    @Test
+    public void testIsAdjacentWithEmptyString()
+    {
+        assertTrue(EXPECTED_TRUE, graphWithEmptyStringNode.isAdjacent("", "n1"));
+    }
+
+    @Test
+    public void testAddNodeWithEmptyString()
+    {
+        assertTrue(EXPECTED_TRUE, emptyGraph.addNode(""));
+        assertTrue(EXPECTED_TRUE, emptyGraph.containsNode(""));
+    }
+
+    @Test
+    public void testAddEdgeWithEmptyString()
+    {
+        assertTrue(EXPECTED_TRUE, graphWithEmptyStringNode.addEdge("", "", "n1"));
+        assertTrue(EXPECTED_TRUE, graphWithEmptyStringNode.containsEdge("", "", "n1"));
+    }
+
+    @Test
+    public void testContainsNodeWithEmptyString()
+    {
+        assertTrue(EXPECTED_TRUE, graphWithEmptyStringNode.containsNode(""));
+    }
+
+    @Test
+    public void testContainsEdgeWithEmptyString()
+    {
+        assertTrue(EXPECTED_TRUE, graphWithEmptyStringNode.containsEdge("", "n2", ""));
+    }
+
+    @Test
+    public void testGetEdgeWithEmptyString()
+    {
+        edges.add("");
+        assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getEdge("n2", ""));
+    }
+
+    @Test
+    public void testGetChildrenWithEmptyString()
+    {
+        edges.add("n1");
+        assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getChildren(""));
+    }
+
+    @Test
+    public void testGetAllNodesWithEmptyString()
+    {
+        nodes.add("");
+        nodes.add("n1");
+        nodes.add("n2");
+        assertEquals(EXPECTED_TRUE, nodes, graphWithEmptyStringNode.getAllNodes());
+    }
+
+    @Test
+    public void testGetNumOfEdgesWithEmptyString()
+    {
+        assertEquals(EXPECTED_TRUE, 2, graphWithEmptyStringNode.getNumOfEdges());
+    }
 }

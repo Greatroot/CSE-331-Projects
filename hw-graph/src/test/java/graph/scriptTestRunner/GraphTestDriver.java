@@ -161,7 +161,6 @@ public class GraphTestDriver {
     }
 
     private void createGraph(String graphName) {
-        // TODO Insert your code here.
 
         Graph graph = new Graph();
          graphs.put(graphName, graph);
@@ -180,7 +179,6 @@ public class GraphTestDriver {
     }
 
     private void addNode(String graphName, String nodeName) {
-        // TODO Insert your code here.
 
         Graph graph = graphs.get(graphName);
         graph.addNode(nodeName);
@@ -208,7 +206,6 @@ public class GraphTestDriver {
 
     private void addEdge(String graphName, String parentName, String childName,
                          String edgeLabel) {
-        // TODO Insert your code here.
 
         Graph graph = graphs.get(graphName);
         graph.addEdge(edgeLabel, parentName, childName);
@@ -233,7 +230,6 @@ public class GraphTestDriver {
     }
 
     private void listNodes(String graphName) {
-        // TODO Insert your code here.
 
         Graph graph = graphs.get(graphName);
         List<String> nodes = graph.getAllNodes();
@@ -258,20 +254,19 @@ public class GraphTestDriver {
     }
 
     private void listChildren(String graphName, String parentName) {
-        // TODO Insert your code here.
 
         Graph graph = graphs.get(graphName);
         List<String> childrenNodes = graph.getChildren(parentName);
         Collections.sort(childrenNodes);
 
-        // TODO: Ask how much of a benefit StringBuilder is (I'm guessing efficiency and methods?).
-        String result = "the children of " + parentName + " in " + graphName + " are:";
+        StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
         for(String childNode : childrenNodes)
         {
             List<String> childrenEdgeLabels = graph.getEdge(parentName, childNode);
+            Collections.sort(childrenEdgeLabels);
             for(String edgeLabel : childrenEdgeLabels)
             {
-                result += " " + childNode + "(" + edgeLabel + ")";
+                result.append(" ").append(childNode).append("(").append(edgeLabel).append(")");
             }
         }
         output.println(result);
