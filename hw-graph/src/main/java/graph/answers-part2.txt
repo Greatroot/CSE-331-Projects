@@ -30,13 +30,14 @@ complexity, or ease of implementation).
 chose it. If you chose to use a different representation than one of the three we described
 above, be sure to list its advantages and disadvantages, too.
 
-    - I originally decided on a mix between a collection of edges and an adjacency list. The choice to have both
-    is somewhat of an artifact from the previous version of my Graph, where I wanted nodes and edges
-    to be their own public objects that the user could create and manipulate separately. I wanted both
-    edges and nodes to store the information of their place in the graph separately, and so I implemented
-    both a collection of edges and an adjacency list. When I moved to make both of those inner classes
-    private, I moved my representation to just be an adjacency list where nodes store adjacent edges
-    instead of adjacent nodes because of its time complexity advantages with adding nodes and edges.
+    - I originally decided on making an adjacency list where both node and edge were private inner classes
+    and node objects themselves stored edges, but this proved to be too coupled of a design.
+
+    - So to fix run-time complexity issues, I changed my rep to be an adjacency list where only edge had its
+    own object and both nodes and edges were stored as a key/value pair inside a Graph. So I chose an adjacency
+    list as my rep so that adding nodes and edges can be O(1) time-complexity and chose to use a Map to
+    link both node and edge so that there is enough coupling to keep their relationship without having so
+    much that I loose performance.
 
 ## Section 4
 ###########################################################################
@@ -47,18 +48,24 @@ above, be sure to list its advantages and disadvantages, too.
 tests alone are sufficient.
 
     - Got rid of testing suite for setNode() and getNode() since I removed those methods/functionality.
-    - Added empty graph stuff.
-    - Added testing all of my @throws.
-    - Added testing for all methods returning true when expected.
-    - Added testing for all methods to throw IllegalArgumentException when expected.
+
+    - Added testing all of my methods to see if they properly throw IllegalArgumentException
+        for passing in nulls.
+
+    - Added testing for all methods to see if they returned true when expected.
+
     - Added testing all methods with an empty graph to see if they return the expected output and behave
         the correct way.
+
     - Added testing for proper behavior when adding duplicate nodes and edges.
 
+    - Added testing for proper behavior with ListNode and ListChildren
 
+    - Added testing to see if my graph works properly with empty strings
 
 2. Did you make any changes to your specifications as you were implementing your Graph? (yes/no)
 If yes, describe your changes and why you made them.
 
-
-
+    - Yes, I made slight changes to my specs by tweaking
+        a.) methods to allow empty strings as node values and edge labels.
+        b.) methods to throw an IllegalArgumentExceptions if any nulls get passed.

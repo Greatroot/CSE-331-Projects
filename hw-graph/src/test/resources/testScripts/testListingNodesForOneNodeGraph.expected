@@ -1,0 +1,5 @@
+# Tests listing nodes for one node graph
+
+created graph graph
+added node n1 to graph
+graph contains: n1

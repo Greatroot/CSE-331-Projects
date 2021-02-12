@@ -1,4 +1,4 @@
 #Test adding one node | should appear within the graph's nodes.
 
 CreateGraph graph
-AddNode graph node
+AddNode graph n1

@@ -4,16 +4,6 @@ import org.w3c.dom.Node;
 
 import java.util.*;
 
-// Questions for Hal:
-//  *Should we return List<>() or ArrayList<>()?
-//  *Is an object immutable if the object itself can't be modified (ie. there are no accessible modifiers)?
-//  *Or do the pointers have to be immutable as well? Is it enough to just have no accessible modifiers?
-//  *Is there a way to getChildren() without it being in O(n) or O(n^2) time? It seems impossible to me.
-//  *Should I just keep my getAllEdges the way it is or should I make my private inner classes public just for
-//  data viewing purposes, where everything inside is private otherwise. If all the methods inside a public inner ADT
-//  are private, then is there any use putting specs on them?
-//  *What exactly does ListChildren even want? Does it want the user to pass in an edge label for a parent node
-//  * so that a child node can be found?
 /**
  * <b>Graph</b> represents a <b>mutable</b> directed labeled graph, which is a collection of
  * nodes and edges. A node is simply made up of a String value while an edge consists of a String label
@@ -61,19 +51,22 @@ import java.util.*;
  */
 public class Graph {
 
-    // Abstraction Function: // TODO: Redo my AF
-    // A Graph is made up of Nodes and Edges:
-    //      node in the graph => each Node in the nodes Set.
-    //      edge in the graph => each Node in the nodes Set stores all of its incident Edges.
+    // Abstraction Function:
+    // A Graph g is made up of Nodes and Edges:
+    //      node collection in the graph => g.nodes.keySet()
+    //      for every Node n in the graph:
+    //          all edges with n as parent => g.nodes.get(n)
 
     // Representation Invariant for each Graph g:
     //  g.nodes != null
-    //  g.nodes cannot contain duplicates.
-    //  For every Edge e paired to every Node n within g.nodes: e.parent.equals(n) // TODO: Implement this
+    //
+    //  For every Edge e paired to every Node n within g.nodes:
+    //      n != null
+    //      e != null
+    //      e.parent.equals(n)
 
-    //I use a Map and a Set here to satisfy the RI.
     private Map<String, Set<Edge>> nodes; // Each node in the map is paired with all of their child edges.
-    // Make sure to not expose the rep
+    private final boolean HEAVY_DEBUG = true;
 
     /**
      * @spec.effects Constructs a new Graph with no nodes.
@@ -298,7 +291,8 @@ public class Graph {
         return edgeLabels;
     }
 
-    /** // TODO: make a version of getChildren that returns the edge labels.
+    /** // TODO: make a version of getChildren that returns the edge labels. First ask if I need to/if there is a better way.
+     * // TODO: for now, I'm just going to go with mixing getChildren and getEdge.
      * returns all children nodes of the parent node.
      *
      * @param parentNode the value of the parent node whose children we want to retrieve.
@@ -377,6 +371,20 @@ public class Graph {
     private void checkRep() {
         //  g.nodes != null
         assert (this.nodes != null);
+
+        //  For every Edge e paired to every Node n within g.nodes: e.parent.equals(n)
+        if(HEAVY_DEBUG)
+        {
+            Iterator<String> allNodes = this.nodes.keySet().iterator();
+            for(Set<Edge> edges : this.nodes.values())
+            {
+                String parentNode = allNodes.next();
+                for(Edge edge : edges)
+                {
+                    assert(edge.getParent().equals(parentNode));
+                }
+            }
+        }
     }
 
 //    /**
@@ -399,15 +407,13 @@ public class Graph {
     private class Edge {
 
         // Abstract Function:
-        //
-        // label => String Edge.label
-        // parent node => Edge.parent; Node
-        // child node => Edge.child; Node
+        //  For every Edge e:
+        //      e.label => Edge.label : String
+        //      e.parent node => Edge.parent : Node
+        //      e.child node => Edge.child :Node
 
         // Representation Invariant for every Edge e:
         //  e.label && e.parent && e.child != null
-        //  e.label && e.parent && e.child != empty string
-
 
         private final String label;
         private final String parent;

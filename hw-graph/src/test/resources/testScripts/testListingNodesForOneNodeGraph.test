@@ -1,0 +1,5 @@
+# Tests listing nodes for one node graph
+
+CreateGraph graph
+AddNode graph n1
+ListNodes graph

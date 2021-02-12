@@ -1,5 +1,4 @@
-# Test adding two edges to two separate pairs
- | should add both edges.
+# Test adding two edges to two separate pairs | should add both edges.
 
 CreateGraph graph
 AddNode graph n1

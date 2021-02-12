@@ -1,5 +1,4 @@
-# Test adding two edges, both overlapping at child
- | should add both edges
+# Test adding two edges, both overlapping at child | should add both edges
 
  CreateGraph graph
  AddNode graph n1

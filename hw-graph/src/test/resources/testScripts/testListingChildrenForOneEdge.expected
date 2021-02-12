@@ -1,5 +1,4 @@
-# Tests listing children for a node with one edge
-| Should return that one child
+# Tests listing children for a node with one edge | Should return that one child
 
 created graph graph
 added node n1 to graph

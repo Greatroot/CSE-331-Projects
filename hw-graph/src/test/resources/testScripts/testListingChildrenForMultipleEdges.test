@@ -1,0 +1,12 @@
+# Tests listing children for a graph with three edges
+
+CreateGraph graph
+AddNode graph n1
+AddNode graph n2
+AddNode graph n3
+AddEdge graph n1 n2 e1
+AddEdge graph n2 n3 e2
+AddEdge graph n1 n3 e3
+ListChildren graph n1
+ListChildren graph n2
+ListChildren graph n3

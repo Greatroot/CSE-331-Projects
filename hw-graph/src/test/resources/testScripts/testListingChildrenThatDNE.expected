@@ -1,4 +1,4 @@
-# Tests listing children for a one node graph | should return no children.
+# Tests listing children for a one node graph with no edges | should return no children.
 
 created graph graph
 added node n1 to graph

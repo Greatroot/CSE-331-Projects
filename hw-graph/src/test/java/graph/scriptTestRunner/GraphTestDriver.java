@@ -239,12 +239,12 @@ public class GraphTestDriver {
         List<String> nodes = graph.getAllNodes();
         Collections.sort(nodes);
 
-        StringBuilder nodesResult = new StringBuilder(graphName + " contains:");
+        StringBuilder result = new StringBuilder(graphName + " contains:");
         for(String node : nodes)
         {
-            nodesResult.append(" ").append(node);
+            result.append(" ").append(node);
         }
-        output.println(nodesResult);
+        output.println(result);
     }
 
     private void listChildren(List<String> arguments) {
@@ -264,9 +264,17 @@ public class GraphTestDriver {
         List<String> childrenNodes = graph.getChildren(parentName);
         Collections.sort(childrenNodes);
 
+        // TODO: Ask how much of a benefit StringBuilder is (I'm guessing efficiency and methods?).
         String result = "the children of " + parentName + " in " + graphName + " are:";
-
-        // output.println(...);
+        for(String childNode : childrenNodes)
+        {
+            List<String> childrenEdgeLabels = graph.getEdge(parentName, childNode);
+            for(String edgeLabel : childrenEdgeLabels)
+            {
+                result += " " + childNode + "(" + edgeLabel + ")";
+            }
+        }
+        output.println(result);
     }
 
     /**
