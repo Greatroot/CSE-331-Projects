@@ -297,6 +297,7 @@ public class Graph {
      * If parent doesn't exist within the graph, return null.
      * @throws IllegalArgumentException if the String parent is null.
      */
+    //TODO: Make this method only return each child once, not multiple times.
     public List<String> getChildren(String parentNode) throws IllegalArgumentException
     { // This retrieves child nodes
         this.checkRep();
@@ -315,7 +316,10 @@ public class Graph {
         Set<Edge> edges = this.nodes.get(parentNode);
         for(Edge edge : edges)
         {
-            childrenNodes.add(edge.getChild());
+            if(!childrenNodes.contains(edge.getChild())) // Could be a potential area for time consumption?
+            {
+                childrenNodes.add(edge.getChild());
+            }
         }
 
         this.checkRep();

@@ -1,0 +1,8 @@
+# Tests loading a graph from a small dataset.
+
+LoadGraph smallGraph staffSuperheroes.tsv
+ListNodes smallGraph
+ListChildren smallGraph Ernst-the-Bicycling-Wizard
+ListChildren smallGraph Notkin-of-the-Superhuman-Beard
+ListChildren smallGraph Perkins-the-Magical-Singing-Instructor
+ListChildren smallGraph Grossman-the-Youngest-of-them-all
