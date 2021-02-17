@@ -31,7 +31,6 @@ public class MarvelParser {
      * @param filename the file that will be read
      * @spec.requires filename is a valid file in the resources/data folder.
      */
-    // TODO: Replace 'void' with the type you want the parser to produce
     public static Iterator<HeroModel> parseData(String filename) {
         // You can use this code as an example for getting a file from the resources folder
         // in a project like this. If you access TSV files elsewhere in your code, you'll need
@@ -52,13 +51,13 @@ public class MarvelParser {
         }
         Reader reader = new BufferedReader(new InputStreamReader(stream));
 
-        Iterator<HeroModel> csvHeroIterator =
+        Iterator<HeroModel> tsvHeroIterator =
                 new CsvToBeanBuilder<HeroModel>(reader)
                 .withType(HeroModel.class)
                 .withSeparator('\t')
                 .withIgnoreLeadingWhiteSpace(true)
                 .build().iterator();
 
-        return csvHeroIterator;
+        return tsvHeroIterator;
     }
 }

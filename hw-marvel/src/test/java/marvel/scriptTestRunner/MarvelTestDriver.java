@@ -151,6 +151,7 @@ public class MarvelTestDriver {
                     break;
                 case "FindPath":
                     findPath(arguments);
+                    break;
                 default:
                     output.println("Unrecognized command: " + command);
                     break;
@@ -289,7 +290,7 @@ public class MarvelTestDriver {
 
     private void loadGraph(String graphName, String filename)
     {
-        this.graphs.put(graphName, MarvelPaths.LoadGraph(filename));
+        this.graphs.put(graphName, MarvelPaths.loadGraph(filename));
         if(this.graphs.containsKey(graphName))
         {
             output.println("loaded graph " + graphName);

@@ -7,27 +7,32 @@ import java.util.*;
 
 //TODO: As of 10:54 PM on Tuesday night
 // TODO: 1.) Ask about Unknown command: FindPath
-// TODO: 2.) Try to find why my LoadGraph doesn't scale well and is so slow with marvel.txt.
+// TODO: 2.) Try to find why my LoadGraph doesn't scale well and is so slow with marvel.txt. FOUND IT~
 // TODO: 3.) Tidy up comments for Graph's getEdge() and getChildren()
 // TODO: 4.) Write tests for FindPath and LoadGraph.
+// TODO: 5.) Ask in office hours if this, EdgeCompare, and HeroModel count as ADTs
+//  (I'm pretty sure about the first two)
+// Ask about testing. Should we also test for weird TSV data?
 
-//TODO: Make the class static???
+/**
+ * MarvelPaths contains methods useful to generating a Graph based on data in a TSV file and performing
+ * path finding operations on a Graph.
+ */
 public final class MarvelPaths {
-
-    //TODO: Remove this if I go through with making this class static.
-//    private Graph marvelGraph;
 
     /**
      * Loads a graph from an empty one using the TSV data within the file passed in.
-     * @param filename
+     *
+     * @param filename the name of the TSV file whose data we want to generate a Graph from.
      * @return a graph generated or loaded from the data from the TSV file passed in.
+     * @throws IllegalArgumentException if the filename cannot be found within the file system.
+     * @throws NullPointerException if the filename passed in is null.
      */
-    public static Graph LoadGraph(String filename)
+    public static Graph loadGraph(String filename)
     {
         Graph graph = new Graph();
         Iterator<HeroModel> heroModelIterator = MarvelParser.parseData(filename);
         Map<String, List<String>> marvelBooks = new HashMap<String, List<String>>();
-        // TODO: If for some reason the map needs to stop duplicates, look here.
 
         // First add all of the heroes as nodes while building up my map.
         while(heroModelIterator.hasNext())

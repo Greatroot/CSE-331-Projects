@@ -1,0 +1,3 @@
+# Tests that a small loaded graph has all the correct two way edges.
+
+LoadGraph

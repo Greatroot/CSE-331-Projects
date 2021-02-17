@@ -66,7 +66,7 @@ public class Graph {
     //      e.parent.equals(n)
 
     private Map<String, Set<Edge>> nodes; // Each node in the map is paired with all of their child edges.
-    private final boolean HEAVY_DEBUG = true;
+    private final boolean HEAVY_DEBUG = false;
 
     /**
      * @spec.effects Constructs a new Graph with no nodes.
