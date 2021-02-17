@@ -1,0 +1,9 @@
+# Tests that a small loaded graph builds correctly with duplicate HeroModels.
+
+loaded graph g
+g contains: Ben-The-Boy Ernst-the-Bicycling-Wizard	Grossman-the-Youngest-of-them-all Notkin-of-the-Superhuman-Beard Perkins-the-Magical-Singing-Instructor
+the children of Ernst-the-Bicycling-Wizard in g are: Ben-The-Boy(CSE331) Grossman-the-Youngest-of-them-all(CSE331) Notkin-of-the-Superhuman-Beard(CSE331) Notkin-of-the-Superhuman-Beard(CSE403) Perkins-the-Magical-Singing-Instructor(CSE331)
+the children of Notkin-of-the-Superhuman-Beard in g are: Ben-The-Boy(CSE331) Ernst-the-Bicycling-Wizard(CSE331) Ernst-the-Bicycling-Wizard(CSE403) Grossman-the-Youngest-of-them-all(CSE331) Perkins-the-Magical-Singing-Instructor(CSE331)
+the children of Perkins-the-Magical-Singing-Instructor in g are: Ben-The-Boy(CSE331) Ben-The-Boy(CSE401) Ernst-the-Bicycling-Wizard(CSE331) Grossman-the-Youngest-of-them-all(CSE331) Notkin-of-the-Superhuman-Beard(CSE331)
+the children of Grossman-the-Youngest-of-them-all in g are: Ben-The-Boy(CSE331) Ernst-the-Bicycling-Wizard(CSE331) Notkin-of-the-Superhuman-Beard(CSE331) Perkins-the-Magical-Singing-Instructor(CSE331)
+the children of Ben-The-Boy in g are: Ernst-the-Bicycling-Wizard(CSE331) Grossman-the-Youngest-of-them-all(CSE331) Notkin-of-the-Superhuman-Beard(CSE331) Perkins-the-Magical-Singing-Instructor(CSE331) Perkins-the-Magical-Singing-Instructor(CSE401)

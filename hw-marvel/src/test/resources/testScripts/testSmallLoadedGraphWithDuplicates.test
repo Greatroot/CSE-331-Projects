@@ -1,0 +1,9 @@
+# Tests that a small loaded graph builds correctly with duplicate HeroModels.
+
+LoadGraph g staffSuperheroesWithDuplicates.tsv
+ListNodes g
+ListChildren g Ernst-the-Bicycling-Wizard
+ListChildren g Notkin-of-the-Superhuman-Beard
+ListChildren g Perkins-the-Magical-Singing-Instructor
+ListChildren g Grossman-the-Youngest-of-them-all
+ListChildren g Ben-The-Boy

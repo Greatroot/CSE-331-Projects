@@ -1,3 +1,6 @@
 # Tests that a small loaded graph has all the correct two way edges.
 
-LoadGraph
+LoadGraph smallGraph staffSuperheroes.tsv
+ListNodes smallGraph
+ListChildren smallGraph Ernst-the-Bicycling-Wizard
+ListChildren smallGraph Notkin-of-the-Superhuman-Beard

@@ -1,0 +1,6 @@
+# Tests that a small loaded graph has all the correct two way edges.
+
+loaded graph smallGraph
+smallGraph contains: Ernst-the-Bicycling-Wizard	Grossman-the-Youngest-of-them-all Notkin-of-the-Superhuman-Beard Perkins-the-Magical-Singing-Instructor
+the children of Ernst-the-Bicycling-Wizard in smallGraph are: Grossman-the-Youngest-of-them-all(CSE331) Notkin-of-the-Superhuman-Beard(CSE331) Notkin-of-the-Superhuman-Beard(CSE403) Perkins-the-Magical-Singing-Instructor(CSE331)
+the children of Notkin-of-the-Superhuman-Beard in smallGraph are: Ernst-the-Bicycling-Wizard(CSE331) Ernst-the-Bicycling-Wizard(CSE403) Grossman-the-Youngest-of-them-all(CSE331) Perkins-the-Magical-Singing-Instructor(CSE331)
