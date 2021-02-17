@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -313,7 +311,7 @@ public final class GraphTest {
     @Test(expected = IllegalArgumentException.class)
     public void testPassingNullToGetChildren()
     {
-        threeNodesThreeEdgesGraph.getChildren(null);
+        threeNodesThreeEdgesGraph.getChildrenNodes(null);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -363,7 +361,7 @@ public final class GraphTest {
     public void testGetChildrenWithEmptyGraph()
     {
         String failMessage = "failure - expected null";
-        assertNull(failMessage, emptyGraph.getChildren("n1"));
+        assertNull(failMessage, emptyGraph.getChildrenNodes("n1"));
     }
 
     @Test
@@ -455,7 +453,7 @@ public final class GraphTest {
     public void testGetChildrenWithEmptyString()
     {
         edges.add("n1");
-        assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getChildren(""));
+        assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getChildrenNodes(""));
     }
 
     @Test

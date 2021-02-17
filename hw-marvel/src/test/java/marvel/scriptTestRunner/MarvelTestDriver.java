@@ -12,8 +12,6 @@
 package marvel.scriptTestRunner;
 
 import graph.Graph;
-import marvel.HeroModel;
-import marvel.MarvelParser;
 import marvel.MarvelPaths;
 
 import java.io.*;
@@ -266,7 +264,7 @@ public class MarvelTestDriver {
     private void listChildren(String graphName, String parentName) {
 
         Graph graph = graphs.get(graphName);
-        List<String> childrenNodes = graph.getChildren(parentName);
+        List<String> childrenNodes = graph.getChildrenNodes(parentName);
         Collections.sort(childrenNodes);
 //        System.out.println("\nchildrenNodes = " + childrenNodes);// TODO: Remove this after testing.
 

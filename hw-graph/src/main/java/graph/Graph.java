@@ -290,6 +290,36 @@ public class Graph {
     }
 
     /**
+     * returns all children edges of parent node.
+     *
+     * @param parentNode the value of the parent node whose children we want to retrieve.
+     * @return a list of child edges. If there are no children, returns empty list.
+     * If parent doesn't exist within the graph, return null.
+     * @throws IllegalArgumentException if the String parent is null.
+     */
+    //TODO: Make a method that returns all the edges coming out from the parent node.
+    public List<Edge> getChildren(String parentNode) throws IllegalArgumentException
+    { // This retrieves child nodes
+        this.checkRep();
+        if(parentNode == null)
+        {
+            throw new IllegalArgumentException();
+        }
+
+        if(!this.nodes.containsKey(parentNode))
+        {
+            return null;
+        }
+
+        Set<Edge> edges = this.nodes.get(parentNode);
+        // TODO: Converting from Set to List could be a source of lag?
+        List<Edge> childrenEdges = new ArrayList<Edge>(edges);
+
+        this.checkRep();
+        return childrenEdges;
+    }
+
+    /**
      * returns all children nodes of the parent node.
      *
      * @param parentNode the value of the parent node whose children we want to retrieve.
@@ -297,8 +327,9 @@ public class Graph {
      * If parent doesn't exist within the graph, return null.
      * @throws IllegalArgumentException if the String parent is null.
      */
-    //TODO: Make this method only return each child once, not multiple times.
-    public List<String> getChildren(String parentNode) throws IllegalArgumentException
+    // I think it is ok to keep this, just in case someone for some reason wanted
+    // to get children nodes only.
+    public List<String> getChildrenNodes(String parentNode) throws IllegalArgumentException
     { // This retrieves child nodes
         this.checkRep();
         if(parentNode == null
@@ -406,7 +437,7 @@ public class Graph {
 //     * endpoint : Node // Either Node that makes up an edge. If Edge A has the parent Node B
 //     * and the child Node C, then both Nodes B and C are endpoints of A.
 //     */
-    private class Edge {
+    public static class Edge { // TODO: If I keep this, then make sure to uncomment the specs and tidy it up.
 
         // Abstract Function:
         //  For every Edge e:
@@ -445,7 +476,7 @@ public class Graph {
 //         *
 //         * @return a separate copy of this Edge's label.
 //         */
-        private String getLabel()
+        public String getLabel()
         {
             // Retains immutability since String is immutable.
             this.checkRep();
@@ -457,7 +488,7 @@ public class Graph {
 //         *
 //         * @return a separate copy of this Edge's parent Node.
 //         */
-        private String getParent()
+        public String getParent()
         {
             // Retains immutability since Node is immutable.
             this.checkRep();
@@ -470,7 +501,7 @@ public class Graph {
 //         *
 //         * @return a separate copy of this Edge's child Node.
 //         */
-        private String getChild()
+        public String getChild()
         {
             // Retains immutability since Node is immutable
             this.checkRep();
@@ -489,7 +520,7 @@ public class Graph {
                     + this.child;
         }
 
-//        /**
+    //        /**
 //         * Standard equality operation.
 //         *
 //         * @param obj the object to be compared for equality

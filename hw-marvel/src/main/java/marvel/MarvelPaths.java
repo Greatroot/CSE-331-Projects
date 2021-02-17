@@ -62,9 +62,48 @@ public final class MarvelPaths {
                 }
             }
         }
-
 //        System.out.println(marvelBooks); TODO: Remove this
         return graph;
+    }
+
+    /**
+     * Returns the path of heroes that connects hero_a to hero_b.
+     *
+     * @param marvelGraph
+     * @param hero_a
+     * @param hero_b
+     * @return
+     */
+    // To make this work lexicographically, I need to make sure I search each child in lexicographical order.
+    public static List<Graph.Edge> findPath(Graph marvelGraph, String hero_a, String hero_b)
+    {
+        // visited node -> edges traveled.
+        Map<String, List<Graph.Edge>> paths = new HashMap<String, List<Graph.Edge>>();
+        Queue<String> nodesToVisit = new LinkedList<String>();
+
+        nodesToVisit.add(hero_a);
+        paths.put(hero_a, new ArrayList<Graph.Edge>());
+        while(!nodesToVisit.isEmpty())
+        {
+            String currentHero = nodesToVisit.remove();
+            if(currentHero.equals(hero_b))
+            {
+                return paths.get(currentHero); // Make sure this is right.
+            }
+            //TODO: Use new version of getChildren/getEdges.
+            List<Graph.Edge> nextConnectedHeroes = marvelGraph.getChildrenNodes(currentHero);
+            Collections.sort(nextConnectedHeroes); // Ensures child nodes are in searched in lexicographical order.
+            for(String nextConnectedHero : nextConnectedHeroes) // This is the list of child nodes.
+            {
+                if(!paths.containsKey(nextConnectedHero))
+                {
+                    List<String> pathToNextHero = new ArrayList<String>(paths.get(currentHero));
+                    pathToNextHero.add(nextConnectedHero); // Because our path is just the path of heroes/nodes from a to b.
+                    paths.put(nextConnectedHero, pathToNextHero);
+                    nodesToVisit.add(nextConnectedHero);
+                }
+            }
+        }
     }
 
 }

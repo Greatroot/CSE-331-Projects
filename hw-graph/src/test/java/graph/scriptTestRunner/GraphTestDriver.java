@@ -256,21 +256,37 @@ public class GraphTestDriver {
     private void listChildren(String graphName, String parentName) {
 
         Graph graph = graphs.get(graphName);
-        List<String> childrenNodes = graph.getChildren(parentName);
-        Collections.sort(childrenNodes);
+        List<Graph.Edge> childrenEdges = graph.getChildren(parentName);
+        EdgeCompare edgeCompare = new EdgeCompare();
+        childrenEdges.sort(edgeCompare);
 
         StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
-        for(String childNode : childrenNodes)
+        for(Graph.Edge childEdge : childrenEdges)
         {
-            List<String> childrenEdgeLabels = graph.getEdge(parentName, childNode);
-            Collections.sort(childrenEdgeLabels);
-            for(String edgeLabel : childrenEdgeLabels)
-            {
-                result.append(" ").append(childNode).append("(").append(edgeLabel).append(")");
-            }
+            result.append(" ").append(childEdge.getChild()).append("(").append(childEdge.getLabel()).append(")");
         }
         output.println(result);
     }
+
+    //TODO: Remove this if replaced.
+//    private void listChildren(String graphName, String parentName) {
+//
+//        Graph graph = graphs.get(graphName);
+//        List<String> childrenNodes = graph.getChildrenNodes(parentName);
+//        Collections.sort(childrenNodes);
+//
+//        StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
+//        for(String childNode : childrenNodes)
+//        {
+//            List<String> childrenEdgeLabels = graph.getEdge(parentName, childNode);
+//            Collections.sort(childrenEdgeLabels);
+//            for(String edgeLabel : childrenEdgeLabels)
+//            {
+//                result.append(" ").append(childNode).append("(").append(edgeLabel).append(")");
+//            }
+//        }
+//        output.println(result);
+//    }
 
     /**
      * This exception results when the input file cannot be parsed properly
@@ -286,5 +302,20 @@ public class GraphTestDriver {
         }
 
         public static final long serialVersionUID = 3495;
+    }
+
+    // Class to compare Edges by their child nodes first and then their edge labels second.
+    // Returns negative if this Edge lexicographically precedes the Edge passed.
+    private class EdgeCompare implements Comparator<Graph.Edge> {
+        public int compare(Graph.Edge e1, Graph.Edge e2)
+        {
+            int result = e1.getChild().compareTo(e2.getChild());
+            if(result == 0)
+            {
+                result = e1.getLabel().compareTo(e2.getLabel());
+            }
+
+            return result;
+        }
     }
 }
