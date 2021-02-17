@@ -11,6 +11,7 @@
 
 package graph.scriptTestRunner;
 
+import graph.EdgeCompare;
 import graph.Graph;
 
 import java.io.*;
@@ -302,20 +303,5 @@ public class GraphTestDriver {
         }
 
         public static final long serialVersionUID = 3495;
-    }
-
-    // Class to compare Edges by their child nodes first and then their edge labels second.
-    // Returns negative if this Edge lexicographically precedes the Edge passed.
-    private class EdgeCompare implements Comparator<Graph.Edge> {
-        public int compare(Graph.Edge e1, Graph.Edge e2)
-        {
-            int result = e1.getChild().compareTo(e2.getChild());
-            if(result == 0)
-            {
-                result = e1.getLabel().compareTo(e2.getLabel());
-            }
-
-            return result;
-        }
     }
 }

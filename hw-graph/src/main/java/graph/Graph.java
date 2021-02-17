@@ -208,7 +208,6 @@ public class Graph {
         }
 
         boolean doesContain = this.nodes.containsKey(nodeValue);
-        System.out.println("this.nodes.containsKey(nodeValue): " + this.nodes.containsKey(""));
 
         this.checkRep();
         return doesContain;
@@ -250,17 +249,17 @@ public class Graph {
     }
 
     /**
-     * Returns a collection of edge labels that connect parentNode to childNode.
-     * If no such edges exist, returns an empty list.
+     * Returns a collection of Edges that connect parentNode to childNode.
+     * If no such Edges exist, returns an empty list.
      *
      * @param parentNode the parent node of the edges we want.
      * @param childNode the child node of the edges we want.
-     * @return a list of edge labels with the specified parentNode and childNode.
-     * If no edges with those endpoints exist, then return an empty list.
-     * If either edge doesn't exist within the graph, then return null.
+     * @return a list of Edges with the specified parentNode and childNode.
+     * If no Edges with those endpoints exist, then return an empty list.
+     * If either Edge doesn't exist within the graph, then return null.
      * @throws IllegalArgumentException if either parentNode or childNode are null
      */
-    public List<String> getEdge(String parentNode, String childNode) throws IllegalArgumentException
+    public List<Edge> getEdge(String parentNode, String childNode) throws IllegalArgumentException
     { // This retrieves edge labels of edges that sit between the two nodes.
         // The client should have access to all three components of the edge: the label, the parent,
         // and the child since they passed in the latter two.
@@ -275,18 +274,18 @@ public class Graph {
             return null;
         }
 
-        List<String> edgeLabels = new ArrayList<String>();
-        Set<Edge> edges = this.nodes.get(parentNode);
-        for(Edge edge : edges)
+        List<Edge> edgesToChild = new ArrayList<Edge>();
+        Set<Edge> edgesToAllChildren = this.nodes.get(parentNode);
+        for(Edge edge : edgesToAllChildren)
         {
             if(edge.getChild().equals(childNode))
             {
-                edgeLabels.add(edge.getLabel());
+                edgesToChild.add(edge);
             }
         }
 
         this.checkRep();
-        return edgeLabels;
+        return edgesToChild;
     }
 
     /**
@@ -516,7 +515,7 @@ public class Graph {
 //         */
         @Override
         public String toString() {
-            return "This Node " + this.label + " starts at " + this.parent + " and ends at "
+            return "This edge " + this.label + " starts at " + this.parent + " and ends at "
                     + this.child;
         }
 

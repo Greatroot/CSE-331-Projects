@@ -28,14 +28,14 @@ public final class GraphTest {
 
     Graph emptyGraph, oneNodeGraph, threeNodesOneEdgeGraph, fourNodesGraph, threeNodesThreeEdgesGraph,
             graphWithEmptyStringNode;
-    List<String> edges;
+    List<Graph.Edge> edges;
     List<String> nodes;
 
     @Before
     public void setUp()
     {
         nodes = new ArrayList<String>();
-        edges = new ArrayList<String>();
+        edges = new ArrayList<Graph.Edge>();
 
         emptyGraph = new Graph();
 
@@ -136,13 +136,13 @@ public final class GraphTest {
     public void testNoEdgesBetweenTwoNodes()
     {
         String failMessage = "failure - getEdge() did not return an empty list of edges.";
-        assertEquals(failMessage, new ArrayList<>(), fourNodesGraph.getEdge("n1", "n2"));
+        assertEquals(failMessage, new ArrayList<Graph.Edge>(), fourNodesGraph.getEdge("n1", "n2"));
     }
 
     @Test
     public void testOneEdgeBetweenTwoNodes()
     {
-        edges.add("e1");
+        edges.add(new Graph.Edge("e1", "n1", "n2"));
         String failMessage = "failure - getEdge() did not return the one edge.";
         assertEquals(failMessage, edges, threeNodesOneEdgeGraph.getEdge("n1", "n2"));
     }
@@ -150,8 +150,8 @@ public final class GraphTest {
     @Test
     public void testMultipleEdgesBetweenTwoNodes()
     {
-        edges.add("e1");
-        edges.add("e2");
+        edges.add(new Graph.Edge("e1", "n1", "n2"));
+        edges.add(new Graph.Edge("e2", "n1", "n2"));
         String failMessage = "failure - getEdge() did not return the two edges.";
         assertEquals(failMessage, edges, threeNodesThreeEdgesGraph.getEdge("n1", "n2"));
     }
@@ -445,15 +445,15 @@ public final class GraphTest {
     @Test
     public void testGetEdgeWithEmptyString()
     {
-        edges.add("");
+        edges.add(new Graph.Edge("", "n2", ""));
         assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getEdge("n2", ""));
     }
 
     @Test
     public void testGetChildrenWithEmptyString()
     {
-        edges.add("n1");
-        assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getChildrenNodes(""));
+        nodes.add("n1");
+        assertEquals(EXPECTED_TRUE, nodes, graphWithEmptyStringNode.getChildrenNodes(""));
     }
 
     @Test

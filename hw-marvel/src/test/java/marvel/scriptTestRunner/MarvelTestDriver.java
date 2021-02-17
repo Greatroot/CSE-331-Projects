@@ -11,6 +11,7 @@
 
 package marvel.scriptTestRunner;
 
+import graph.EdgeCompare;
 import graph.Graph;
 import marvel.MarvelPaths;
 
@@ -264,20 +265,14 @@ public class MarvelTestDriver {
     private void listChildren(String graphName, String parentName) {
 
         Graph graph = graphs.get(graphName);
-        List<String> childrenNodes = graph.getChildrenNodes(parentName);
-        Collections.sort(childrenNodes);
-//        System.out.println("\nchildrenNodes = " + childrenNodes);// TODO: Remove this after testing.
+        List<Graph.Edge> childrenEdges = graph.getChildren(parentName);
+        EdgeCompare edgeCompare = new EdgeCompare();
+        childrenEdges.sort(edgeCompare);
 
         StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
-        for(String childNode : childrenNodes)
+        for(Graph.Edge childEdge : childrenEdges)
         {
-            List<String> childrenEdgeLabels = graph.getEdge(parentName, childNode);
-//            System.out.println("\nchildrenEdgeLabels for " + parentName + ": " + childrenEdgeLabels); // TODO: Remove this after testing.
-            Collections.sort(childrenEdgeLabels);
-            for(String edgeLabel : childrenEdgeLabels)
-            {
-                result.append(" ").append(childNode).append("(").append(edgeLabel).append(")");
-            }
+            result.append(" ").append(childEdge.getChild()).append("(").append(childEdge.getLabel()).append(")");
         }
         output.println(result);
     }
@@ -320,12 +315,37 @@ public class MarvelTestDriver {
 
     private void findPath(String graphName, String node_a, String node_b)
     {
+        Graph graph = this.graphs.get(graphName);
+        node_a = node_a.replaceAll("_", " ");
+        node_b = node_b.replaceAll("_", " ");
 
+        if(!graph.containsNode(node_a)) // If node_a isn't within the graph.
+        {
+            output.println("unknown character " + node_a);
+        }
+        if(!graph.containsNode(node_b)) // If node_b isn't within the graph.
+        {
+            output.println("unknown character " + node_b);
+        }
+
+        if(graph.containsNode(node_a) && graph.containsNode(node_b)) // If both nodes passed are within the graph.
+        {
+            List<Graph.Edge> path = MarvelPaths.findPath(graph, node_a, node_b);
+            System.out.println("nodeA: " + node_a + ", nodeB: " + node_b + " path: " + path);
+
+            output.println("path from " + node_a + " to " + node_b + ":");
+            if(path == null) // If there was no path found.
+            {
+                output.println("no path found");
+            } else { // A path was found
+                for(Graph.Edge edgeInPath : path)
+                {
+                    output.println(edgeInPath.getParent() + " to " + edgeInPath.getChild() + " via "
+                            + edgeInPath.getLabel());
+                }
+            }
+        }
     }
-
-
-
-
 
 
     /**
