@@ -123,7 +123,11 @@ public final class MarvelPaths {
         return null;
     }
 
-    //
+    /**
+     * An interactable terminal solution for MarvelPaths' functionality.
+     *
+      * @param args arguments passed.
+     */
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Input the file you want to search: ");

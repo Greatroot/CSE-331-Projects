@@ -30,6 +30,7 @@ public class MarvelParser {
      * comic book the character appeared in, separated by a tab character
      *
      * @param filename the file that will be read
+     * @return an iterator of HeroModels where each element is a row from the parsed file.
      * @spec.requires filename is a valid file in the resources/data folder.
      */
     public static Iterator<HeroModel> parseData(String filename) {
