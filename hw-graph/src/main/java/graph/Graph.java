@@ -61,9 +61,13 @@ public class Graph {
     //  g.nodes != null
     //
     //  For every Edge e paired to every Node n within g.nodes:
+    //      n is unique
     //      n != null
     //      e != null
     //      e.parent.equals(n)
+    //
+    //  For all Edges e between node A and node B:
+    //      e is unique.
 
     private Map<String, Set<Edge>> nodes; // Each node in the map is paired with all of their child edges.
     private final boolean HEAVY_DEBUG = false;
@@ -137,7 +141,7 @@ public class Graph {
      * that value already present in this graph.
      * @throws IllegalArgumentException if nodeValue is null
      * @spec.modifies this
-     * @spec.effects our collection of Nodes by adding a node to it.
+     * @spec.effects our graph by adding a node to it.
      */
     public boolean addNode(String nodeValue) throws IllegalArgumentException
     {
@@ -170,7 +174,7 @@ public class Graph {
      * false and do not add the edge.
      * @throws IllegalArgumentException if label, parentNode, or childNode are null
      * @spec.modifies this
-     * @spec.effects our collection of edges by adding an edge to it.
+     * @spec.effects our graph by adding an edge to it.
      */
     public boolean addEdge(String label, String parentNode, String childNode)
             throws IllegalArgumentException
@@ -256,7 +260,7 @@ public class Graph {
      * @param childNode the child node of the edges we want.
      * @return a list of Edges with the specified parentNode and childNode.
      * If no Edges with those endpoints exist, then return an empty list.
-     * If either Edge doesn't exist within the graph, then return null.
+     * If either node doesn't exist within the graph, then return null.
      * @throws IllegalArgumentException if either parentNode or childNode are null
      */
     public List<Edge> getEdge(String parentNode, String childNode) throws IllegalArgumentException
@@ -294,10 +298,9 @@ public class Graph {
      * @param parentNode the value of the parent node whose children we want to retrieve.
      * @return a list of child edges. If there are no children, returns empty list.
      * If parent doesn't exist within the graph, return null.
-     * @throws IllegalArgumentException if the String parent is null.
+     * @throws IllegalArgumentException if parentNode parent is null.
      */
-    //TODO: Make a method that returns all the edges coming out from the parent node.
-    public List<Edge> getChildren(String parentNode) throws IllegalArgumentException
+    public List<Edge> getChildrenEdges(String parentNode) throws IllegalArgumentException
     { // This retrieves child nodes
         this.checkRep();
         if(parentNode == null)
@@ -311,7 +314,6 @@ public class Graph {
         }
 
         Set<Edge> edges = this.nodes.get(parentNode);
-        // TODO: Converting from Set to List could be a source of lag?
         List<Edge> childrenEdges = new ArrayList<Edge>(edges);
 
         this.checkRep();
@@ -419,24 +421,26 @@ public class Graph {
         }
     }
 
-//    /**
-//     * A <b>Edge</b> represents an <b>immutable</b> one-directional edge connecting two Nodes on our graph,
-//     * and is made up of a single String label and the edge's starting (parent) Node and ending (child) Node.
-//     *
-//     * <p> Each edge is one directional, meaning it represents a vector pointing FROM one Node TO another
-//     * Node. For example, node "A" can be connected to node "B" by edge "E" and "B" is directly
-//     * reachable from "A" (A, B). Because of one-way directionality, "A" cannot be accessed
-//     * by "B" using edge "E." A new edge must be made for this to happen.
-//     *
-//     *<p> This "one directionality" of how nodes are connected by edges is mainly kept track of by the
-//     * Edge class and it instances itself, but nodes do keep track of these relationships as well.
-//     *
-//     * For the purposes of simplicity, it is not valid for an Edge to have an empty String as a label.
-//     *
-//     * endpoint : Node // Either Node that makes up an edge. If Edge A has the parent Node B
-//     * and the child Node C, then both Nodes B and C are endpoints of A.
-//     */
-    public static class Edge { // TODO: If I keep this, then make sure to uncomment the specs and tidy it up.
+    /**
+     * A <b>Edge</b> represents an <b>immutable</b> one-directional edge connecting two Nodes on our graph,
+     * and is made up of a single String label and the edge's starting (parent) Node and ending (child) Node.
+     *
+     * <p> Each edge is one directional, meaning it represents a vector pointing FROM one Node TO another
+     * Node. For example, node "A" can be connected to node "B" by edge "E" and "B" is directly
+     * reachable from "A" (A, B). Because of one-way directionality, "A" cannot be accessed
+     * by "B" using edge "E." A new edge must be made for this to happen.
+     *
+     *<p> This "one directionality" of how nodes are connected by edges is mainly kept track of by the
+     * Edge class and it instances itself, but nodes do keep track of these relationships as well.
+     *
+     * <p> For the purposes of simplicity, it is valid for a node to have an empty String as a value and
+     *  for an edge to have an empty String as a label. An empty String also counts as a unique value for
+     *  the purposes of comparing nodes to nodes and edges to edges.
+     *
+     * endpoint : Node // Either Node that makes up an edge. If Edge A has the parent Node B
+     * and the child Node C, then both Nodes B and C are endpoints of A.
+     */
+    public static class Edge {
 
         // Abstract Function:
         //  For every Edge e:
@@ -451,17 +455,17 @@ public class Graph {
         private final String parent;
         private final String child;
 
-//        /**
-//         * Constructs an Edge with the specified "label," "parent," and "child."
-//         *
-//         * @param label the label for this Edge
-//         * @param parent the parent Node that this Edge starts at.
-//         * @param child the child Node that this Edge ends at.
-//         * @spec.requires {@code label != null && parent != null && child != null && !label.isEmpty()},
-//         * which is upheld by Graph.addEdge()'s @requires spec.
-//         *
-//         * Note: an edge can start at a node and point to itself.
-//         */
+        /**
+         * Constructs an Edge with the specified "label," "parent," and "child."
+         *
+         * @param label the label for this Edge
+         * @param parent the parent node that this Edge starts at.
+         * @param child the child node that this Edge ends at.
+         * @spec.requires {@code label != null && parent != null && child != null},
+         * which is upheld by Graph.addEdge()'s @requires spec.
+         *
+         * Note: an edge can start at a node and point to itself.
+         */
         public Edge(String label, String parent, String child)
         {
             this.label = label;
@@ -470,11 +474,11 @@ public class Graph {
             this.checkRep();
         }
 
-//        /**
-//         * Returns this Edge's label
-//         *
-//         * @return a separate copy of this Edge's label.
-//         */
+        /**
+         * Returns this Edge's label
+         *
+         * @return this Edge's String label.
+         */
         public String getLabel()
         {
             // Retains immutability since String is immutable.
@@ -482,11 +486,11 @@ public class Graph {
             return this.label;
         }
 
-//        /**
-//         * Returns the parent Node.
-//         *
-//         * @return a separate copy of this Edge's parent Node.
-//         */
+        /**
+         * Returns the parent Node.
+         *
+         * @return this Edge's parent node.
+         */
         public String getParent()
         {
             // Retains immutability since Node is immutable.
@@ -495,11 +499,11 @@ public class Graph {
 
         }
 
-//        /**
-//         * Returns the child Node.
-//         *
-//         * @return a separate copy of this Edge's child Node.
-//         */
+        /**
+         * Returns the child Node.
+         *
+         * @return this Edge's child Node.
+         */
         public String getChild()
         {
             // Retains immutability since Node is immutable
@@ -507,25 +511,25 @@ public class Graph {
             return this.child;
         }
 
-//        /**
-//         * Returns a string representation of this Edge.
-//         *
-//         * @return a String representation of this Node by printing out the label and the parent and child
-//         * Nodes.
-//         */
+        /**
+         * Returns a string representation of this Edge.
+         *
+         * @return a String representation of this Node by printing out the label and the parent and child
+         * nodes.
+         */
         @Override
         public String toString() {
             return "This edge " + this.label + " starts at " + this.parent + " and ends at "
                     + this.child;
         }
 
-    //        /**
-//         * Standard equality operation.
-//         *
-//         * @param obj the object to be compared for equality
-//         * @return true if and only if 'obj' is an instance of an Edge and 'this' and 'obj' represent
-//         * the same Edges with the same label and endpoints.
-//         */
+        /**
+         * Standard equality operation.
+         *
+         * @param obj the object to be compared for equality
+         * @return true if and only if 'obj' is an instance of an Edge and 'this' and 'obj' represent
+         * the same Edges with the same label and endpoints.
+         */
         @Override
         public boolean equals(Object obj) {
             if(obj == this)
@@ -543,11 +547,11 @@ public class Graph {
                     && this.child.equals(other.child);
         }
 
-//        /**
-//         * Standard hashCode function.
-//         *
-//         * @return an int that all objects equal to this will also return
-//         */
+        /**
+         * Standard hashCode function.
+         *
+         * @return an int that all objects equal to this will also return
+         */
         @Override
         public int hashCode() {
             int result = this.label.hashCode();
@@ -557,9 +561,9 @@ public class Graph {
             return result;
         }
 
-//        /**
-//         * Throws an exception if the representation invariant is violated.
-//         */
+        /**
+         * Throws an exception if the representation invariant is violated.
+         */
         private void checkRep() {
             //  e.label && e.parent && e.child != null
             assert (this.label != null);

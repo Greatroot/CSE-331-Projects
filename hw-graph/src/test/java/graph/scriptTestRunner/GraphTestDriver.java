@@ -257,7 +257,7 @@ public class GraphTestDriver {
     private void listChildren(String graphName, String parentName) {
 
         Graph graph = graphs.get(graphName);
-        List<Graph.Edge> childrenEdges = graph.getChildren(parentName);
+        List<Graph.Edge> childrenEdges = graph.getChildrenEdges(parentName);
         EdgeCompare edgeCompare = new EdgeCompare();
         childrenEdges.sort(edgeCompare);
 

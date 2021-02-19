@@ -1,0 +1,15 @@
+# Tests to see if the graph stores loops between multiple nodes properly (ex: n1 -> n2, n2 -> n1).
+
+CreateGraph g
+
+AddNode g n1
+AddNode g n2
+AddNode g n3
+
+AddEdge g n1 n2 e1
+AddEdge g n2 n1 e2
+
+ListNodes g
+
+ListChildren g n1
+ListChildren g n2

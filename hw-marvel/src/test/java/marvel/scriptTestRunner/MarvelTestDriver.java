@@ -266,7 +266,7 @@ public class MarvelTestDriver {
     private void listChildren(String graphName, String parentName) {
 
         Graph graph = graphs.get(graphName);
-        List<Graph.Edge> childrenEdges = graph.getChildren(parentName);
+        List<Graph.Edge> childrenEdges = graph.getChildrenEdges(parentName);
         EdgeCompare edgeCompare = new EdgeCompare();
         childrenEdges.sort(edgeCompare);
 
@@ -314,6 +314,8 @@ public class MarvelTestDriver {
         findPath(graphName, node_a, node_b);
     }
 
+    // Note, if node_a or node_b DNE within graph, I also take care of that within MarvelPaths.findPath() itself.
+    // Whether MarvelPaths.findPath() successfully takes care of that edge case is not tested here.
     private void findPath(String graphName, String node_a, String node_b)
     {
         Graph graph = this.graphs.get(graphName);

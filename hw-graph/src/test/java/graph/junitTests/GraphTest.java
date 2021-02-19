@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
  * This class contains a set of test cases that can be used to test the implementation of the
  * Graph class.
  *
- * <p>
  */
 public final class GraphTest {
 
@@ -309,9 +308,15 @@ public final class GraphTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testPassingNullToGetChildren()
+    public void testPassingNullToGetChildrenNodes()
     {
         threeNodesThreeEdgesGraph.getChildrenNodes(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPassingNullToGetChildrenEdges()
+    {
+        threeNodesThreeEdgesGraph.getChildrenEdges(null);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -358,10 +363,17 @@ public final class GraphTest {
     }
 
     @Test
-    public void testGetChildrenWithEmptyGraph()
+    public void testGetChildrenNodesWithEmptyGraph()
     {
         String failMessage = "failure - expected null";
         assertNull(failMessage, emptyGraph.getChildrenNodes("n1"));
+    }
+
+    @Test
+    public void testGetChildrenEdgesWithEmptyGraph()
+    {
+        String failMessage = "failure - expected null";
+        assertNull(failMessage, emptyGraph.getChildrenEdges("n1"));
     }
 
     @Test
@@ -450,10 +462,17 @@ public final class GraphTest {
     }
 
     @Test
-    public void testGetChildrenWithEmptyString()
+    public void testGetChildrenNodesWithEmptyString()
     {
         nodes.add("n1");
         assertEquals(EXPECTED_TRUE, nodes, graphWithEmptyStringNode.getChildrenNodes(""));
+    }
+
+    @Test
+    public void testGetChildrenEdgesWithEmptyString()
+    {
+        edges.add(new Graph.Edge("e1", "", "n1"));
+        assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getChildrenEdges(""));
     }
 
     @Test

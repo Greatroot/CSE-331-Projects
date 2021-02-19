@@ -5,15 +5,6 @@ import graph.Graph;
 
 import java.util.*;
 
-//TODO: As of 10:54 PM on Tuesday night
-// TODO: 1.) Ask about Unknown command: FindPath
-// TODO: 2.) Try to find why my LoadGraph doesn't scale well and is so slow with marvel.txt. FOUND IT~
-// TODO: 3.) Tidy up comments for Graph's getEdge() and getChildren()
-// TODO: 4.) Write tests for FindPath and LoadGraph.
-// TODO: 5.) Ask in office hours if this, EdgeCompare, and HeroModel count as ADTs
-//  (I'm pretty sure about the first two)
-// Ask about testing. Should we also test for weird TSV data?
-
 /**
  * MarvelPaths contains methods useful to generating a Graph based on data in a TSV file and performing
  * path finding operations on a Graph.
@@ -28,8 +19,12 @@ public final class MarvelPaths {
      * @throws IllegalArgumentException if the filename cannot be found within the file system.
      * @throws NullPointerException if the filename passed in is null.
      */
-    public static Graph loadGraph(String filename)
+    public static Graph loadGraph(String filename) throws IllegalArgumentException, NullPointerException
     {
+        if(filename == null)
+        {
+            throw new NullPointerException();
+        }
         Graph graph = new Graph();
         Iterator<HeroModel> heroModelIterator = MarvelParser.parseData(filename);
         Map<String, List<String>> marvelBooks = new HashMap<String, List<String>>();
@@ -54,7 +49,6 @@ public final class MarvelPaths {
                 marvelBooks.put(currentHero.getBook(), heroesInBook);
             }
         }
-//        System.out.println(marvelBooks); TODO: Remove this
 
         // Now create all of the edges now that we have all of the nodes in place
         // using the organized map we created.
@@ -67,14 +61,13 @@ public final class MarvelPaths {
             {
                 for(int j = 0; j != heroesInBook.size(); j++)
                 {
-                    if(j != i) // To avoid pointing a hero to itself.
+                    if(!heroesInBook.get(i).equals(heroesInBook.get(j))) // To avoid pointing a hero to itself and duplicates.
                     {
                         graph.addEdge(bookTitle, heroesInBook.get(i), heroesInBook.get(j));
                     }
                 }
             }
         }
-//        System.out.println(marvelBooks); TODO: Remove this
         return graph;
     }
 
@@ -84,13 +77,19 @@ public final class MarvelPaths {
      * @param marvelGraph the graph we want to perform the BFS search on.
      * @param hero_a the hero we want to start the search at.
      * @param hero_b the hero we want to find the shortest path TO from hero_a.
+     * @throws IllegalArgumentException if hero_a or hero_b are not within marvelGraph.
      * @return the shortest path of books and heroes (stored in Edges) that connects hero_a
      * to hero_b in the provided graph. If hero_a.equals(hero_b), then just return an empty path.
      * If there is no path that exists between the two heroes, return null.
      */
-    // To make this work lexicographically, I need to make sure I search each child in lexicographical order.
     public static List<Graph.Edge> findPath(Graph marvelGraph, String hero_a, String hero_b)
+            throws IllegalArgumentException
     {
+        if(!marvelGraph.containsNode(hero_a) || !marvelGraph.containsNode(hero_b))
+        {
+            throw new IllegalArgumentException();
+        }
+
         // visited node -> edges traveled.
         Map<String, List<Graph.Edge>> paths = new HashMap<String, List<Graph.Edge>>();
         Queue<String> nodesToVisit = new LinkedList<String>();
@@ -104,9 +103,8 @@ public final class MarvelPaths {
             {
                 return paths.get(currentHero); // Make sure this is right.
             }
-            //TODO: Use new version of getChildren/getEdges.
-            List<Graph.Edge> nextConnectedHeroes = marvelGraph.getChildren(currentHero);
 
+            List<Graph.Edge> nextConnectedHeroes = marvelGraph.getChildrenEdges(currentHero);
             EdgeCompare edgeCompare = new EdgeCompare();
             nextConnectedHeroes.sort(edgeCompare); // Ensures child nodes are in searched in lexicographical order.
 
@@ -123,6 +121,45 @@ public final class MarvelPaths {
         }
         // The loop terminated and there is no path that exists from start to dest.
         return null;
+    }
+
+    //
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Input the file you want to search: ");
+        String filename = scan.nextLine();
+
+        System.out.println("Input the starting node: ");
+        String node_a = scan.nextLine();
+
+        System.out.println("Input the ending node: ");
+        String node_b = scan.nextLine();
+
+        System.out.println("path from " + node_a + " to " + node_b + ":");
+        Graph graph = MarvelPaths.loadGraph(filename);
+        if(!graph.containsNode(node_a)) // If node_a DNE within the graph
+        {
+            System.out.println("unknown node: " + node_a);
+        }
+        if(!graph.containsNode(node_b)) // If node_b DNE within the graph
+        {
+            System.out.println("unknown node: " + node_a);
+        }
+
+        if(graph.containsNode(node_a) && graph.containsNode(node_b))
+        {
+            List<Graph.Edge> path = MarvelPaths.findPath(graph, node_a, node_b);
+            if(path != null) // If there is a path
+            {
+                for(Graph.Edge edge : path)
+                {
+                    System.out.println(edge.getParent() + " to " + edge.getChild() + " via " + edge.getLabel());
+                }
+            } else // If there's no paths found
+            {
+                System.out.println("No path found");
+            }
+        }
     }
 
 }

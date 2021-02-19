@@ -1,0 +1,14 @@
+# Tests loading multiple graphs from the same tsv and modifying those graphs.
+
+loaded graph g1
+loaded graph g2
+
+added node A to g1
+added node B to g1
+
+added node A to g2
+added node C to g2
+added node D to g2
+
+g1 contains: A B n1 n10 n11 n12 n13 n2 n3 n4 n5 n6 n7 n8 n9
+g2 contains: A C D n1 n10 n11 n12 n13 n2 n3 n4 n5 n6 n7 n8 n9

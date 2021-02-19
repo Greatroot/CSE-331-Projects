@@ -1,0 +1,15 @@
+# Tests that MarvelPaths.findPath() returns the lexicographically first shortest path.
+
+CreateGraph g
+AddNode g n1
+AddNode g n2
+AddNode g n3
+AddNode g n4
+AddNode g n5
+AddEdge g n1 n2 e1
+AddEdge g n2 n3 e2
+AddEdge g n2 n4 e3
+AddEdge g n3 n5 e4
+AddEdge g n4 n5 e5
+
+FindPath g n1 n5

@@ -1,0 +1,5 @@
+# Tests finding the four hop path from THANDEMOS to URCHALLA.
+
+LoadGraph marvel marvel.tsv
+
+FindPath marvel THANADEMOS URCHALLA

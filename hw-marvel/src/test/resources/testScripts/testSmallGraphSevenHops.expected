@@ -1,0 +1,30 @@
+# Tests finding a path with lots of hops on a small graph.
+
+loaded graph g
+
+path from n5 to n7:
+n5 to n2 via e3
+n2 to n1 via e1
+n1 to n3 via e2
+n3 to n4 via e4
+n4 to n6 via e5
+n6 to n10 via e10
+n10 to n7 via e11
+
+path from n7 to n5:
+n7 to n10 via e11
+n10 to n6 via e10
+n6 to n4 via e5
+n4 to n3 via e4
+n3 to n1 via e2
+n1 to n2 via e1
+n2 to n5 via e3
+
+path from n10 to n11:
+n10 to n6 via e10
+n6 to n4 via e5
+n4 to n3 via e4
+n3 to n1 via e2
+n1 to n2 via e1
+n2 to n5 via e3
+n5 to n11 via e7

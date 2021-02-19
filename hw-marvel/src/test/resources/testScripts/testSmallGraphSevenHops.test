@@ -1,0 +1,9 @@
+# Tests finding a path with lots of hops on a small graph.
+
+LoadGraph g testData.tsv
+
+FindPath g n5 n7
+
+FindPath g n7 n5
+
+FindPath g n10 n11

@@ -1,0 +1,14 @@
+# Tests loading multiple graphs from the same tsv and modifying those graphs.
+
+LoadGraph g1 testData.tsv
+LoadGraph g2 testData.tsv
+
+AddNode g1 A
+AddNode g1 B
+
+AddNode g2 A
+AddNode g2 C
+AddNode g2 D
+
+ListNodes g1
+ListNodes g2
