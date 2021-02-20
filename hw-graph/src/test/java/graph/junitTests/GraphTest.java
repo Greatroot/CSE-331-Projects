@@ -25,39 +25,39 @@ public final class GraphTest {
     private final String EXPECTED_FALSE = "failure - expected false but was true";
 
 
-    Graph emptyGraph, oneNodeGraph, threeNodesOneEdgeGraph, fourNodesGraph, threeNodesThreeEdgesGraph,
+    Graph<String, String> emptyGraph, oneNodeGraph, threeNodesOneEdgeGraph, fourNodesGraph, threeNodesThreeEdgesGraph,
             graphWithEmptyStringNode;
-    List<Graph.Edge> edges;
+    List<Graph.Edge<String, String>> edges;
     List<String> nodes;
 
     @Before
     public void setUp()
     {
         nodes = new ArrayList<String>();
-        edges = new ArrayList<Graph.Edge>();
+        edges = new ArrayList<Graph.Edge<String, String>>();
 
-        emptyGraph = new Graph();
+        emptyGraph = new Graph<String, String>();
 
-        oneNodeGraph = new Graph("n1");
+        oneNodeGraph = new Graph<String, String>("n1");
 
-        threeNodesOneEdgeGraph = new Graph("n1");
+        threeNodesOneEdgeGraph = new Graph<String, String>("n1");
         threeNodesOneEdgeGraph.addNode("n2");
         threeNodesOneEdgeGraph.addNode("n3");
         threeNodesOneEdgeGraph.addEdge("e1", "n1", "n2");
 
-        fourNodesGraph = new Graph("n1");
+        fourNodesGraph = new Graph<String, String>("n1");
         fourNodesGraph.addNode("n2");
         fourNodesGraph.addNode("n3");
         fourNodesGraph.addNode("n4");
 
-        threeNodesThreeEdgesGraph = new Graph("n1");
+        threeNodesThreeEdgesGraph = new Graph<String, String>("n1");
         threeNodesThreeEdgesGraph.addNode("n2");
         threeNodesThreeEdgesGraph.addNode("n3");
         threeNodesThreeEdgesGraph.addEdge("e1", "n1", "n2");
         threeNodesThreeEdgesGraph.addEdge("e2", "n1", "n2");
         threeNodesThreeEdgesGraph.addEdge("e3", "n1", "n3");
 
-        graphWithEmptyStringNode = new Graph("");
+        graphWithEmptyStringNode = new Graph<String, String>("");
         graphWithEmptyStringNode.addNode("n1");
         graphWithEmptyStringNode.addNode("n2");
         graphWithEmptyStringNode.addEdge("e1", "", "n1");
@@ -135,13 +135,13 @@ public final class GraphTest {
     public void testNoEdgesBetweenTwoNodes()
     {
         String failMessage = "failure - getEdge() did not return an empty list of edges.";
-        assertEquals(failMessage, new ArrayList<Graph.Edge>(), fourNodesGraph.getEdge("n1", "n2"));
+        assertEquals(failMessage, new ArrayList<Graph.Edge<String, String>>(), fourNodesGraph.getEdge("n1", "n2"));
     }
 
     @Test
     public void testOneEdgeBetweenTwoNodes()
     {
-        edges.add(new Graph.Edge("e1", "n1", "n2"));
+        edges.add(new Graph.Edge<String, String>("e1", "n1", "n2"));
         String failMessage = "failure - getEdge() did not return the one edge.";
         assertEquals(failMessage, edges, threeNodesOneEdgeGraph.getEdge("n1", "n2"));
     }
@@ -149,8 +149,8 @@ public final class GraphTest {
     @Test
     public void testMultipleEdgesBetweenTwoNodes()
     {
-        edges.add(new Graph.Edge("e1", "n1", "n2"));
-        edges.add(new Graph.Edge("e2", "n1", "n2"));
+        edges.add(new Graph.Edge<String, String>("e1", "n1", "n2"));
+        edges.add(new Graph.Edge<String, String>("e2", "n1", "n2"));
         String failMessage = "failure - getEdge() did not return the two edges.";
         assertEquals(failMessage, edges, threeNodesThreeEdgesGraph.getEdge("n1", "n2"));
     }
@@ -232,7 +232,7 @@ public final class GraphTest {
     @Test(expected = IllegalArgumentException.class)
     public void testPassingNullToConstructor()
     {
-        Graph illegalGraph = new Graph(null);
+        Graph<String, String> illegalGraph = new Graph<String, String>(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -457,7 +457,7 @@ public final class GraphTest {
     @Test
     public void testGetEdgeWithEmptyString()
     {
-        edges.add(new Graph.Edge("", "n2", ""));
+        edges.add(new Graph.Edge<String, String>("", "n2", ""));
         assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getEdge("n2", ""));
     }
 
@@ -471,7 +471,7 @@ public final class GraphTest {
     @Test
     public void testGetChildrenEdgesWithEmptyString()
     {
-        edges.add(new Graph.Edge("e1", "", "n1"));
+        edges.add(new Graph.Edge<String, String>("e1", "", "n1"));
         assertEquals(EXPECTED_TRUE, edges, graphWithEmptyStringNode.getChildrenEdges(""));
     }
 

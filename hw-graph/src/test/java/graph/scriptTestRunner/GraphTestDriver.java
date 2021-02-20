@@ -11,7 +11,7 @@
 
 package graph.scriptTestRunner;
 
-import graph.EdgeCompare;
+import graph.EdgeStringCompare;
 import graph.Graph;
 
 import java.io.*;
@@ -79,7 +79,7 @@ public class GraphTestDriver {
      * String -> Graph: maps the names of graphs to the actual graph
      **/
     // TODO for the student: Uncomment and parameterize the next line correctly:
-    private final Map<String, Graph> graphs = new HashMap<String, Graph>();
+    private final Map<String, Graph<String, String>> graphs = new HashMap<String, Graph<String, String>>();
     private final PrintWriter output;
     private final BufferedReader input;
 
@@ -163,7 +163,7 @@ public class GraphTestDriver {
 
     private void createGraph(String graphName) {
 
-        Graph graph = new Graph();
+        Graph<String, String> graph = new Graph<String, String>();
          graphs.put(graphName, graph);
          output.println("created graph " + graphName);
     }
@@ -181,7 +181,7 @@ public class GraphTestDriver {
 
     private void addNode(String graphName, String nodeName) {
 
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
         graph.addNode(nodeName);
         if(graph.containsNode(nodeName))
         {
@@ -208,7 +208,7 @@ public class GraphTestDriver {
     private void addEdge(String graphName, String parentName, String childName,
                          String edgeLabel) {
 
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
         graph.addEdge(edgeLabel, parentName, childName);
         if(graph.containsEdge(edgeLabel, parentName, childName))
         {
@@ -232,7 +232,7 @@ public class GraphTestDriver {
 
     private void listNodes(String graphName) {
 
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
         List<String> nodes = graph.getAllNodes();
         Collections.sort(nodes);
 
@@ -256,38 +256,18 @@ public class GraphTestDriver {
 
     private void listChildren(String graphName, String parentName) {
 
-        Graph graph = graphs.get(graphName);
-        List<Graph.Edge> childrenEdges = graph.getChildrenEdges(parentName);
-        EdgeCompare edgeCompare = new EdgeCompare();
-        childrenEdges.sort(edgeCompare);
+        Graph<String, String> graph = graphs.get(graphName);
+        List<Graph.Edge<String, String>> childrenEdges = graph.getChildrenEdges(parentName);
+        EdgeStringCompare edgeStringCompare = new EdgeStringCompare();
+        childrenEdges.sort(edgeStringCompare);
 
         StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
-        for(Graph.Edge childEdge : childrenEdges)
+        for(Graph.Edge<String, String> childEdge : childrenEdges)
         {
             result.append(" ").append(childEdge.getChild()).append("(").append(childEdge.getLabel()).append(")");
         }
         output.println(result);
     }
-
-    //TODO: Remove this if replaced.
-//    private void listChildren(String graphName, String parentName) {
-//
-//        Graph graph = graphs.get(graphName);
-//        List<String> childrenNodes = graph.getChildrenNodes(parentName);
-//        Collections.sort(childrenNodes);
-//
-//        StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
-//        for(String childNode : childrenNodes)
-//        {
-//            List<String> childrenEdgeLabels = graph.getEdge(parentName, childNode);
-//            Collections.sort(childrenEdgeLabels);
-//            for(String edgeLabel : childrenEdgeLabels)
-//            {
-//                result.append(" ").append(childNode).append("(").append(edgeLabel).append(")");
-//            }
-//        }
-//        output.println(result);
-//    }
 
     /**
      * This exception results when the input file cannot be parsed properly

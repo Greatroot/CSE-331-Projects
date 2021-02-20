@@ -33,7 +33,7 @@ public class EdgeTest {
     @Test
     public void testConstructingValidEdge()
     {
-        Graph.Edge edge = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge<String, String> edge = new Graph.Edge<String, String>("e1", "n1", "n2");
         assertEquals(EXPECTED_TRUE, "e1", edge.getLabel());
         assertEquals(EXPECTED_TRUE, "n1", edge.getParent());
         assertEquals(EXPECTED_TRUE, "n2", edge.getChild());
@@ -42,7 +42,7 @@ public class EdgeTest {
     @Test
     public void testConstructingEdgeWithEmptyLabel()
     {
-        Graph.Edge edge = new Graph.Edge("", "n1", "n2");
+        Graph.Edge<String, String> edge = new Graph.Edge<String, String>("", "n1", "n2");
         assertEquals(EXPECTED_TRUE, "", edge.getLabel());
         assertEquals(EXPECTED_TRUE, "n1", edge.getParent());
         assertEquals(EXPECTED_TRUE, "n2", edge.getChild());
@@ -51,7 +51,7 @@ public class EdgeTest {
     @Test
     public void testConstructingEdgeWithEmptyParent()
     {
-        Graph.Edge edge = new Graph.Edge("e1", "", "n2");
+        Graph.Edge<String, String> edge = new Graph.Edge<String, String>("e1", "", "n2");
         assertEquals(EXPECTED_TRUE, "e1", edge.getLabel());
         assertEquals(EXPECTED_TRUE, "", edge.getParent());
         assertEquals(EXPECTED_TRUE, "n2", edge.getChild());
@@ -60,7 +60,7 @@ public class EdgeTest {
     @Test
     public void testConstructingEdgeWithEmptyChild()
     {
-        Graph.Edge edge = new Graph.Edge("e1", "n1", "");
+        Graph.Edge<String, String> edge = new Graph.Edge<String, String>("e1", "n1", "");
         assertEquals(EXPECTED_TRUE, "e1", edge.getLabel());
         assertEquals(EXPECTED_TRUE, "n1", edge.getParent());
         assertEquals(EXPECTED_TRUE, "", edge.getChild());
@@ -69,7 +69,7 @@ public class EdgeTest {
     @Test
     public void testConstructingEdgeBetweenSameNode()
     {
-        Graph.Edge edge = new Graph.Edge("e1", "n1", "n1");
+        Graph.Edge<String, String> edge = new Graph.Edge<String, String>("e1", "n1", "n1");
         assertEquals(EXPECTED_TRUE, "e1", edge.getLabel());
         assertEquals(EXPECTED_TRUE, "n1", edge.getParent());
         assertEquals(EXPECTED_TRUE, "n1", edge.getChild());
@@ -82,11 +82,11 @@ public class EdgeTest {
     @Test
     public void testNormalEdgeEquality()
     {
-        Graph.Edge edge1 = new Graph.Edge("e1", "n1", "n2");
-        Graph.Edge edge2 = new Graph.Edge("e1", "n1", "n2");
-        Graph.Edge edge3 = new Graph.Edge("e2", "n1", "n2");
-        Graph.Edge edge4 = new Graph.Edge("e1", "n3", "n2");
-        Graph.Edge edge5 = new Graph.Edge("e1", "n1", "n3");
+        Graph.Edge<String, String> edge1 = new Graph.Edge<String, String>("e1", "n1", "n2");
+        Graph.Edge<String, String> edge2 = new Graph.Edge<String, String>("e1", "n1", "n2");
+        Graph.Edge<String, String> edge3 = new Graph.Edge<String, String>("e2", "n1", "n2");
+        Graph.Edge<String, String> edge4 = new Graph.Edge<String, String>("e1", "n3", "n2");
+        Graph.Edge<String, String> edge5 = new Graph.Edge<String, String>("e1", "n1", "n3");
 
         assertEquals(EXPECTED_TRUE, edge1, edge1);
         assertEquals(EXPECTED_TRUE, edge1, edge2);
@@ -98,16 +98,18 @@ public class EdgeTest {
     @Test
     public void testEmptyEdgeEquality()
     {
-        Graph.Edge edge1 = new Graph.Edge("", "n1", "n2");
-        Graph.Edge edge2 = new Graph.Edge("", "n1", "n2");
-        Graph.Edge edge3 = new Graph.Edge("e2", "", "n2");
-        Graph.Edge edge4 = new Graph.Edge("e1", "n3", "");
-        Graph.Edge edge5 = new Graph.Edge("e1", "n1", "n3");
-        Graph.Edge edge6 = new Graph.Edge("", "", "");
-        Graph.Edge edge7 = new Graph.Edge("", "", "");
+        Graph.Edge<String, String> edge1 = new Graph.Edge<String, String>("", "n1", "n2");
+        Graph.Edge<String, String> edge2 = new Graph.Edge<String, String>("", "n1", "n2");
+        Graph.Edge<String, String> edge3 = new Graph.Edge<String, String>("e2", "", "n2");
+        Graph.Edge<String, String> edge4 = new Graph.Edge<String, String>("e1", "n3", "");
+        Graph.Edge<String, String> edge5 = new Graph.Edge<String, String>("e1", "n1", "n3");
+        Graph.Edge<String, String> edge6 = new Graph.Edge<String, String>("", "", "");
+        Graph.Edge<String, String> edge7 = new Graph.Edge<String, String>("", "", "");
 
         assertEquals(EXPECTED_TRUE, edge1, edge1);
         assertEquals(EXPECTED_TRUE, edge1, edge2);
+        assertEquals(EXPECTED_TRUE, edge6, edge7);
+
         assertNotEquals(EXPECTED_TRUE, edge1, edge3);
         assertNotEquals(EXPECTED_TRUE, edge1, edge4);
         assertNotEquals(EXPECTED_TRUE, edge1, edge5);

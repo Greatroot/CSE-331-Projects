@@ -1,6 +1,6 @@
 package marvel;
 
-import graph.EdgeCompare;
+import graph.EdgeStringCompare;
 import graph.Graph;
 
 import java.util.*;
@@ -105,8 +105,8 @@ public final class MarvelPaths {
             }
 
             List<Graph.Edge> nextConnectedHeroes = marvelGraph.getChildrenEdges(currentHero);
-            EdgeCompare edgeCompare = new EdgeCompare();
-            nextConnectedHeroes.sort(edgeCompare); // Ensures child nodes are in searched in lexicographical order.
+            EdgeStringCompare edgeStringCompare = new EdgeStringCompare();
+            nextConnectedHeroes.sort(edgeStringCompare); // Ensures child nodes are in searched in lexicographical order.
 
             for(Graph.Edge nextConnectedHero : nextConnectedHeroes) // This is the list of child nodes.
             {

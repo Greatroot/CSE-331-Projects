@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 /** Comparator that compares Edges by their child nodes first and then their edge labels second.
  */
-public class EdgeCompare implements Comparator<Graph.Edge> {
+public class EdgeStringCompare implements Comparator<Graph.Edge<String, String>> {
 
     /**
      * Compares two Edges lexicographically by their children nodes first and then their
@@ -16,7 +16,7 @@ public class EdgeCompare implements Comparator<Graph.Edge> {
      * int if e1 lexicographically comes after e2, and 0 if both are defined by Graph.Edge.equals()
      * to be equal.
      */
-    public int compare(Graph.Edge e1, Graph.Edge e2)
+    public int compare(Graph.Edge<String, String> e1, Graph.Edge<String, String> e2)
     {
         int result = e1.getChild().compareTo(e2.getChild());
         if(result == 0)

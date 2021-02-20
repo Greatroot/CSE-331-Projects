@@ -1,2 +1,27 @@
 Briefly list any changes you made to your graph class during hw-pathfinder, and why you made those changes.
 
+    Graph.java:
+        - Added the generic class parameters <NodeType, LabelType> to Graph and the necessary changes to
+            Graph's methods and specs.
+
+    Graph.Edge.java:
+        - Added the generic class parameters <LabelType, NodeType> to Graph.Edge and the necessary changes
+            to Edge's methods and specs.
+
+    GraphTestDriver.java:
+        - Parameterized all references and instances of Graph with <String, String> and Graph.Edge with
+            <String, String>.
+
+    GraphTest.java:
+        - Parameterized all references and instances of Graph with <String, String> and Graph.Edge with
+            <String, String>.
+
+    EdgeTest.java:
+        - Parameterized all references and instances of Graph.Edge with <String, String>.
+
+    EdgeStringCompare.java:
+        - Changed the name from EdgeCompare.java to EdgeStringCompare.java to specialize it.
+        - Parameterized all references and instances of Graph.Edge with <String, String> to specialize.
+
+
+

@@ -11,7 +11,7 @@
 
 package marvel.scriptTestRunner;
 
-import graph.EdgeCompare;
+import graph.EdgeStringCompare;
 import graph.Graph;
 import marvel.MarvelPaths;
 
@@ -267,8 +267,8 @@ public class MarvelTestDriver {
 
         Graph graph = graphs.get(graphName);
         List<Graph.Edge> childrenEdges = graph.getChildrenEdges(parentName);
-        EdgeCompare edgeCompare = new EdgeCompare();
-        childrenEdges.sort(edgeCompare);
+        EdgeStringCompare edgeStringCompare = new EdgeStringCompare();
+        childrenEdges.sort(edgeStringCompare);
 
         StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
         for(Graph.Edge childEdge : childrenEdges)
