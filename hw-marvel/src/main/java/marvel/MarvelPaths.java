@@ -19,13 +19,13 @@ public final class MarvelPaths {
      * @throws IllegalArgumentException if the filename cannot be found within the file system.
      * @throws NullPointerException if the filename passed in is null.
      */
-    public static Graph loadGraph(String filename) throws IllegalArgumentException, NullPointerException
+    public static Graph<String, String> loadGraph(String filename) throws IllegalArgumentException, NullPointerException
     {
         if(filename == null)
         {
             throw new NullPointerException();
         }
-        Graph graph = new Graph();
+        Graph<String, String> graph = new Graph<String, String>();
         Iterator<HeroModel> heroModelIterator = MarvelParser.parseData(filename);
         Map<String, List<String>> marvelBooks = new HashMap<String, List<String>>();
 
@@ -82,7 +82,7 @@ public final class MarvelPaths {
      * to hero_b in the provided graph. If hero_a.equals(hero_b), then just return an empty path.
      * If there is no path that exists between the two heroes, return null.
      */
-    public static List<Graph.Edge> findPath(Graph marvelGraph, String hero_a, String hero_b)
+    public static List<Graph.Edge<String, String>> findPath(Graph<String, String> marvelGraph, String hero_a, String hero_b)
             throws IllegalArgumentException
     {
         if(!marvelGraph.containsNode(hero_a) || !marvelGraph.containsNode(hero_b))
@@ -91,11 +91,11 @@ public final class MarvelPaths {
         }
 
         // visited node -> edges traveled.
-        Map<String, List<Graph.Edge>> paths = new HashMap<String, List<Graph.Edge>>();
+        Map<String, List<Graph.Edge<String, String>>> paths = new HashMap<String, List<Graph.Edge<String, String>>>();
         Queue<String> nodesToVisit = new LinkedList<String>();
 
         nodesToVisit.add(hero_a);
-        paths.put(hero_a, new ArrayList<Graph.Edge>());
+        paths.put(hero_a, new ArrayList<Graph.Edge<String, String>>());
         while(!nodesToVisit.isEmpty())
         {
             String currentHero = nodesToVisit.remove();
@@ -104,15 +104,15 @@ public final class MarvelPaths {
                 return paths.get(currentHero); // Make sure this is right.
             }
 
-            List<Graph.Edge> nextConnectedHeroes = marvelGraph.getChildrenEdges(currentHero);
+            List<Graph.Edge<String, String>> nextConnectedHeroes = marvelGraph.getChildrenEdges(currentHero);
             EdgeStringCompare edgeStringCompare = new EdgeStringCompare();
             nextConnectedHeroes.sort(edgeStringCompare); // Ensures child nodes are in searched in lexicographical order.
 
-            for(Graph.Edge nextConnectedHero : nextConnectedHeroes) // This is the list of child nodes.
+            for(Graph.Edge<String, String> nextConnectedHero : nextConnectedHeroes) // This is the list of child nodes.
             {
                 if(!paths.containsKey(nextConnectedHero.getChild()))
                 {
-                    List<Graph.Edge> pathToNextHero = new ArrayList<Graph.Edge>(paths.get(currentHero));
+                    List<Graph.Edge<String, String>> pathToNextHero = new ArrayList<Graph.Edge<String, String>>(paths.get(currentHero));
                     pathToNextHero.add(nextConnectedHero); // Because our path is just the path of heroes/nodes from a to b.
                     paths.put(nextConnectedHero.getChild(), pathToNextHero);
                     nodesToVisit.add(nextConnectedHero.getChild());
@@ -140,7 +140,7 @@ public final class MarvelPaths {
         String node_b = scan.nextLine();
 
         System.out.println("path from " + node_a + " to " + node_b + ":");
-        Graph graph = MarvelPaths.loadGraph(filename);
+        Graph<String, String> graph = MarvelPaths.loadGraph(filename);
         if(!graph.containsNode(node_a)) // If node_a DNE within the graph
         {
             System.out.println("unknown node: " + node_a);
@@ -152,10 +152,10 @@ public final class MarvelPaths {
 
         if(graph.containsNode(node_a) && graph.containsNode(node_b))
         {
-            List<Graph.Edge> path = MarvelPaths.findPath(graph, node_a, node_b);
+            List<Graph.Edge<String, String>> path = MarvelPaths.findPath(graph, node_a, node_b);
             if(path != null) // If there is a path
             {
-                for(Graph.Edge edge : path)
+                for(Graph.Edge<String, String> edge : path)
                 {
                     System.out.println(edge.getParent() + " to " + edge.getChild() + " via " + edge.getLabel());
                 }

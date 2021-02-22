@@ -82,7 +82,7 @@ public class MarvelTestDriver {
     // TODO: Change Graph type to MarvelPaths type.
     // TODO: MarvelPaths should give us the funcitonality to write the LoadGraph and FindPath tests,
             // and so this test driver still stores and uses Graphs, not MarvelPaths.
-    private final Map<String, Graph> graphs = new HashMap<String, Graph>();
+    private final Map<String, Graph<String, String>> graphs = new HashMap<String, Graph<String, String>>();
     private final PrintWriter output;
     private final BufferedReader input;
 
@@ -172,7 +172,7 @@ public class MarvelTestDriver {
 
     private void createGraph(String graphName) {
 
-        Graph graph = new Graph();
+        Graph<String, String> graph = new Graph<String, String>();
         graphs.put(graphName, graph);
         output.println("created graph " + graphName);
     }
@@ -190,7 +190,7 @@ public class MarvelTestDriver {
 
     private void addNode(String graphName, String nodeName) {
 
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
         graph.addNode(nodeName);
         if(graph.containsNode(nodeName))
         {
@@ -217,7 +217,7 @@ public class MarvelTestDriver {
     private void addEdge(String graphName, String parentName, String childName,
                          String edgeLabel) {
 
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
         graph.addEdge(edgeLabel, parentName, childName);
         if(graph.containsEdge(edgeLabel, parentName, childName))
         {
@@ -241,7 +241,7 @@ public class MarvelTestDriver {
 
     private void listNodes(String graphName) {
 
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
         List<String> nodes = graph.getAllNodes();
         Collections.sort(nodes);
 
@@ -265,13 +265,13 @@ public class MarvelTestDriver {
 
     private void listChildren(String graphName, String parentName) {
 
-        Graph graph = graphs.get(graphName);
-        List<Graph.Edge> childrenEdges = graph.getChildrenEdges(parentName);
+        Graph<String, String> graph = graphs.get(graphName);
+        List<Graph.Edge<String, String>> childrenEdges = graph.getChildrenEdges(parentName);
         EdgeStringCompare edgeStringCompare = new EdgeStringCompare();
         childrenEdges.sort(edgeStringCompare);
 
         StringBuilder result = new StringBuilder("the children of " + parentName + " in " + graphName + " are:");
-        for(Graph.Edge childEdge : childrenEdges)
+        for(Graph.Edge<String, String> childEdge : childrenEdges)
         {
             result.append(" ").append(childEdge.getChild()).append("(").append(childEdge.getLabel()).append(")");
         }
@@ -318,7 +318,7 @@ public class MarvelTestDriver {
     // Whether MarvelPaths.findPath() successfully takes care of that edge case is not tested here.
     private void findPath(String graphName, String node_a, String node_b)
     {
-        Graph graph = this.graphs.get(graphName);
+        Graph<String, String> graph = this.graphs.get(graphName);
         node_a = node_a.replaceAll("_", " ");
         node_b = node_b.replaceAll("_", " ");
 
@@ -333,7 +333,7 @@ public class MarvelTestDriver {
 
         if(graph.containsNode(node_a) && graph.containsNode(node_b)) // If both nodes passed are within the graph.
         {
-            List<Graph.Edge> path = MarvelPaths.findPath(graph, node_a, node_b);
+            List<Graph.Edge<String, String>> path = MarvelPaths.findPath(graph, node_a, node_b);
             System.out.println("nodeA: " + node_a + ", nodeB: " + node_b + " path: " + path);
 
             output.println("path from " + node_a + " to " + node_b + ":");
@@ -341,7 +341,7 @@ public class MarvelTestDriver {
             {
                 output.println("no path found");
             } else { // A path was found
-                for(Graph.Edge edgeInPath : path)
+                for(Graph.Edge<String, String> edgeInPath : path)
                 {
                     output.println(edgeInPath.getParent() + " to " + edgeInPath.getChild() + " via "
                             + edgeInPath.getLabel());

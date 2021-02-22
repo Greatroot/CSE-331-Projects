@@ -27,13 +27,13 @@ public final class MarvelPathsTest {
     private final String EXPECTED_FALSE = "failure - expected false but was true";
 
 
-    Graph marvelGraph, testDataGraph, loadedGraphWithEmptyStringedNodes, loadedGraphWithEmptyStringedEdges;
-    List<Graph.Edge> path;
+    Graph<String, String> marvelGraph, testDataGraph, loadedGraphWithEmptyStringedNodes, loadedGraphWithEmptyStringedEdges;
+    List<Graph.Edge<String, String>> path;
 
     @Before
     public void setUp()
     {
-        path = new ArrayList<Graph.Edge>();
+        path = new ArrayList<Graph.Edge<String, String>>();
 
         marvelGraph = MarvelPaths.loadGraph("marvel.tsv");
         testDataGraph = MarvelPaths.loadGraph("testData.tsv");
@@ -48,13 +48,13 @@ public final class MarvelPathsTest {
     @Test
     public void testLoadingGraphFromTSVWithEmptyNode()
     {
-        path.add(new Graph.Edge("e13" ,"", "n10"));
-        path.add(new Graph.Edge("e10" ,"n10", "n6"));
-        path.add(new Graph.Edge("e5" ,"n6", "n4"));
-        path.add(new Graph.Edge("e4" ,"n4", "n3"));
-        path.add(new Graph.Edge("e2" ,"n3", "n1"));
-        path.add(new Graph.Edge("e1" ,"n1", "n2"));
-        path.add(new Graph.Edge("e3" ,"n2", "n5"));
+        path.add(new Graph.Edge<String, String>("e13" ,"", "n10"));
+        path.add(new Graph.Edge<String, String>("e10" ,"n10", "n6"));
+        path.add(new Graph.Edge<String, String>("e5" ,"n6", "n4"));
+        path.add(new Graph.Edge<String, String>("e4" ,"n4", "n3"));
+        path.add(new Graph.Edge<String, String>("e2" ,"n3", "n1"));
+        path.add(new Graph.Edge<String, String>("e1" ,"n1", "n2"));
+        path.add(new Graph.Edge<String, String>("e3" ,"n2", "n5"));
 
         assertEquals(EXPECTED_TRUE, path, MarvelPaths.findPath(loadedGraphWithEmptyStringedNodes, "", "n5"));
     }
@@ -62,7 +62,7 @@ public final class MarvelPathsTest {
     @Test
     public void testLoadingGraphFromTSVWithEmptyEdges()
     {
-        path.add(new Graph.Edge("" ,"n10", "n5"));
+        path.add(new Graph.Edge<String, String>("" ,"n10", "n5"));
 
         assertEquals(EXPECTED_TRUE, path, MarvelPaths.findPath(loadedGraphWithEmptyStringedEdges, "n10", "n5"));
     }

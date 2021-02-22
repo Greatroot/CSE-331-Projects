@@ -45,11 +45,11 @@ import java.util.List;
  * <p><b>endpoint</b> : Node // Either node that makes up an edge. If edge A has the parent node B
  * and the child node C, then both nodes B and C are endpoints of A.
  *
- * @param <NodeType> The type of the nodes you want stored in the Graph.
- * @param <LabelType> The type of edge labels you want stored in all the edges in your graph.
+ * @param <N> The type of the nodes you want stored in the Graph.
+ * @param <E> The type of edge labels you want stored in all the edges in your graph.
  *
  */
-public class Graph<NodeType, LabelType> {
+public class Graph<N, E> {
 
     // Abstraction Function:
     // A Graph g is made up of Nodes and Edges:
@@ -69,7 +69,7 @@ public class Graph<NodeType, LabelType> {
     //  For all Edges e between node A and node B:
     //      e is unique.
 
-    private Map<NodeType, Set<Edge<LabelType, NodeType>>> nodes; // Each node in the map is paired with all of their child edges.
+    private Map<N, Set<Edge<E, N>>> nodes; // Each node in the map is paired with all of their child edges.
     private final boolean HEAVY_DEBUG = false;
 
     /**
@@ -77,7 +77,7 @@ public class Graph<NodeType, LabelType> {
      */
     public Graph()
     {
-        this.nodes = new HashMap<NodeType, Set<Edge<LabelType, NodeType>>>();
+        this.nodes = new HashMap<N, Set<Edge<E, N>>>();
         checkRep();
     }
 
@@ -87,15 +87,15 @@ public class Graph<NodeType, LabelType> {
      * @spec.effects Constructs a new Graph with a single node.
      *
      */
-    public Graph(NodeType nodeValue) throws IllegalArgumentException
+    public Graph(N nodeValue) throws IllegalArgumentException
     {
         if(nodeValue == null)
         {
             throw new IllegalArgumentException();
         }
 
-        this.nodes = new HashMap<NodeType, Set<Edge<LabelType, NodeType>>>();
-        this.nodes.put(nodeValue, new HashSet<Edge<LabelType, NodeType>>());
+        this.nodes = new HashMap<N, Set<Edge<E, N>>>();
+        this.nodes.put(nodeValue, new HashSet<Edge<E, N>>());
         checkRep();
     }
 
@@ -108,7 +108,7 @@ public class Graph<NodeType, LabelType> {
      * Returns false otherwise, including if either node passed DNE within the graph.
      * @throws IllegalArgumentException if parent or child are null.
      */
-    public boolean isAdjacent(NodeType parent, NodeType child) throws IllegalArgumentException
+    public boolean isAdjacent(N parent, N child) throws IllegalArgumentException
     {
         this.checkRep();
         if(parent == null || child == null)
@@ -116,10 +116,10 @@ public class Graph<NodeType, LabelType> {
             throw new IllegalArgumentException();
         }
 
-        Set<Edge<LabelType, NodeType>> childEdges = this.nodes.get(parent);
+        Set<Edge<E, N>> childEdges = this.nodes.get(parent);
         if(childEdges != null)
         {
-            for(Edge<LabelType, NodeType> childEdge : childEdges)
+            for(Edge<E, N> childEdge : childEdges)
             {
                 if(childEdge.getChild().equals(child))
                 {
@@ -143,7 +143,7 @@ public class Graph<NodeType, LabelType> {
      * @spec.modifies this
      * @spec.effects our graph by adding a node to it.
      */
-    public boolean addNode(NodeType nodeValue) throws IllegalArgumentException
+    public boolean addNode(N nodeValue) throws IllegalArgumentException
     {
         this.checkRep();
         if(nodeValue == null)
@@ -157,7 +157,7 @@ public class Graph<NodeType, LabelType> {
             return false;
         }
 
-        this.nodes.put(nodeValue, new HashSet<Edge<LabelType, NodeType>>());
+        this.nodes.put(nodeValue, new HashSet<Edge<E, N>>());
         this.checkRep();
         return true;
     }
@@ -176,7 +176,7 @@ public class Graph<NodeType, LabelType> {
      * @spec.modifies this
      * @spec.effects our graph by adding an edge to it.
      */
-    public boolean addEdge(LabelType label, NodeType parentNode, NodeType childNode)
+    public boolean addEdge(E label, N parentNode, N childNode)
             throws IllegalArgumentException
     {
         this.checkRep();
@@ -187,7 +187,7 @@ public class Graph<NodeType, LabelType> {
 
         boolean didAdd = false;
         if(this.nodes.containsKey(parentNode) && this.nodes.containsKey(childNode)) {
-            Edge<LabelType, NodeType> newEdge = new Edge<LabelType, NodeType>(label, parentNode, childNode);
+            Edge<E, N> newEdge = new Edge<E, N>(label, parentNode, childNode);
             didAdd = this.nodes.get(parentNode).add(newEdge);
         }
 
@@ -203,7 +203,7 @@ public class Graph<NodeType, LabelType> {
      * returns false.
      * @throws IllegalArgumentException if nodeValue is null
      */
-    public boolean containsNode(NodeType nodeValue) throws IllegalArgumentException
+    public boolean containsNode(N nodeValue) throws IllegalArgumentException
     {
         this.checkRep();
         if(nodeValue == null)
@@ -227,7 +227,7 @@ public class Graph<NodeType, LabelType> {
      * this graph. If it isn't, return false.
      * @throws IllegalArgumentException if label, parent, or child are null
      */
-    public boolean containsEdge(LabelType label, NodeType parent, NodeType child)
+    public boolean containsEdge(E label, N parent, N child)
             throws IllegalArgumentException
     {
         this.checkRep();
@@ -236,10 +236,10 @@ public class Graph<NodeType, LabelType> {
             throw new IllegalArgumentException();
         }
 
-        Set<Edge<LabelType, NodeType>> childEdges = this.nodes.get(parent);
+        Set<Edge<E, N>> childEdges = this.nodes.get(parent);
         if(childEdges != null)
         {
-            for(Edge<LabelType, NodeType> edge : childEdges)
+            for(Edge<E, N> edge : childEdges)
             {
                 if(edge.getLabel().equals(label) && edge.getChild().equals(child))
                 {
@@ -264,7 +264,7 @@ public class Graph<NodeType, LabelType> {
      * If either node doesn't exist within the graph, then return null.
      * @throws IllegalArgumentException if either parentNode or childNode are null
      */
-    public List<Edge<LabelType, NodeType>> getEdge(NodeType parentNode, NodeType childNode)
+    public List<Edge<E, N>> getEdge(N parentNode, N childNode)
             throws IllegalArgumentException
     { // This retrieves edge labels of edges that sit between the two nodes.
         // The client should have access to all three components of the edge: the label, the parent,
@@ -280,9 +280,9 @@ public class Graph<NodeType, LabelType> {
             return null;
         }
 
-        List<Edge<LabelType, NodeType>> edgesToChild = new ArrayList<Edge<LabelType, NodeType>>();
-        Set<Edge<LabelType, NodeType>> edgesToAllChildren = this.nodes.get(parentNode);
-        for(Edge<LabelType, NodeType> edge : edgesToAllChildren)
+        List<Edge<E, N>> edgesToChild = new ArrayList<Edge<E, N>>();
+        Set<Edge<E, N>> edgesToAllChildren = this.nodes.get(parentNode);
+        for(Edge<E, N> edge : edgesToAllChildren)
         {
             if(edge.getChild().equals(childNode))
             {
@@ -302,7 +302,7 @@ public class Graph<NodeType, LabelType> {
      * If parent doesn't exist within the graph, return null.
      * @throws IllegalArgumentException if parentNode parent is null.
      */
-    public List<Edge<LabelType, NodeType>> getChildrenEdges(NodeType parentNode)
+    public List<Edge<E, N>> getChildrenEdges(N parentNode)
             throws IllegalArgumentException
     { // This retrieves child nodes
         this.checkRep();
@@ -316,8 +316,8 @@ public class Graph<NodeType, LabelType> {
             return null;
         }
 
-        Set<Edge<LabelType, NodeType>> edges = this.nodes.get(parentNode);
-        List<Edge<LabelType, NodeType>> childrenEdges = new ArrayList<Edge<LabelType, NodeType>>(edges);
+        Set<Edge<E, N>> edges = this.nodes.get(parentNode);
+        List<Edge<E, N>> childrenEdges = new ArrayList<Edge<E, N>>(edges);
 
         this.checkRep();
         return childrenEdges;
@@ -333,7 +333,7 @@ public class Graph<NodeType, LabelType> {
      */
     // I think it is ok to keep this, just in case someone for some reason wanted
     // to get children nodes only.
-    public List<NodeType> getChildrenNodes(NodeType parentNode) throws IllegalArgumentException
+    public List<N> getChildrenNodes(N parentNode) throws IllegalArgumentException
     { // This retrieves child nodes
         this.checkRep();
         if(parentNode == null
@@ -347,9 +347,9 @@ public class Graph<NodeType, LabelType> {
             return null;
         }
 
-        List<NodeType> childrenNodes = new ArrayList<NodeType>();
-        Set<Edge<LabelType, NodeType>> edges = this.nodes.get(parentNode);
-        for(Edge<LabelType, NodeType> edge : edges)
+        List<N> childrenNodes = new ArrayList<N>();
+        Set<Edge<E, N>> edges = this.nodes.get(parentNode);
+        for(Edge<E, N> edge : edges)
         {
             if(!childrenNodes.contains(edge.getChild()))
             {
@@ -366,12 +366,12 @@ public class Graph<NodeType, LabelType> {
      *
      * @return a copy of the list of all nodes in this graph.
      */
-    public List<NodeType> getAllNodes()
+    public List<N> getAllNodes()
     {
         this.checkRep();
 
-        Set<NodeType> keySet = this.nodes.keySet();
-        List<NodeType> nodeValues = new ArrayList<NodeType>(this.nodes.keySet());
+        Set<N> keySet = this.nodes.keySet();
+        List<N> nodeValues = new ArrayList<N>(this.nodes.keySet());
 
         this.checkRep();
         return nodeValues;
@@ -388,8 +388,8 @@ public class Graph<NodeType, LabelType> {
     {
         this.checkRep();
         int size = 0;
-        Collection<Set<Edge<LabelType, NodeType>>> totalEdges = this.nodes.values();
-        for(Set<Edge<LabelType, NodeType>> edges : totalEdges)
+        Collection<Set<Edge<E, N>>> totalEdges = this.nodes.values();
+        for(Set<Edge<E, N>> edges : totalEdges)
         {
             if(size != Integer.MAX_VALUE)
             {
@@ -410,11 +410,11 @@ public class Graph<NodeType, LabelType> {
         //  For every Edge e paired to every Node n within g.nodes: e.parent.equals(n)
         if(HEAVY_DEBUG)
         {
-            Iterator<NodeType> allNodes = this.nodes.keySet().iterator();
-            for(Set<Edge<LabelType, NodeType>> edges : this.nodes.values())
+            Iterator<N> allNodes = this.nodes.keySet().iterator();
+            for(Set<Edge<E, N>> edges : this.nodes.values())
             {
-                NodeType parentNode = allNodes.next();
-                for(Edge<LabelType, NodeType> edge : edges)
+                N parentNode = allNodes.next();
+                for(Edge<E, N> edge : edges)
                 {
                     assert(edge.getParent().equals(parentNode));
                 }
@@ -441,10 +441,11 @@ public class Graph<NodeType, LabelType> {
      * endpoint : Node // Either Node that makes up an edge. If Edge A has the parent Node B
      * and the child Node C, then both Nodes B and C are endpoints of A.
      *
-     * @param <LabelType> The type of label you want stored in this edge.
-     * @param <NodeType> The type of nodes you want as your parent and child nodes.
+     * @param <L> The type of label you want stored in this edge.
+     * @param <T> The type of nodes you want as your parent and child nodes.
      */
-    public static class Edge<LabelType, NodeType> {
+    // Since this is a static inner class, Edge is not able to use Graph's generic parameters.
+    public static class Edge<L, T> {
 
         // Abstract Function:
         //  For every Edge e:
@@ -455,9 +456,9 @@ public class Graph<NodeType, LabelType> {
         // Representation Invariant for every Edge e:
         //  e.label && e.parent && e.child != null
 
-        private final LabelType label;
-        private final NodeType parent;
-        private final NodeType child;
+        private final L label;
+        private final T parent;
+        private final T child;
 
         /**
          * Constructs an Edge with the specified "label," "parent," and "child."
@@ -469,7 +470,7 @@ public class Graph<NodeType, LabelType> {
          *
          * Note: an edge can start at a node and point to itself.
          */
-        public Edge(LabelType label, NodeType parent, NodeType child) throws IllegalArgumentException
+        public Edge(L label, T parent, T child) throws IllegalArgumentException
         {
             if(label == null || parent == null || child == null)
             {
@@ -486,7 +487,7 @@ public class Graph<NodeType, LabelType> {
          *
          * @return this Edge's String label.
          */
-        public LabelType getLabel()
+        public L getLabel()
         {
             // Retains immutability since String is immutable.
             this.checkRep();
@@ -498,7 +499,7 @@ public class Graph<NodeType, LabelType> {
          *
          * @return this Edge's parent node.
          */
-        public NodeType getParent()
+        public T getParent()
         {
             // Retains immutability since Node is immutable.
             this.checkRep();
@@ -511,7 +512,7 @@ public class Graph<NodeType, LabelType> {
          *
          * @return this Edge's child Node.
          */
-        public NodeType getChild()
+        public T getChild()
         {
             // Retains immutability since Node is immutable
             this.checkRep();
@@ -544,12 +545,12 @@ public class Graph<NodeType, LabelType> {
             {
                 return true;
             }
-            if(!(obj instanceof Edge))
+            if(!(obj instanceof Edge<?, ?>))
             {
                 return false;
             }
 
-            Edge other = (Edge) obj;
+            Edge<?, ?> other = (Edge<?, ?>) obj;
 
             return this.label.equals(other.label) && this.parent.equals(other.parent)
                     && this.child.equals(other.child);
