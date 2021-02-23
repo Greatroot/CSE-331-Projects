@@ -36,31 +36,32 @@ public class CampusMap implements ModelAPI {
         List<CampusPath> campusPaths = CampusPathsParser.parseCampusPaths("campus_paths.tsv");
 
         //Building the graph with Point(x1, y1)(nodes) (since we know they are a unique identifier
-        // of a building) from campusBuildings and distances(edge labels) from
-        // campusPaths.
+        // of a building) from campusPaths (since campusBuildings does not include all nodes) and
+        // distances(edge labels) from campusPaths.
 
         // First adds nodes.
-        for(CampusBuilding campusBuilding : campusBuildings)
+        for(CampusPath campusPath : campusPaths)
         {
-            campusGraph.addNode(new Point(campusBuilding.getX(), campusBuilding.getY()));
+            campusGraph.addNode(new Point(campusPath.getX1(), campusPath.getY1()));
+            campusGraph.addNode(new Point(campusPath.getX2(), campusPath.getY2()));
         }
 
-        //TODO: Remove this after testing.
-//        System.out.println("In the constructor: ");
-//        System.out.println("campusPath: " + campusPaths);
-
-        //TODO: Remove after testing; I'm going to check what state my graph is in.
-        System.out.println("Nodes: ");
-        for(Point node : campusGraph.getAllNodes())
-        {
-            System.out.println("\t" + node);
-        }
+//        //TODO: Remove this after testing.
+////        System.out.println("In the constructor: ");
+////        System.out.println("campusPath: " + campusPaths);
+//
+//        //TODO: Remove after testing; I'm going to check what state my graph is in.
+//        System.out.println("Nodes: ");
+//        for(Point node : campusGraph.getAllNodes())
+//        {
+//            System.out.println("\t" + node);
+//        }
 
         // Then add all the edges.
         for(CampusPath campusPath : campusPaths)
         {
-            //TODO: Remove after testing.
-            System.out.println(campusPath);
+//            //TODO: Remove after testing.
+//            System.out.println(campusPath);
             campusGraph.addEdge(campusPath.getDistance(), new Point(campusPath.getX1(), campusPath.getY1()),
                     new Point(campusPath.getX2(), campusPath.getY2()));
         }
@@ -121,16 +122,16 @@ public class CampusMap implements ModelAPI {
             throw new IllegalArgumentException();
         }
 
-        //TODO: Remove after testing; I'm going to check what state my graph is in.
-        System.out.println("Nodes: ");
-        for(Point node : campusGraph.getAllNodes())
-        {
-            System.out.println("\t" + node);
-            for(Graph.Edge<Double, Point> edge : campusGraph.getChildrenEdges(node))
-            {
-                System.out.println("\t" + edge.getParent() + " to " + edge.getChild() + " with weight " + edge.getLabel());
-            }
-        }
+//        //TODO: Remove after testing; I'm going to check what state my graph is in.
+//        System.out.println("Nodes: ");
+//        for(Point node : campusGraph.getAllNodes())
+//        {
+//            System.out.println("\t" + node);
+//            for(Graph.Edge<Double, Point> edge : campusGraph.getChildrenEdges(node))
+//            {
+//                System.out.println("\t" + edge.getParent() + " to " + edge.getChild() + " with weight " + edge.getLabel());
+//            }
+//        }
 
         // Convert startShortName into a Point
         Point startPoint = null;
@@ -147,12 +148,12 @@ public class CampusMap implements ModelAPI {
         }
 
         Path<Point> path = FindPath.findShortestPath(campusGraph, startPoint, endPoint);
-        // TODO: Remove this after testing
-        assert(path != null);
-        for(Path<Point>.Segment segment : path)
-        {
-            System.out.println(segment.getStart() + " to " + segment.getEnd() + " with weight " + segment.getCost());
-        }
+//        // TODO: Remove this after testing
+//        assert(path != null);
+//        for(Path<Point>.Segment segment : path)
+//        {
+//            System.out.println(segment.getStart() + " to " + segment.getEnd() + " with weight " + segment.getCost());
+//        }
 
         return path;
     }

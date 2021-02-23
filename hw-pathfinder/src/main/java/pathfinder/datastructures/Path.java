@@ -23,6 +23,7 @@ import java.util.List;
     // 5.) Is it ok to have my PathComparator class as a nested class?
     // 6.) Ask about this:    // TODO: Remove the generic typing and replace with wildcard?
     // 7.) For equality sake, should I just make all the generic parameters in Graph extends Comparable?
+    // 8.) Was it ok to go through the entire campusPath iterator twice to build both nodes and edges?
 
 /**
  * This represents an immutable path between two nodes, particularly
