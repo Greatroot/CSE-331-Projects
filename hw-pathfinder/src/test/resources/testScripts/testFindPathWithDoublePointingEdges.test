@@ -1,0 +1,17 @@
+# Tests FindPath.findSmallestPath() with edges that point both ways.
+
+CreateGraph g
+
+AddNode g n1
+AddNode g n2
+AddNode g n3
+AddNode g n4
+
+AddEdge g n4 n3 1.0
+AddEdge g n3 n2 2.0
+AddEdge g n2 n1 3.0
+AddEdge g n1 n2 6.0
+AddEdge g n2 n3 10.0
+AddEdge g n3 n4 4.0
+
+FindPath g n1 n4

@@ -1,0 +1,22 @@
+# Tests FindPath.findSmallestPath() with nodes that point to themselves in it.
+
+created graph g
+
+added node n1 to g
+added node n2 to g
+added node n3 to g
+added node n4 to g
+
+added edge 1.000 from n1 to n1 in g
+added edge 2.000 from n2 to n2 in g
+added edge 3.000 from n3 to n3 in g
+added edge 4.000 from n4 to n4 in g
+added edge 6.000 from n1 to n2 in g
+added edge 10.000 from n2 to n3 in g
+added edge 4.000 from n3 to n4 in g
+
+path from n1 to n4:
+n1 to n2 with weight 6.000
+n2 to n3 with weight 10.000
+n3 to n4 with weight 4.000
+total cost: 20.000

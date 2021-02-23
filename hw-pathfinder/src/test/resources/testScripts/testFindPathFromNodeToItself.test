@@ -1,0 +1,31 @@
+#Tests FindPath.findSmallestPath() from a node to itself, which should return empty.
+
+CreateGraph g
+
+AddNode g n1
+AddNode g n2
+AddNode g n3
+AddNode g n4
+AddNode g n5
+AddNode g n6
+AddNode g n7
+AddNode g n8
+AddNode g n9
+AddNode g n10
+AddNode g n11
+
+AddEdge g n5 n2 4.0
+AddEdge g n2 n3 9.0
+AddEdge g n2 n1 6.5
+AddEdge g n1 n3 3.5
+AddEdge g n3 n6 20.0
+AddEdge g n3 n4 5.5
+AddEdge g n4 n6 4.5
+AddEdge g n6 n10 3.0
+AddEdge g n10 n7 100.0
+AddEdge g n6 n7 50.0
+AddEdge g n5 n11 1.0
+AddEdge g n11 n9 3.0
+AddEdge g n9 n8 2.0
+
+FindPath g n5 n5
