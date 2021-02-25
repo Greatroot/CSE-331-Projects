@@ -383,7 +383,6 @@ public class Graph<N, E> {
      * @return the number of edges in this graph. If this graph contains more than Integer.MAX_VALUE
      * elements, returns Integer.MAX_VALUE.
      */
-    //TODO: Test to see if this still works.
     public int getNumOfEdges()
     {
         this.checkRep();

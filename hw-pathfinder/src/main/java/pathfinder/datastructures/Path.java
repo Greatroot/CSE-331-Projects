@@ -15,16 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-//TODO: Questions to ask TA:
-    // 1.) How should I deal with my Comparator class for Edge? Should I keep it specialized or make it Generic.
-    // 2.) Is it ok to use the language "node" and "edge" in the JavaDocs for this class?
-    // 3.) Ask about how to deal with rep exposure in Segment.
-    // 4.) Should I change the name of PathfinderTestDriver.java?
-    // 5.) Is it ok to have my PathComparator class as a nested class?
-    // 6.) Ask about this:    // TODO: Remove the generic typing and replace with wildcard?
-    // 7.) For equality sake, should I just make all the generic parameters in Graph extends Comparable?
-    // 8.) Was it ok to go through the entire campusPath iterator twice to build both nodes and edges?
-
 /**
  * This represents an immutable path between two nodes, particularly
  * Path#getStart() and Path#getEnd(). Also contains a cached
