@@ -465,7 +465,7 @@ public class Graph<N, E> {
          * @param label the label for this Edge
          * @param parent the parent node that this Edge starts at.
          * @param child the child node that this Edge ends at.
-         * @throws IllegalArgumentException if {@code label == null && parent == null && child == null
+         * @throws IllegalArgumentException if {@code label == null && parent == null && child == null}
          *
          * Note: an edge can start at a node and point to itself.
          */

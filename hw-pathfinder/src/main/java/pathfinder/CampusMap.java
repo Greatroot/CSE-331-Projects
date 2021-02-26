@@ -188,7 +188,10 @@ public class CampusMap implements ModelAPI {
             if(campusBuilding.getShortName().equals(startShortName)) // If starting building is found.
             {
                 startPoint = new Point(campusBuilding.getX(), campusBuilding.getY());
-            } else if(campusBuilding.getShortName().equals(endShortName)) // If ending point is found.
+            }
+            // I decided NOT to use an else if to reduce processing to cover the case that both points
+            // are the same node.
+            if(campusBuilding.getShortName().equals(endShortName)) // If ending point is found.
             {
                 endPoint = new Point(campusBuilding.getX(), campusBuilding.getY());
             }
