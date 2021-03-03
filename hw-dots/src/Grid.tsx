@@ -15,6 +15,9 @@ interface GridProps {
     size: number;    // size of the grid to display
     width: number;   // width of the canvas on which to draw
     height: number;  // height of the canvas on which to draw
+    edges: [[number, number], [number, number], string][]; // information for edges we want the canvas
+                        // to draw in format [[x1, y1], [x2, y2] "COLOR"].
+    incorrect_input_message: string;
 }
 
 interface GridState {
@@ -85,6 +88,51 @@ class Grid extends Component<GridProps, GridState> {
         const coordinates = this.getCoordinates();
         for (let coordinate of coordinates) {
             this.drawCircle(ctx, coordinate);
+        }
+
+        let lineNum = 1;
+        for(let edge of this.props.edges)
+        {
+            let x1: number = edge[0][0];
+            let y1: number = edge[0][1];
+            let x2: number = edge[1][0];
+            let y2: number = edge[1][1];
+            let color: string = edge[2];
+            const scalar = 500 / (this.props.size + 1); // The scale of the grid of dots
+
+            //validation for if coordinates don't fit the grid.
+            if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
+            {
+                let requiredSize = this.props.size;
+                if(x1 >= this.props.size)
+                {
+                    requiredSize = x1 + 1;
+                }
+                if(y1 >= this.props.size)
+                {
+                    requiredSize = y1 + 1;
+                }
+                if(x2 >= this.props.size)
+                {
+                    requiredSize = x2 + 1;
+                }
+                if(y2 >= this.props.size)
+                {
+                    requiredSize = y2 + 1;
+                }
+                alert("Line " + lineNum + ": Cannot draw edges, grid must be at least size " + requiredSize);
+            } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+                alert(this.props.incorrect_input_message + "\n\nLine " + lineNum + ": Coordinate(s) contain " +
+                    "negative value(s)");
+            } else {
+                ctx.beginPath();
+                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = color;
+                ctx.moveTo((x1+1)*scalar, (y1+1)*scalar);
+                ctx.lineTo((x2+1)*scalar, (y2+1)*scalar);
+                ctx.stroke();
+            }
+            lineNum++;
         }
     };
 

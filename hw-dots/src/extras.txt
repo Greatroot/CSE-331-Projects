@@ -7,4 +7,4 @@ Describe any additional functionality you added to your application, or any
 significant changes you made to the starter code beyond the basic requirements
 of the assignment, below:
 
-
+    - I made it so that the default text in the Edge TextArea disappears when you first click on it.

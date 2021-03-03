@@ -9,6 +9,8 @@
  * author.
  */
 
+// TODO: Remove edgeText?
+
 import React, {Component} from 'react';
 import EdgeList from "./EdgeList";
 import Grid from "./Grid";
@@ -19,6 +21,10 @@ import "./App.css";
 
 interface AppState {
     gridSize: number;  // size of the grid to display
+    // edgeText: string; // The text that the user types into the EdgeList text box.
+    edges: [[number, number], [number, number], string][] // All edges the user wants to draw in
+                                                      // the format: x1, y1, x2, y2, COLOR
+    incorrect_error_message: string; // An error message common to multiple components.
 }
 
 class App extends Component<{}, AppState> { // <- {} means no props.
@@ -27,14 +33,23 @@ class App extends Component<{}, AppState> { // <- {} means no props.
         super(props);
         this.state = {
             gridSize: 4,
+            edges: [],
+            incorrect_error_message: "There was an error with some of your line input."
+                + "\nFor reference, the correct form for each line should be: x1,y1 x2,y2 color",
         };
     }
 
     updateGridSize = (newSize: number) => {
         this.setState({
-            gridSize: newSize
+            gridSize: newSize,
         });
     };
+
+    updateEdges = (newEdges: [[number, number], [number, number], string][]) => {
+        this.setState( {
+            edges: newEdges,
+        });
+    }
 
     render() {
         const canvas_size = 500;
@@ -42,13 +57,15 @@ class App extends Component<{}, AppState> { // <- {} means no props.
             <div>
                 <p id="app-title">Connect the Dots!</p>
                 <GridSizePicker value={this.state.gridSize.toString()} onChange={this.updateGridSize}/>
-                <Grid size={this.state.gridSize} width={canvas_size} height={canvas_size}/>
-                <EdgeList onChange={(value) => {console.log("EdgeList onChange", value)}}/>
+                <Grid incorrect_input_message={this.state.incorrect_error_message} size={this.state.gridSize} width={canvas_size} height={canvas_size} edges={this.state.edges}/>
+                <EdgeList incorrect_error_message={this.state.incorrect_error_message} onChange={this.updateEdges}/>
             </div>
 
         );
     }
 
 }
+// <EdgeList value={this.state.edgeText} onChange={(value) => {console.log("EdgeList onChange", value)}}/>
+
 
 export default App;
