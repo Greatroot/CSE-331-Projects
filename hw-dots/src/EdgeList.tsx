@@ -25,6 +25,9 @@ interface EdgeListProps {
     onIncorrectInput(wrongInput: string): void; // Updates App on if there was some incorrect
                                 // user input within the TextArea
     onChangeReset(): void; // Resets App.edges and App.wrongInputs.
+    //TODO: Remove this after testing
+    wrongInputs: string[];
+    myEdges: [[number, number], [number, number], string][];
 }
 
 /**
@@ -70,6 +73,9 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
      */
     onDrawButtonClick = () => { // Parses the current edgeText and sends that edge information to App.
         this.props.onChangeReset(); // Clear App.wrongInputs and App.edges before starting.
+        console.log("Things should be reset now: ");
+        console.log("wrongInputs: " + this.props.wrongInputs);
+        console.log("edges: " + this.props.myEdges);
 
         console.log("edgeText: " + this.state.edgeText);
         if(this.state.edgeText !== "") // If there is text within the TextArea, then parse.

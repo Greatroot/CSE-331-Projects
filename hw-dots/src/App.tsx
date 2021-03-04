@@ -69,13 +69,15 @@ class App extends Component<{}, AppState> { // <- {} means no props.
     /**
      * Clears all of the user's wrong input error messages and clears all pre-existing edges in this.state.edges.
      */
-    resetWrongInputs = () => {
+    partiallyResetState = () => {
+        console.log("Things should be getting reset now")
         this.setState({
             wrongInputs: [],
             edges: [],
         });
     }
 
+    //TODO: Change EdgeList back after testing
     render() {
         const canvas_size = 500;
         return (
@@ -87,10 +89,10 @@ class App extends Component<{}, AppState> { // <- {} means no props.
                       incorrect_input_message={this.state.incorrect_error_message}
                       size={this.state.gridSize} width={canvas_size} height={canvas_size}
                       edges={this.state.edges}/>
-                <EdgeList onChangeReset={this.resetWrongInputs}
+                <EdgeList onChangeReset={this.partiallyResetState}
                           onIncorrectInput={this.incorrectInputWasFound}
                           incorrect_error_message={this.state.incorrect_error_message}
-                          onChange={this.updateEdges}/>
+                          onChange={this.updateEdges} wrongInputs={this.state.wrongInputs} myEdges={this.state.edges}/>
             </div>
 
         );

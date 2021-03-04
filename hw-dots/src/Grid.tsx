@@ -9,9 +9,6 @@
  * author.
  */
 
-// TODO: Add a way to reset this.props.edges
-// TODO: Check if everything works when I increase the grid size.
-
 import React, {Component} from 'react';
 import {Simulate} from "react-dom/test-utils";
 
