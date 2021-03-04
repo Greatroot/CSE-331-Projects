@@ -40,13 +40,15 @@ interface GridState {
  */
 class Grid extends Component<GridProps, GridState> {
 
+    firstTime: boolean // True if this is the first time the component has called componentDidUpdate()
     canvasReference: React.RefObject<HTMLCanvasElement>
 
     constructor(props: GridProps) {
         super(props);
         this.state = {
-            backgroundImage: null  // An image object to render into the canvas.
+            backgroundImage: null,  // An image object to render into the canvas.
         };
+        this.firstTime = true; // True if this is the first time the component has called componentDidUpdate()
         this.canvasReference = React.createRef();
     }
 
@@ -55,10 +57,22 @@ class Grid extends Component<GridProps, GridState> {
         // redraw the canvas, we only need to load it once, when our component first mounts.
         this.fetchAndSaveImage();
         this.redraw();
+        console.log("I made it to here!")
     }
 
-    componentDidUpdate() {
-        this.redraw()
+    // It seems that our background can't load in time and needs to call redraw twice to finish "mounting"
+    componentDidUpdate(prevProps: GridProps) {
+        console.log("component is updating...");
+        if(this.props.size !== prevProps.size || this.firstTime) // If grid size changes, only redraw grid.
+        {
+            console.log("I'm about to redraw");
+            this.redraw();
+            this.firstTime = false;
+
+        } else { // If its another prop that changes (i.e. edges), then drawEdges and leave grid alone.
+            console.log("I'm about to draw edges.");
+            this.drawEdges();
+        }
     }
 
     fetchAndSaveImage() {
@@ -98,6 +112,20 @@ class Grid extends Component<GridProps, GridState> {
         const coordinates = this.getCoordinates();
         for (let coordinate of coordinates) {
             this.drawCircle(ctx, coordinate);
+        }
+    };
+
+    /**
+     * Sets up and draws the edges.
+     */
+    drawEdges = () =>
+    {
+        if (this.canvasReference.current === null) {
+            throw new Error("Unable to access canvas.");
+        }
+        const ctx = this.canvasReference.current.getContext('2d');
+        if (ctx === null) {
+            throw new Error("Unable to create canvas drawing context.");
         }
 
         let lineNum = 1; // To keep track of each line of Edge user input we parse through.

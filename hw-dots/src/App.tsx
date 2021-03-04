@@ -67,13 +67,12 @@ class App extends Component<{}, AppState> { // <- {} means no props.
     }
 
     /**
-     * Clears all of the user's wrong input error messages.
+     * Clears all of the user's wrong input error messages and clears all pre-existing edges in this.state.edges.
      */
     resetWrongInputs = () => {
-        // let tempEdges: [[number, number], [number, number], string][] = [...this.state.edges];
         this.setState({
             wrongInputs: [],
-            // edges: tempEdges,
+            edges: [],
         });
     }
 
@@ -100,3 +99,13 @@ class App extends Component<{}, AppState> { // <- {} means no props.
 }
 
 export default App;
+
+
+// Good test inputs for EdgeList
+// 2,3 1,1 3,2 3,3
+// 1,2 5,6 red
+// 2,1 3,-3 blue
+
+// 9,9 6,7 red
+// 3,2 5,9 blue
+// 0,0 8,3 orange
