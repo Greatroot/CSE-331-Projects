@@ -26,9 +26,8 @@ interface AppState {
                                                       // the format: x1, y1, x2, y2, COLOR
     incorrect_error_message: string; // An error message for incorrect user input that is
                                     // common to multiple components.
-    inputIsIncorrect: boolean; // Is true if there were any issues with the user's input in the Edge
-                                // TextArea. Allows me to both avoid drawing when one of the edges is
-                            // incorrect and avoid printing the same error message multiple times.
+    wrongInputs: string[]; // A collection of all of the user input error messages in their most recent
+                        // EdgeList TextArea input. For each line, the first user error that shows up
 }
 
 class App extends Component<{}, AppState> { // <- {} means no props.
@@ -40,7 +39,7 @@ class App extends Component<{}, AppState> { // <- {} means no props.
             edges: [],
             incorrect_error_message: "There was an error with some of your line input."
                 + "\nFor reference, the correct form for each line should be: x1,y1 x2,y2 color",
-            inputIsIncorrect: false,
+            wrongInputs: [],
         };
     }
 
@@ -57,9 +56,24 @@ class App extends Component<{}, AppState> { // <- {} means no props.
     }
 
     // Updates App's state if there was some incorrect user input within the EdgeList's TextArea
-    incorrectInputWasFound = () => {
+    incorrectInputWasFound = (wrongInput: string) => {
+        console.log("I entered incorrectInputWasFound")
+        let updatedWrongInputs: string[] = [...this.state.wrongInputs];
+        updatedWrongInputs.push(wrongInput);
         this.setState({
-           inputIsIncorrect: true,
+           wrongInputs: updatedWrongInputs,
+        });
+        console.log("wrongInputs: " + this.state.wrongInputs);
+    }
+
+    /**
+     * Clears all of the user's wrong input error messages.
+     */
+    resetWrongInputs = () => {
+        // let tempEdges: [[number, number], [number, number], string][] = [...this.state.edges];
+        this.setState({
+            wrongInputs: [],
+            // edges: tempEdges,
         });
     }
 
@@ -69,12 +83,13 @@ class App extends Component<{}, AppState> { // <- {} means no props.
             <div>
                 <p id="app-title">Connect the Dots!</p>
                 <GridSizePicker value={this.state.gridSize.toString()} onChange={this.updateGridSize}/>
-                <Grid inputIsIncorrect={this.state.inputIsIncorrect}
+                <Grid wrongInputs={this.state.wrongInputs}
+                      onIncorrectInput={this.incorrectInputWasFound}
                       incorrect_input_message={this.state.incorrect_error_message}
                       size={this.state.gridSize} width={canvas_size} height={canvas_size}
                       edges={this.state.edges}/>
-                <EdgeList onIncorrectInput={this.incorrectInputWasFound}
-                          inputIsIncorrect={this.state.inputIsIncorrect}
+                <EdgeList onChangeReset={this.resetWrongInputs}
+                          onIncorrectInput={this.incorrectInputWasFound}
                           incorrect_error_message={this.state.incorrect_error_message}
                           onChange={this.updateEdges}/>
             </div>

@@ -9,7 +9,11 @@
  * author.
  */
 
+// TODO: Add a way to reset this.props.edges
+// TODO: Check if everything works when I increase the grid size.
+
 import React, {Component} from 'react';
+import {Simulate} from "react-dom/test-utils";
 
 interface GridProps {
     size: number;    // size of the grid to display
@@ -19,9 +23,10 @@ interface GridProps {
                         // to draw in format [[x1, y1], [x2, y2] "COLOR"].
     incorrect_input_message: string; // An error message for incorrect user input that is
                                     // common to multiple components.
-    inputIsIncorrect: boolean; // Is true if there were any issues with the user's input in the Edge
-                                // TextArea. Allows me to both avoid drawing when one of the edges is
-                                // incorrect and avoid printing the same error message multiple times.
+    wrongInputs: string[];// A collection of all of the user input error messages in their most recent
+    // EdgeList TextArea input.
+    onIncorrectInput(wrongInput: string): void; // Updates App's state if there was some incorrect
+                            // user input within the EdgeList's TextArea
 }
 
 interface GridState {
@@ -71,6 +76,7 @@ class Grid extends Component<GridProps, GridState> {
     }
 
     redraw = () => {
+        console.log("I'm starting a 'redraw' cycle")
         if (this.canvasReference.current === null) {
             throw new Error("Unable to access canvas.");
         }
@@ -94,7 +100,11 @@ class Grid extends Component<GridProps, GridState> {
             this.drawCircle(ctx, coordinate);
         }
 
-        let lineNum = 1;
+        let lineNum = 1; // To keep track of each line of Edge user input we parse through.
+        let errorMessages = [...this.props.wrongInputs]; // Storing wrongInputs into a local variable
+        // so that I don't trigger componentDidUpdate every
+        // time I add an error message.
+        console.log("edges: " + this.props.edges);
         for(let edge of this.props.edges)
         {
             let x1: number = edge[0][0];
@@ -124,19 +134,31 @@ class Grid extends Component<GridProps, GridState> {
                 {
                     requiredSize = y2 + 1;
                 }
-                alert("Line " + lineNum + ": Cannot draw edges, grid must be at least size " + requiredSize);
+                errorMessages.push("Line " + lineNum + ": Cannot draw edges, grid must be " +
+                    "at least size " + requiredSize);
             } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
-                alert(this.props.incorrect_input_message + "\n\nLine " + lineNum + ": Coordinate(s) contain " +
+                errorMessages.push("Line " + lineNum + ": Coordinate(s) contain " +
                     "negative value(s)");
-            } else if(!this.props.inputIsIncorrect) { // If there weren't any errors with user input found in EdgeList...
+            } else if(errorMessages.length === 0) { // If there weren't any errors with user input found in EdgeList...
                 ctx.beginPath();
                 ctx.lineWidth = 2.5;
                 ctx.strokeStyle = color;
-                ctx.moveTo((x1+1)*scalar, (y1+1)*scalar);
-                ctx.lineTo((x2+1)*scalar, (y2+1)*scalar);
+                ctx.moveTo((x1 + 1) * scalar, (y1 + 1) * scalar);
+                ctx.lineTo((x2 + 1) * scalar, (y2 + 1) * scalar);
                 ctx.stroke();
             }
             lineNum++;
+        }
+
+        // If there were errors inside wrongInputs, then print them all out in one error message.
+        if(errorMessages.length !== 0)
+        {
+            let fullErrorMessage: string = this.props.incorrect_input_message + "\n\n";
+            for(let errorMessage of errorMessages)
+            {
+                fullErrorMessage += "\n" + errorMessage;
+            }
+            alert(fullErrorMessage);
         }
     };
 
