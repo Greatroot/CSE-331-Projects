@@ -9,7 +9,6 @@
  * author.
  */
 
-// TODO: Remove value?
 import React, {Component} from 'react';
 
 interface EdgeListState {
@@ -21,7 +20,12 @@ interface EdgeListProps {
     onChange(edges: [[number, number], [number, number], string][]): void;  // called when a new edge list is ready
     // once you decide how you want to communicate the edges to the App, you should
     // change the type of edges so it isn't `any`
-    incorrect_error_message: string;
+    incorrect_error_message: string; // An error message for incorrect user input that is
+                                    // common to multiple components.
+    inputIsIncorrect: boolean, // Is true if there were any issues with the user's input in the Edge
+                            // TextArea. Allows me to both avoid drawing when one of the edges is
+                            // incorrect and avoid printing the same error message multiple times.
+    onIncorrectInput(): void; // Updates App on if there was some incorrect user input within the TextArea
 }
 
 /**
@@ -38,14 +42,20 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
         }
     }
 
-    //TODO: Do I need validation???
+    /**
+     *
+     * @param event | Information on the state of the TextArea when it changes.
+     */
     onTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
             edgeText: event.target.value,
         });
     }
 
-    // Make the default text come back when the box is empty and you click away???
+    /**
+     * Removes the default text on the TexaArea when the user clicks on it for the
+     * FIRST and first time only.
+     */
     onTextAreaClick = () => {
         if(this.state.isFirstTime)
         {
@@ -56,11 +66,14 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
         }
     }
 
-    // TODO: This is probably the place for user validation. ADD VALIDATION!!!
+    /**
+     *  Parses the current edgeText and sends that edge information to App to be sent to Grid and drawn.
+     */
     onDrawButtonClick = () => { // Parses the current edgeText and sends that edge information to App.
         let edges: [[number, number], [number, number], string][] = [];
         let parsedByNewLines: string[] = this.state.edgeText.split("\n");
         let parsedEachLine: [string, string, string][] = [];
+
         for(let line of parsedByNewLines) { // First parse each line into a [P1, P2, COLOR] tuple
             let lineArray: string[] = line.split(" ");
             let parsedLine: [string, string, string] = [lineArray[0], lineArray[1], lineArray[2]];
@@ -70,20 +83,27 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
         let lineNum = 1;
         for(let parsedLine of parsedEachLine) // Now parse each line into a [[x1,y1], [x2,y2], COLOR] tuple
         {
-            if(parsedLine[0] === undefined || parsedLine[1] === undefined)
+            // If either point1, point2, or color are missing or the spaces/commas are incorrectly formatted.
+            if(parsedLine[0] === undefined || parsedLine[1] === undefined || parsedLine[2] === undefined)
             {
+                this.props.onIncorrectInput();
                 alert(this.props.incorrect_error_message + "\n\nLine " + lineNum + ": You're either missing a "
                     + "portion of the line or missing a space.");
-            } else {
+            } else if(parsedLine.length > 3) { // Error if the user put too many arguments into a line.
+                this.props.onIncorrectInput();
+                alert(this.props.incorrect_error_message + "\n\nLine " + lineNum + ": There are extra "
+                    + "portions or an extra space somewhere on this line. ")
+            }else {
                 let point1: string[] = parsedLine[0].split(","); // ["x1", "y1"]
                 let point2: string[] = parsedLine[1].split(","); // ["y2", "y2"]
 
                 let p1: [number, number] = [parseInt(point1[0]), parseInt(point1[1])] // [x1, y1]
                 let p2: [number, number] = [parseInt(point2[0]), parseInt(point2[1])] // [x2, y2]
 
-                // Validation on the two points and color that I'm putting into my edges.
-                if(isNaN(p1[0]) || isNaN(p1[1]) || isNaN(p2[0]) || isNaN(p2[1]))
+                // Validation to make sure the two points of an edge are numbers.
+                if((isNaN(p1[0]) || isNaN(p1[1]) || isNaN(p2[0]) || isNaN(p2[1])) && !this.props.inputIsIncorrect)
                 {
+                    this.props.onIncorrectInput();
                     alert(this.props.incorrect_error_message + "\n\nLine " + lineNum + ": Coordinate(s) contain "
                     + "non-integer value(s).");
                 } else
@@ -92,20 +112,10 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
                     lineNum++;
                 }
             }
-
-
-        }
-
-        if(edges === [])
-        {
-            alert(this.props.incorrect_error_message + "\n\nLine " + lineNum + ": You're either missing a "
-                + "portion of the line or missing a space.");
         }
 
         this.props.onChange(edges);
     }
-
-
 
 
     render() {

@@ -17,7 +17,11 @@ interface GridProps {
     height: number;  // height of the canvas on which to draw
     edges: [[number, number], [number, number], string][]; // information for edges we want the canvas
                         // to draw in format [[x1, y1], [x2, y2] "COLOR"].
-    incorrect_input_message: string;
+    incorrect_input_message: string; // An error message for incorrect user input that is
+                                    // common to multiple components.
+    inputIsIncorrect: boolean; // Is true if there were any issues with the user's input in the Edge
+                                // TextArea. Allows me to both avoid drawing when one of the edges is
+                                // incorrect and avoid printing the same error message multiple times.
 }
 
 interface GridState {
@@ -124,7 +128,7 @@ class Grid extends Component<GridProps, GridState> {
             } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
                 alert(this.props.incorrect_input_message + "\n\nLine " + lineNum + ": Coordinate(s) contain " +
                     "negative value(s)");
-            } else {
+            } else if(!this.props.inputIsIncorrect) { // If there weren't any errors with user input found in EdgeList...
                 ctx.beginPath();
                 ctx.lineWidth = 2.5;
                 ctx.strokeStyle = color;
