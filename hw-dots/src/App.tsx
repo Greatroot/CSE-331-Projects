@@ -22,12 +22,8 @@ import "./App.css";
 interface AppState {
     gridSize: number;  // size of the grid to display
     // edgeText: string; // The text that the user types into the EdgeList text box.
-    edges: [[number, number], [number, number], string][] // All edges the user wants to draw in
-                                                      // the format: x1, y1, x2, y2, COLOR
-    incorrect_error_message: string; // An error message for incorrect user input that is
-                                    // common to multiple components.
-    wrongInputs: string[]; // A collection of all of the user input error messages in their most recent
-                        // EdgeList TextArea input. For each line, the first user error that shows up
+    edgeText: string // All edges the user wants to draw in
+                    // the format: x1, y1, x2, y2, COLOR
 }
 
 class App extends Component<{}, AppState> { // <- {} means no props.
@@ -36,10 +32,7 @@ class App extends Component<{}, AppState> { // <- {} means no props.
         super(props);
         this.state = {
             gridSize: 4,
-            edges: [],
-            incorrect_error_message: "There was an error with some of your line input."
-                + "\nFor reference, the correct form for each line should be: x1,y1 x2,y2 color",
-            wrongInputs: [],
+            edgeText: "Enter edges here: ",
         };
     }
 
@@ -49,50 +42,44 @@ class App extends Component<{}, AppState> { // <- {} means no props.
         });
     };
 
-    updateEdges = (newEdges: [[number, number], [number, number], string][]) => {
+    updateEdges = (newEdges: string) => {
         this.setState( {
-            edges: newEdges,
+            edgeText: newEdges,
         });
     }
 
-    // Updates App's state if there was some incorrect user input within the EdgeList's TextArea
-    incorrectInputWasFound = (wrongInput: string) => {
-        console.log("I entered incorrectInputWasFound")
-        let updatedWrongInputs: string[] = [...this.state.wrongInputs];
-        updatedWrongInputs.push(wrongInput);
-        this.setState({
-           wrongInputs: updatedWrongInputs,
-        });
-        console.log("wrongInputs: " + this.state.wrongInputs);
-    }
+    // // Updates App's state if there was some incorrect user input within the EdgeList's TextArea
+    // incorrectInputWasFound = (wrongInput: string) => {
+    //     console.log("I entered incorrectInputWasFound")
+    //     let updatedWrongInputs: string[] = [...this.state.wrongInputs];
+    //     updatedWrongInputs.push(wrongInput);
+    //     this.setState({
+    //        wrongInputs: updatedWrongInputs,
+    //     });
+    //     console.log("wrongInputs: " + this.state.wrongInputs);
+    // }
 
-    /**
-     * Clears all of the user's wrong input error messages and clears all pre-existing edges in this.state.edges.
-     */
-    partiallyResetState = () => {
-        console.log("Things should be getting reset now")
-        this.setState({
-            wrongInputs: [],
-            edges: [],
-        });
-    }
+    // /** TODO: Remove this
+    //  * Clears all of the user's wrong input error messages and clears all pre-existing edges in this.state.edges.
+    //  */
+    // partiallyResetState = () => {
+    //     console.log("Things should be getting reset now")
+    //     this.setState({
+    //         wrongInputs: [],
+    //         edges: [],
+    //     });
+    // }
 
-    //TODO: Change EdgeList back after testing
     render() {
         const canvas_size = 500;
         return (
             <div>
                 <p id="app-title">Connect the Dots!</p>
                 <GridSizePicker value={this.state.gridSize.toString()} onChange={this.updateGridSize}/>
-                <Grid wrongInputs={this.state.wrongInputs}
-                      onIncorrectInput={this.incorrectInputWasFound}
-                      incorrect_input_message={this.state.incorrect_error_message}
-                      size={this.state.gridSize} width={canvas_size} height={canvas_size}
-                      edges={this.state.edges}/>
-                <EdgeList onChangeReset={this.partiallyResetState}
-                          onIncorrectInput={this.incorrectInputWasFound}
-                          incorrect_error_message={this.state.incorrect_error_message}
-                          onChange={this.updateEdges} wrongInputs={this.state.wrongInputs} myEdges={this.state.edges}/>
+                <Grid size={this.state.gridSize} width={canvas_size} height={canvas_size}
+                      edgeText={this.state.edgeText}/>
+                <EdgeList edgeText={this.state.edgeText}
+                          onChange={this.updateEdges}/>
             </div>
 
         );

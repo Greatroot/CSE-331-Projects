@@ -38,18 +38,17 @@ class GridSizePicker extends Component<GridSizePickerProps, GridSizePickerState>
         // box updates, it'll tell you the new contents of the text box, like we're using
         // below.
         //
-        // TODO - Not currently doing any validation or error handling. Should probably add some...
         let newSize: number = parseInt(event.target.value);
-        let newDisplaySize: string = event.target.value;
-        if(isNaN(newSize))
+        if(isNaN(newSize)) // Should only happen in the event that event.target.value is an empty string
         {
             newSize = 0;
         }
-        if(0 <= newSize && newSize <= 100)
+
+        this.setState({displaySize: event.target.value}); // Shouldn't need any other validation for display
+        if(1 <= newSize && newSize <= 100)
         {
             this.props.onChange(newSize); // Tell our parent component about the new size.
-            this.setState({displaySize: newDisplaySize});
-        } else {
+        } else if(0 > newSize || newSize > 100) { // Includes 0 as being a valid display size.
             alert("Size must be an integer between 0 and 100 (inclusive).");
         }
     };
