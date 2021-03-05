@@ -98,3 +98,10 @@ export default App;
 // 9,9 6,7 red
 // 3,2 5,9 blue
 // 0,0 8,3 orange
+
+//9,9 6,7 red
+// 3,2 5,9 blue
+// 0,0 8,3 orange
+// 3,2 14,9 teal
+// 0,0 15,15 yellow
+// 2,1 5,4 green

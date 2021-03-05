@@ -30,7 +30,7 @@ interface GridState {
  */
 class Grid extends Component<GridProps, GridState> {
 
-    firstTime: boolean // True if this is the first time the component has called componentDidUpdate()
+    // firstTime: boolean // True if this is the first time the component has called componentDidUpdate()
     incorrectInputMessage: string // A common error message for incorrect user input.
     canvasReference: React.RefObject<HTMLCanvasElement>
 
@@ -38,8 +38,8 @@ class Grid extends Component<GridProps, GridState> {
         super(props);
         this.state = {
             backgroundImage: null,  // An image object to render into the canvas.
-        };
-        this.firstTime = true; // True if this is the first time the component has called componentDidUpdate()
+        }; // TODO: Remove firstTime
+        // this.firstTime = true; // True if this is the first time the component has called componentDidUpdate()
         this.incorrectInputMessage = "There was an error with some of your line input."
             + "\nFor reference, the correct form for each line should be: x1,y1 x2,y2 color";
         this.canvasReference = React.createRef();
@@ -53,14 +53,20 @@ class Grid extends Component<GridProps, GridState> {
     }
 
     // It seems that our background can't load in time and needs to call redraw twice to finish "mounting"
-    componentDidUpdate(prevProps: GridProps) {
-        if(this.props.size !== prevProps.size || this.firstTime) // If grid size changes, only redraw grid.
-        {
-            this.redraw();
-            this.firstTime = false;
+    componentDidUpdate(prevProps: GridProps) { //TODO Remove!
+        // if(this.props.size !== prevProps.size) // Only to deal with the component mounting for the first time.
+        // {
+        //     this.redraw();
+        //
+        // } else if(this.props.edgeText !== prevProps.edgeText) { // If its another prop that changes (i.e. edges),
+        //     this.redraw();                                      // then drawEdges and leave grid alone.
+        //     this.drawEdges();
+        // }
 
-        } else { // If its another prop that changes (i.e. edges), then drawEdges and leave grid alone.
-            this.drawEdges();
+            this.redraw();
+
+            if(this.props.size === prevProps.size) { // If its another prop that changes (i.e. edges),
+                this.drawEdges()                     // then drawEdges and leave grid alone.
         }
     }
 
@@ -117,105 +123,109 @@ class Grid extends Component<GridProps, GridState> {
             throw new Error("Unable to create canvas drawing context.");
         }
 
-        let edges: [[number, number], [number, number], string][] = [];
-        let parsedByNewLines: string[] = this.props.edgeText.split("\n");
-        let parsedEachLine: [string, string, string][] = [];
-        let errorMessages = []; // A place to keep all of the user's input errors
-                                                        // while parsing their input.
+        if(this.props.edgeText !== "" && this.props.edgeText !== "Enter edges here: ")
+        {
+            let edges: [[number, number], [number, number], string][] = [];
+            let parsedByNewLines: string[] = this.props.edgeText.split("\n");
+            let parsedEachLine: [string, string, string][] = [];
+            let errorMessages = []; // A place to keep all of the user's input errors
+            // while parsing their input.
 
-        let lineNum = 1;
-        for(let line of parsedByNewLines) { // First parse each line into a [P1, P2, COLOR] tuple
-            let lineArray: string[] = line.split(" ");
+            let lineNum = 1;
+            for(let line of parsedByNewLines) { // First parse each line into a [P1, P2, COLOR] tuple
+                let lineArray: string[] = line.split(" ");
 
-            if(lineArray.length > 3) { // Error if the user put too many arguments into a line.
-                errorMessages.push("Line " + lineNum + ": There are extra "
-                    + "portions or an extra space somewhere on this line.");
+                if(lineArray.length > 3) { // Error if the user put too many arguments into a line.
+                    errorMessages.push("Line " + lineNum + ": There are extra "
+                        + "portions or an extra space somewhere on this line.");
+                }
+
+                let parsedLine: [string, string, string] = [lineArray[0], lineArray[1], lineArray[2]];
+                parsedEachLine.push(parsedLine);
             }
 
-            let parsedLine: [string, string, string] = [lineArray[0], lineArray[1], lineArray[2]];
-            parsedEachLine.push(parsedLine);
-        }
-
-        lineNum = 1; // To keep track of each line of Edge user input we parse through.
-        for(let parsedLine of parsedEachLine) // Now parse each line into a [[x1,y1], [x2,y2], COLOR] tuple
-        {
-            // If either point1, point2, or color are missing or the spaces/commas are incorrectly formatted.
-            if (parsedLine[0] === undefined || parsedLine[1] === undefined || parsedLine[2] === undefined) {
-                errorMessages.push("Line " + lineNum + ": You're either missing a "
-                    + "portion of the line or missing a space.");
-            } else {
-                let point1: string[] = parsedLine[0].split(","); // ["x1", "y1"]
-                let point2: string[] = parsedLine[1].split(","); // ["y2", "y2"]
-
-                let p1: [number, number] = [parseInt(point1[0]), parseInt(point1[1])] // [x1, y1]
-                let p2: [number, number] = [parseInt(point2[0]), parseInt(point2[1])] // [x2, y2]
-
-                // Error if one or both of the two points of an edge are NaN.
-                if (isNaN(p1[0]) || isNaN(p1[1]) || isNaN(p2[0]) || isNaN(p2[1])) {
-                    errorMessages.push("Line " + lineNum + ": Coordinate(s) contain "
-                        + "non-integer value(s).");
+            lineNum = 1; // To keep track of each line of Edge user input we parse through.
+            for(let parsedLine of parsedEachLine) // Now parse each line into a [[x1,y1], [x2,y2], COLOR] tuple
+            {
+                // If either point1, point2, or color are missing or the spaces/commas are incorrectly formatted.
+                if (parsedLine[0] === undefined || parsedLine[1] === undefined || parsedLine[2] === undefined) {
+                    errorMessages.push("Line " + lineNum + ": You're either missing a "
+                        + "portion of the line or missing a space.");
                 } else {
-                    edges.push([p1, p2, parsedLine[2]]);
-                    lineNum++;
+                    let point1: string[] = parsedLine[0].split(","); // ["x1", "y1"]
+                    let point2: string[] = parsedLine[1].split(","); // ["y2", "y2"]
+
+                    let p1: [number, number] = [parseInt(point1[0]), parseInt(point1[1])] // [x1, y1]
+                    let p2: [number, number] = [parseInt(point2[0]), parseInt(point2[1])] // [x2, y2]
+
+                    // Error if one or both of the two points of an edge are NaN.
+                    if (isNaN(p1[0]) || isNaN(p1[1]) || isNaN(p2[0]) || isNaN(p2[1])) {
+                        errorMessages.push("Line " + lineNum + ": Coordinate(s) contain "
+                            + "non-integer value(s).");
+                    } else {
+                        edges.push([p1, p2, parsedLine[2]]);
+                        lineNum++;
+                    }
                 }
             }
-        }
 
-        lineNum = 1; // To keep track of each line of Edge user input we parse through.
-        for(let edge of edges)
-        {
-            let x1: number = edge[0][0];
-            let y1: number = edge[0][1];
-            let x2: number = edge[1][0];
-            let y2: number = edge[1][1];
-            let color: string = edge[2];
-            const scalar = 500 / (this.props.size + 1); // The scale of the grid of dots
-
-            //validation for if coordinates don't fit the grid.
-            if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
+            lineNum = 1; // To keep track of each line of Edge user input we parse through.
+            for(let edge of edges)
             {
-                let requiredSize = this.props.size;
-                if(x1 >= this.props.size)
-                {
-                    requiredSize = x1 + 1;
-                }
-                if(y1 >= this.props.size)
-                {
-                    requiredSize = y1 + 1;
-                }
-                if(x2 >= this.props.size)
-                {
-                    requiredSize = x2 + 1;
-                }
-                if(y2 >= this.props.size)
-                {
-                    requiredSize = y2 + 1;
-                }
-                errorMessages.push("Line " + lineNum + ": Cannot draw edges, grid must be " +
-                    "at least size " + requiredSize);
-            } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
-                errorMessages.push("Line " + lineNum + ": Coordinate(s) contain " +
-                    "negative value(s)");
-            } else if(errorMessages.length === 0) { // If there weren't any errors with user input found in EdgeList...
-                ctx.beginPath();
-                ctx.lineWidth = 2.5;
-                ctx.strokeStyle = color;
-                ctx.moveTo((x1 + 1) * scalar, (y1 + 1) * scalar);
-                ctx.lineTo((x2 + 1) * scalar, (y2 + 1) * scalar);
-                ctx.stroke();
-            }
-            lineNum++;
-        }
+                let x1: number = edge[0][0];
+                let y1: number = edge[0][1];
+                let x2: number = edge[1][0];
+                let y2: number = edge[1][1];
+                let color: string = edge[2];
+                const scalar = 500 / (this.props.size + 1); // The scale of the grid of dots
 
-        // If there were errors inside wrongInputs, then print them all out in one error message.
-        if(errorMessages.length !== 0)
-        {
-            let fullErrorMessage: string = this.incorrectInputMessage + "\n\n";
-            for(let errorMessage of errorMessages)
-            {
-                fullErrorMessage += "\n" + errorMessage;
+                //validation for if coordinates don't fit the grid.
+                if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
+                {
+                    let requiredSize = this.props.size;
+                    if(x1 >= this.props.size)
+                    {
+                        requiredSize = x1 + 1;
+                    }
+                    if(y1 >= this.props.size)
+                    {
+                        requiredSize = y1 + 1;
+                    }
+                    if(x2 >= this.props.size)
+                    {
+                        requiredSize = x2 + 1;
+                    }
+                    if(y2 >= this.props.size)
+                    {
+                        requiredSize = y2 + 1;
+                    }
+                    errorMessages.push("Line " + lineNum + ": Cannot draw edges, grid must be " +
+                        "at least size " + requiredSize);
+                } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+                    errorMessages.push("Line " + lineNum + ": Coordinate(s) contain " +
+                        "negative value(s)");
+                } else if(errorMessages.length === 0) { // If there weren't any errors with user input found in EdgeList...
+                    console.log("I'm about to start drawing some edges!")
+                    ctx.beginPath();
+                    ctx.lineWidth = 2.5;
+                    ctx.strokeStyle = color;
+                    ctx.moveTo((x1 + 1) * scalar, (y1 + 1) * scalar);
+                    ctx.lineTo((x2 + 1) * scalar, (y2 + 1) * scalar);
+                    ctx.stroke();
+                }
+                lineNum++;
             }
-            alert(fullErrorMessage);
+
+            // If there were errors inside wrongInputs, then print them all out in one error message.
+            if(errorMessages.length !== 0)
+            {
+                let fullErrorMessage: string = this.incorrectInputMessage + "\n\n";
+                for(let errorMessage of errorMessages)
+                {
+                    fullErrorMessage += "\n" + errorMessage;
+                }
+                alert(fullErrorMessage);
+            }
         }
     };
 

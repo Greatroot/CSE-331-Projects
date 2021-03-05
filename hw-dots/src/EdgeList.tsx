@@ -79,10 +79,12 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
      */
     onDrawButtonClick = () => { // Parses the current edgeText and sends that edge information to App.
 
-        if(this.props.edgeText !== "") // If there is text within the TextArea, then parse.
-        {
-            this.props.onChange(this.state.edgeText);
-        }
+        // if(this.state.edgeText !== "") // If there is text within the TextArea, then parse.
+        // {
+        //     this.props.onChange(this.state.edgeText);
+        // }
+
+        this.props.onChange(this.state.edgeText);
     }
 
     /**
