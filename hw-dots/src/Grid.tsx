@@ -151,33 +151,28 @@ class Grid extends Component<GridProps, GridState> {
                 if (parsedLine[0] === undefined || parsedLine[1] === undefined || parsedLine[2] === undefined) {
                     errorMessages.push("Line " + lineNum + ": You're either missing a "
                         + "portion of the line or missing a space.");
-                } else {
-                    let point1: string[] = parsedLine[0].split(","); // ["x1", "y1"]
-                    let point2: string[] = parsedLine[1].split(","); // ["y2", "y2"]
-
-                    let p1: [number, number] = [parseInt(point1[0]), parseInt(point1[1])] // [x1, y1]
-                    let p2: [number, number] = [parseInt(point2[0]), parseInt(point2[1])] // [x2, y2]
-
-                    // Error if one or both of the two points of an edge are NaN.
-                    if (isNaN(p1[0]) || isNaN(p1[1]) || isNaN(p2[0]) || isNaN(p2[1])) {
-                        errorMessages.push("Line " + lineNum + ": Coordinate(s) contain "
-                            + "non-integer value(s).");
-                    } else {
-                        edges.push([p1, p2, parsedLine[2]]);
-                        lineNum++;
-                    }
                 }
-            }
 
-            lineNum = 1; // To keep track of each line of Edge user input we parse through.
-            for(let edge of edges)
-            {
-                let x1: number = edge[0][0];
-                let y1: number = edge[0][1];
-                let x2: number = edge[1][0];
-                let y2: number = edge[1][1];
-                let color: string = edge[2];
-                const scalar = 500 / (this.props.size + 1); // The scale of the grid of dots
+                let point1: string[] = parsedLine[0].split(","); // ["x1", "y1"]
+                let point2: string[] = parsedLine[1].split(","); // ["y2", "y2"]
+
+                let p1: [number, number] = [parseInt(point1[0]), parseInt(point1[1])] // [x1, y1]
+                let p2: [number, number] = [parseInt(point2[0]), parseInt(point2[1])] // [x2, y2]
+
+                // Error if one or both of the two points of an edge are NaN.
+                if (isNaN(p1[0]) || isNaN(p1[1]) || isNaN(p2[0]) || isNaN(p2[1])) {
+                    errorMessages.push("Line " + lineNum + ": Coordinate(s) contain "
+                        + "non-integer value(s).");
+                }
+                edges.push([p1, p2, parsedLine[2]]);
+
+                // For every edge, we want to do some validation:
+
+                let x1: number = p1[0];
+                let y1: number = p1[1];
+                let x2: number = p2[0];
+                let y2: number = p2[1];
+                let color: string = parsedLine[2];
 
                 //validation for if coordinates don't fit the grid.
                 if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
@@ -201,19 +196,62 @@ class Grid extends Component<GridProps, GridState> {
                     }
                     errorMessages.push("Line " + lineNum + ": Cannot draw edges, grid must be " +
                         "at least size " + requiredSize);
-                } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+                }
+
+                if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) { // Validation for if there are negative numbers.
                     errorMessages.push("Line " + lineNum + ": Coordinate(s) contain " +
                         "negative value(s)");
-                } else if(errorMessages.length === 0) { // If there weren't any errors with user input found in EdgeList...
-                    console.log("I'm about to start drawing some edges!")
+                }
+                lineNum++;
+            }
+
+            // for(let edge of edges)
+            // {
+            //     //validation for if coordinates don't fit the grid.
+            //     if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
+            //     {
+            //         let requiredSize = this.props.size;
+            //         if(x1 >= this.props.size)
+            //         {
+            //             requiredSize = x1 + 1;
+            //         }
+            //         if(y1 >= this.props.size)
+            //         {
+            //             requiredSize = y1 + 1;
+            //         }
+            //         if(x2 >= this.props.size)
+            //         {
+            //             requiredSize = x2 + 1;
+            //         }
+            //         if(y2 >= this.props.size)
+            //         {
+            //             requiredSize = y2 + 1;
+            //         }
+            //         errorMessages.push("Line " + lineNum + ": Cannot draw edges, grid must be " +
+            //             "at least size " + requiredSize);
+            //     } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+            //         errorMessages.push("Line " + lineNum + ": Coordinate(s) contain " +
+            //             "negative value(s)");
+            //     }
+            // }
+
+            if(errorMessages.length === 0) { // If there weren't any errors with user input found in EdgeList...
+                for (let edge of edges) {
+                    let x1: number = edge[0][0];
+                    let y1: number = edge[0][1];
+                    let x2: number = edge[1][0];
+                    let y2: number = edge[1][1];
+                    let color: string = edge[2];
+                    const scalar = 500 / (this.props.size + 1); // The scale of the grid of dots
+
                     ctx.beginPath();
                     ctx.lineWidth = 2.5;
                     ctx.strokeStyle = color;
                     ctx.moveTo((x1 + 1) * scalar, (y1 + 1) * scalar);
                     ctx.lineTo((x2 + 1) * scalar, (y2 + 1) * scalar);
                     ctx.stroke();
+
                 }
-                lineNum++;
             }
 
             // If there were errors inside wrongInputs, then print them all out in one error message.
