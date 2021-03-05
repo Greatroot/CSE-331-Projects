@@ -30,7 +30,6 @@ interface GridState {
  */
 class Grid extends Component<GridProps, GridState> {
 
-    // firstTime: boolean // True if this is the first time the component has called componentDidUpdate()
     incorrectInputMessage: string // A common error message for incorrect user input.
     canvasReference: React.RefObject<HTMLCanvasElement>
 
@@ -38,8 +37,7 @@ class Grid extends Component<GridProps, GridState> {
         super(props);
         this.state = {
             backgroundImage: null,  // An image object to render into the canvas.
-        }; // TODO: Remove firstTime
-        // this.firstTime = true; // True if this is the first time the component has called componentDidUpdate()
+        };
         this.incorrectInputMessage = "There was an error with some of your line input."
             + "\nFor reference, the correct form for each line should be: x1,y1 x2,y2 color";
         this.canvasReference = React.createRef();
@@ -52,21 +50,13 @@ class Grid extends Component<GridProps, GridState> {
         this.redraw();
     }
 
-    // It seems that our background can't load in time and needs to call redraw twice to finish "mounting"
-    componentDidUpdate(prevProps: GridProps) { //TODO Remove!
-        // if(this.props.size !== prevProps.size) // Only to deal with the component mounting for the first time.
-        // {
-        //     this.redraw();
-        //
-        // } else if(this.props.edgeText !== prevProps.edgeText) { // If its another prop that changes (i.e. edges),
-        //     this.redraw();                                      // then drawEdges and leave grid alone.
-        //     this.drawEdges();
-        // }
+    // Redraw the grid and draw edges when component is updated.
+    componentDidUpdate(prevProps: GridProps) {
 
             this.redraw();
 
-            if(this.props.size === prevProps.size) { // If its another prop that changes (i.e. edges),
-                this.drawEdges()                     // then drawEdges and leave grid alone.
+            if(this.props.size === prevProps.size) { // Only draw edges when the grid size hasn't changed
+                this.drawEdges();
         }
     }
 
@@ -123,16 +113,17 @@ class Grid extends Component<GridProps, GridState> {
             throw new Error("Unable to create canvas drawing context.");
         }
 
+        // As long as the edge text isn't the two default values.
         if(this.props.edgeText !== "" && this.props.edgeText !== "Enter edges here: ")
         {
-            let edges: [[number, number], [number, number], string][] = [];
-            let parsedByNewLines: string[] = this.props.edgeText.split("\n");
-            let parsedEachLine: [string, string, string][] = [];
+            let edges: [[number, number], [number, number], string][] = []; // The final parsed version of edges.
+            let parsedByLineBreak: string[] = this.props.edgeText.split("\n"); // ["x1,y1", "x2,y2" "color"]
+            let parsedEachLine: [string, string, string][] = []; // [["x1,y1", "x2,y2", "color], ["x1,y1", "x2,y2", "color]]
             let errorMessages = []; // A place to keep all of the user's input errors
             // while parsing their input.
 
             let lineNum = 1;
-            for(let line of parsedByNewLines) { // First parse each line into a [P1, P2, COLOR] tuple
+            for(let line of parsedByLineBreak) { // First parse each line into a [P1, P2, COLOR] tuple
                 let lineArray: string[] = line.split(" ");
 
                 if(lineArray.length > 3) { // Error if the user put too many arguments into a line.
@@ -172,7 +163,6 @@ class Grid extends Component<GridProps, GridState> {
                 let y1: number = p1[1];
                 let x2: number = p2[0];
                 let y2: number = p2[1];
-                let color: string = parsedLine[2];
 
                 //validation for if coordinates don't fit the grid.
                 if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
@@ -205,36 +195,6 @@ class Grid extends Component<GridProps, GridState> {
                 lineNum++;
             }
 
-            // for(let edge of edges)
-            // {
-            //     //validation for if coordinates don't fit the grid.
-            //     if(x1 >= this.props.size || y1 >= this.props.size || x2 >= this.props.size || y2 >= this.props.size)
-            //     {
-            //         let requiredSize = this.props.size;
-            //         if(x1 >= this.props.size)
-            //         {
-            //             requiredSize = x1 + 1;
-            //         }
-            //         if(y1 >= this.props.size)
-            //         {
-            //             requiredSize = y1 + 1;
-            //         }
-            //         if(x2 >= this.props.size)
-            //         {
-            //             requiredSize = x2 + 1;
-            //         }
-            //         if(y2 >= this.props.size)
-            //         {
-            //             requiredSize = y2 + 1;
-            //         }
-            //         errorMessages.push("Line " + lineNum + ": Cannot draw edges, grid must be " +
-            //             "at least size " + requiredSize);
-            //     } else if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
-            //         errorMessages.push("Line " + lineNum + ": Coordinate(s) contain " +
-            //             "negative value(s)");
-            //     }
-            // }
-
             if(errorMessages.length === 0) { // If there weren't any errors with user input found in EdgeList...
                 for (let edge of edges) {
                     let x1: number = edge[0][0];
@@ -254,7 +214,7 @@ class Grid extends Component<GridProps, GridState> {
                 }
             }
 
-            // If there were errors inside wrongInputs, then print them all out in one error message.
+            // If there were errors inside errorMessages, then print them all out in one error message.
             if(errorMessages.length !== 0)
             {
                 let fullErrorMessage: string = this.incorrectInputMessage + "\n\n";

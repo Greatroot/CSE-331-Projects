@@ -20,13 +20,6 @@ interface EdgeListState {
 interface EdgeListProps {
     edgeText: string; // The entire app's copy of the text within the TextArea.
     onChange(edgeText: string): void;  // called when a new edge list is ready
-    // once you decide how you want to communicate the edges to the App, you should
-    // change the type of edges so it isn't `any`
-    // incorrect_error_message: string; // An error message for incorrect user input that is
-    //                                 // common to multiple components.
-    // onIncorrectInput(wrongInput: string): void; // Updates App on if there was some incorrect
-    //                             // user input within the TextArea
-    // onChangeReset(): void; // Resets App.edges and App.wrongInputs. TODO: Remove
 }
 
 /**
@@ -70,7 +63,6 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
                 isFirstTime: false,
                 edgeText: "",
             });
-            // this.props.onChange(""); TODO: Remove
         }
     }
 
@@ -78,12 +70,6 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
      *  Parses the current edgeText and sends that edge information to App to be sent to Grid and drawn.
      */
     onDrawButtonClick = () => { // Parses the current edgeText and sends that edge information to App.
-
-        // if(this.state.edgeText !== "") // If there is text within the TextArea, then parse.
-        // {
-        //     this.props.onChange(this.state.edgeText);
-        // }
-
         this.props.onChange(this.state.edgeText);
     }
 

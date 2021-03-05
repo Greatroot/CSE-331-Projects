@@ -9,8 +9,6 @@
  * author.
  */
 
-// TODO: Remove edgeText?
-
 import React, {Component} from 'react';
 import EdgeList from "./EdgeList";
 import Grid from "./Grid";
@@ -21,7 +19,6 @@ import "./App.css";
 
 interface AppState {
     gridSize: number;  // size of the grid to display
-    // edgeText: string; // The text that the user types into the EdgeList text box.
     edgeText: string // All edges the user wants to draw in
                     // the format: x1, y1, x2, y2, COLOR
 }
@@ -36,39 +33,27 @@ class App extends Component<{}, AppState> { // <- {} means no props.
         };
     }
 
+    /**
+     * Updates the grid size.
+     *
+     * @param newSize the new grid size
+     */
     updateGridSize = (newSize: number) => {
         this.setState({
             gridSize: newSize,
         });
     };
 
+    /**
+     * Updates the edges
+     *
+     * @param newEdges the new edges we want to draw
+     */
     updateEdges = (newEdges: string) => {
         this.setState( {
             edgeText: newEdges,
         });
     }
-
-    // // Updates App's state if there was some incorrect user input within the EdgeList's TextArea
-    // incorrectInputWasFound = (wrongInput: string) => {
-    //     console.log("I entered incorrectInputWasFound")
-    //     let updatedWrongInputs: string[] = [...this.state.wrongInputs];
-    //     updatedWrongInputs.push(wrongInput);
-    //     this.setState({
-    //        wrongInputs: updatedWrongInputs,
-    //     });
-    //     console.log("wrongInputs: " + this.state.wrongInputs);
-    // }
-
-    // /** TODO: Remove this
-    //  * Clears all of the user's wrong input error messages and clears all pre-existing edges in this.state.edges.
-    //  */
-    // partiallyResetState = () => {
-    //     console.log("Things should be getting reset now")
-    //     this.setState({
-    //         wrongInputs: [],
-    //         edges: [],
-    //     });
-    // }
 
     render() {
         const canvas_size = 500;
@@ -88,20 +73,3 @@ class App extends Component<{}, AppState> { // <- {} means no props.
 }
 
 export default App;
-
-
-// Good test inputs for EdgeList
-// 2,3 1,1 3,2 3,3
-// 1,2 5,6 red
-// 2,1 3,-3 blue
-
-// 9,9 6,7 red
-// 3,2 5,9 blue
-// 0,0 8,3 orange
-
-//9,9 6,7 red
-// 3,2 5,9 blue
-// 0,0 8,3 orange
-// 3,2 14,9 teal
-// 0,0 15,15 yellow
-// 2,1 5,4 green

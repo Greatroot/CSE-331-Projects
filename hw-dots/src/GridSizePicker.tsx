@@ -19,7 +19,7 @@ interface GridSizePickerProps {
 }
 
 interface GridSizePickerState {
-    displaySize: string;
+    displaySize: string; // The grid size that gets displayed below the actual grid.
 }
 
 class GridSizePicker extends Component<GridSizePickerProps, GridSizePickerState> {
@@ -27,10 +27,15 @@ class GridSizePicker extends Component<GridSizePickerProps, GridSizePickerState>
     constructor(props: GridSizePickerProps) {
         super(props);
         this.state = {
-            displaySize: this.props.value,
+            displaySize: this.props.value, // The grid size that gets displayed below the actual grid.
         }
     }
 
+    /**
+     * Updates the display grid size and the actual grid size.
+     *
+     * @param event the information from the input text box
+     */
     onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // Every event handler with JS can optionally take a single parameter that
         // is an "event" object - contains information about an event. For mouse clicks,
