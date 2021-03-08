@@ -54,6 +54,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
     // If you don't want to use this component, you're free to delete it.
 
     canvas: React.RefObject<HTMLCanvasElement>;
+    firstTime: boolean;
 
     constructor(props: CampusMapProps) {
         super(props);
@@ -69,6 +70,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             },
         };
         this.canvas = React.createRef();
+        this.firstTime = true;
     }
 
     componentDidMount() {
@@ -79,15 +81,15 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
     // TODO: use componentDidUpdate() to solve my "background-not-loading-fast-enough-while-mounting-issue"
     //  for now, but ask a TA if there's a better way.
     componentDidUpdate(prevProps: CampusMapProps, prevState: CampusMapState) {
+        console.log("I just started componentDidUpdate!");
         this.drawBackgroundImage();
 
         if((prevProps.firstBuildingIndex !== this.props.firstBuildingIndex
             || prevProps.secondBuildingIndex !== this.props.secondBuildingIndex)
-            && prevState.path !== this.state.path)
+            && (prevState.path !== this.state.path || this.firstTime))
         {
-            console.log("Hello!")
+            this.firstTime = false;
             this.makeRequestForPath();
-            console.log("I made it past makeRequestForPath()!")
             this.drawPath();
         }
     }
@@ -127,13 +129,20 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
         let ctx = canvas.getContext("2d");
         if (ctx === null) throw Error("Unable to draw, no valid graphics context.");
 
+        console.log("I'm in drawPath() and I'm just about to enter the for loop!!!")
         const segments: Segment[] = this.state.path.segment;
+        console.log(this.state.path);
+        console.log(segments);
         for(let segment in segments)
         {
             const x1: number = segments[segment].start.x;
             const y1: number = segments[segment].start.y;
             const x2: number = segments[segment].end.x;
             const y2: number = segments[segment].end.y;
+            console.log("x1: " + x1);
+            console.log("y1: " + y1);
+            console.log("x2: " + x2);
+            console.log("y2: " + y2);
 
             ctx.beginPath();
             ctx.lineWidth = 50;
@@ -149,8 +158,9 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             const buildingShortNames = Object.keys(this.props.buildings);
             const firstBuilding = buildingShortNames[this.props.firstBuildingIndex];
             const secondBuilding = buildingShortNames[this.props.secondBuildingIndex];
-            console.log(firstBuilding);
-            console.log(secondBuilding);
+            console.log("I'm inside makeRequestForPath!")
+            console.log("firstBuilding: " + firstBuilding);
+            console.log("secondBuilding: " + secondBuilding);
             // let response = await fetch("http://localhost:4567/find-shortest-path?start="
             //     + firstBuilding + "&end=" + secondBuilding);
             let response = await fetch("http://localhost:4567/find-shortest-path?start=CSE&end=KNE");
@@ -158,7 +168,8 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
                 alert("The status is wrong! Expected: 200, was: " + response.status);
                 return;
             }
-            const path: Path = await response.json();
+            const path: Path = await response.json(); // This takes too long.
+            console.log(path);
             this.setState({
                 path: path,
             });

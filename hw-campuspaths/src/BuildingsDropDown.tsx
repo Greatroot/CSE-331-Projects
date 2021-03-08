@@ -22,10 +22,6 @@ class BuildingsDropDown extends Component<{}, BuildingsDropDownState> {
         this.makeRequestForBuildings();
     }
 
-    componentDidUpdate() {
-
-    }
-
     makeRequestForBuildings = async () => {
         try {
             let response = await fetch("http://localhost:4567/get-building-names");

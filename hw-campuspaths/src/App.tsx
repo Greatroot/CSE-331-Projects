@@ -55,14 +55,20 @@ class App extends Component<{}, AppState> {
     };
 
     onFirstSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const buildingLongNames = Object.values(this.state.buildings);
+        const index = buildingLongNames.indexOf(event.target.value);
+        console.log("Index: " + index)
         this.setState({
-            firstBuildingIndex: parseInt(event.target.value),
+            firstBuildingIndex: index,
         });
     }
 
     onSecondSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const buildingLongNames = Object.values(this.state.buildings);
+        const index = buildingLongNames.indexOf(event.target.value);
+        console.log("Index: " + index);
         this.setState({
-            secondBuildingIndex: parseInt(event.target.value),
+            secondBuildingIndex: index,
         });
     }
 
