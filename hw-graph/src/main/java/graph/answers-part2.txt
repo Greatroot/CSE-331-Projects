@@ -35,7 +35,7 @@ above, be sure to list its advantages and disadvantages, too.
 
     - So to fix run-time complexity issues, I changed my rep to be an adjacency list where only edge had its
     own object and both nodes and edges were stored as a key/value pair inside a Graph. So I chose an adjacency
-    list as my rep so that adding nodes and edges can be O(1) time-complexity and chose to use a Map to
+    list as my rep so that adding nodes and edges can be O(1) time-complexity and chose to use a CampusMap to
     link both node and edge so that there is enough coupling to keep their relationship without having so
     much that I loose performance
 

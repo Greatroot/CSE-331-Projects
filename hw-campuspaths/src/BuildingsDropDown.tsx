@@ -1,37 +1,29 @@
-/*
- * Copyright (C) 2021 Hal Perkins.  All rights reserved.  Permission is
- * hereby granted to students registered for University of Washington
- * CSE 331 for use solely during Winter Quarter 2021 for purposes of
- * the course.  No other use, copying, distribution, or modification
- * is permitted without prior written consent. Copyrights for
- * third-party components of this work must be honored.  Instructors
- * interested in reusing these course materials should contact the
- * author.
- */
 
 import React, {Component} from 'react';
-import CampusMap from "./CampusMap";
-// import BuildingsDropDown from "./BuildingsDropDown";
 
-interface AppState {
+interface BuildingsDropDownState {
     buildings: Record<string, string>;
-    firstBuildingIndex: number; // Number index of the first building object inside this.buildings
-    secondBuildingIndex: number; // Number index of the second building object inside this.buildings
+    firstBuilding: string;
+    secondBuilding: string;
 }
 
-class App extends Component<{}, AppState> {
+class BuildingsDropDown extends Component<{}, BuildingsDropDownState> {
 
     constructor(props: {}) {
         super(props);
         this.state = {
             buildings: {},
-            firstBuildingIndex: 0,
-            secondBuildingIndex: 0,
+            firstBuilding: "",
+            secondBuilding: "",
         };
     }
 
     componentDidMount() {
         this.makeRequestForBuildings();
+    }
+
+    componentDidUpdate() {
+
     }
 
     makeRequestForBuildings = async () => {
@@ -56,13 +48,13 @@ class App extends Component<{}, AppState> {
 
     onFirstSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
-            firstBuildingIndex: parseInt(event.target.value),
+            firstBuilding: event.target.value,
         });
     }
 
     onSecondSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
-            secondBuildingIndex: parseInt(event.target.value),
+            secondBuilding: event.target.value,
         });
     }
 
@@ -70,16 +62,14 @@ class App extends Component<{}, AppState> {
         const buildingLongNames = Object.values(this.state.buildings);
         return (
             <div>
-                <p>Here's the beginning of your AMAZING CampusPaths GUI!</p>
-                <CampusMap buildings={this.state.buildings} firstBuildingIndex={this.state.firstBuildingIndex} secondBuildingIndex={this.state.secondBuildingIndex}/>
-                <select onChange={this.onFirstSelectChange} value={buildingLongNames[this.state.firstBuildingIndex]}>
+                <select onChange={this.onFirstSelectChange} value={this.state.firstBuilding}>
                     {buildingLongNames.map((buildingLongName, index) =>
                         <option key={index}>
                             {buildingLongName}
                         </option>)
                     }
                 </select>
-                <select onChange={this.onSecondSelectChange} value={buildingLongNames[this.state.secondBuildingIndex]}>
+                <select onChange={this.onSecondSelectChange} value={this.state.secondBuilding}>
                     {buildingLongNames.map((buildingLongName, index) =>
                         <option key={index}>
                             {buildingLongName}
@@ -87,9 +77,14 @@ class App extends Component<{}, AppState> {
                     }
                 </select>
             </div>
-        );
+        )
     }
-
 }
 
-export default App;
+export default BuildingsDropDown;
+
+// {['firstName', 'lastName'].map(key => (
+//     <select key={key}>
+//         {Object.values(this.state.buildings).map(({ [key]: value }) => <option key={value}>{value}</option>)}
+//     </select>
+// ))}
