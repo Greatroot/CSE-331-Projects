@@ -29,7 +29,7 @@ interface Path {
         x: number,
         y: number,
     },
-    segment: Segment[],
+    path: Segment[],
 }
 
 interface Segment {
@@ -66,7 +66,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
                     x: 0,
                     y: 0
                 },
-                segment: []
+                path: []
             },
         };
         this.canvas = React.createRef();
@@ -86,10 +86,13 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
 
         if((prevProps.firstBuildingIndex !== this.props.firstBuildingIndex
             || prevProps.secondBuildingIndex !== this.props.secondBuildingIndex)
-            && (prevState.path !== this.state.path || this.firstTime))
+            || this.firstTime)
         {
             this.firstTime = false;
             this.makeRequestForPath();
+        }
+        if(prevState.path !== this.state.path)
+        {
             this.drawPath();
         }
     }
@@ -130,7 +133,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
         if (ctx === null) throw Error("Unable to draw, no valid graphics context.");
 
         console.log("I'm in drawPath() and I'm just about to enter the for loop!!!")
-        const segments: Segment[] = this.state.path.segment;
+        const segments: Segment[] = this.state.path.path;
         console.log(this.state.path);
         console.log(segments);
         for(let segment in segments)
@@ -145,7 +148,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             console.log("y2: " + y2);
 
             ctx.beginPath();
-            ctx.lineWidth = 50;
+            ctx.lineWidth = 10;
             ctx.strokeStyle = "red";
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
@@ -161,9 +164,10 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             console.log("I'm inside makeRequestForPath!")
             console.log("firstBuilding: " + firstBuilding);
             console.log("secondBuilding: " + secondBuilding);
-            // let response = await fetch("http://localhost:4567/find-shortest-path?start="
-            //     + firstBuilding + "&end=" + secondBuilding);
-            let response = await fetch("http://localhost:4567/find-shortest-path?start=CSE&end=KNE");
+            let response = await fetch("http://localhost:4567/find-shortest-path?start="
+                + firstBuilding + "&end=" + secondBuilding);
+            // TODO: Remove after testing!!!
+            // let response = await fetch("http://localhost:4567/find-shortest-path?start=CSE&end=KNE");
             if(!response.ok) {
                 alert("The status is wrong! Expected: 200, was: " + response.status);
                 return;
