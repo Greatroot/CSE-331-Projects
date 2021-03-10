@@ -72,12 +72,20 @@ class App extends Component<{}, AppState> {
         });
     }
 
+    resetApp = () => {
+        this.setState({
+            firstBuildingIndex: 0,
+            secondBuildingIndex: 0,
+        });
+    }
+
     render() {
         const buildingLongNames = Object.values(this.state.buildings);
         return (
             <div>
                 <p>Here's the beginning of your AMAZING CampusPaths GUI!</p>
                 <CampusMap buildings={this.state.buildings} firstBuildingIndex={this.state.firstBuildingIndex} secondBuildingIndex={this.state.secondBuildingIndex}/>
+                <p>Source</p>
                 <select onChange={this.onFirstSelectChange} value={buildingLongNames[this.state.firstBuildingIndex]}>
                     {buildingLongNames.map((buildingLongName, index) =>
                         <option key={index}>
@@ -85,6 +93,7 @@ class App extends Component<{}, AppState> {
                         </option>)
                     }
                 </select>
+                <p>Destination</p>
                 <select onChange={this.onSecondSelectChange} value={buildingLongNames[this.state.secondBuildingIndex]}>
                     {buildingLongNames.map((buildingLongName, index) =>
                         <option key={index}>
@@ -92,6 +101,7 @@ class App extends Component<{}, AppState> {
                         </option>)
                     }
                 </select>
+                <button onClick={this.resetApp}>Clear</button>
             </div>
         );
     }

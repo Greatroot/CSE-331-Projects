@@ -86,7 +86,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
 
         if((prevProps.firstBuildingIndex !== this.props.firstBuildingIndex
             || prevProps.secondBuildingIndex !== this.props.secondBuildingIndex)
-            || this.firstTime)
+            || prevProps.buildings !== this.props.buildings) // Takes care of buildings loading asynchronously
         {
             this.firstTime = false;
             this.makeRequestForPath();
@@ -142,10 +142,10 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             const y1: number = segments[segment].start.y;
             const x2: number = segments[segment].end.x;
             const y2: number = segments[segment].end.y;
-            console.log("x1: " + x1);
-            console.log("y1: " + y1);
-            console.log("x2: " + x2);
-            console.log("y2: " + y2);
+            // console.log("x1: " + x1); // TODO: Remove this after testing!!!
+            // console.log("y1: " + y1);
+            // console.log("x2: " + x2);
+            // console.log("y2: " + y2);
 
             ctx.beginPath();
             ctx.lineWidth = 10;
@@ -162,6 +162,8 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             const firstBuilding = buildingShortNames[this.props.firstBuildingIndex];
             const secondBuilding = buildingShortNames[this.props.secondBuildingIndex];
             console.log("I'm inside makeRequestForPath!")
+            console.log("firstBuilding: " + this.props.firstBuildingIndex);
+            console.log("secondBuilding: " + this.props.secondBuildingIndex);
             console.log("firstBuilding: " + firstBuilding);
             console.log("secondBuilding: " + secondBuilding);
             let response = await fetch("http://localhost:4567/find-shortest-path?start="
