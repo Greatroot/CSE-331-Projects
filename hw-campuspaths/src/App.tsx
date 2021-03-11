@@ -11,10 +11,12 @@
 
 import React, {Component} from 'react';
 import CampusMap from "./CampusMap";
-// import BuildingsDropDown from "./BuildingsDropDown";
 
+/**
+ * The main component of the app.
+ */
 interface AppState {
-    buildings: Record<string, string>;
+    buildings: Record<string, string>; // A mapping of all buildings from their short names to their long names.
     firstBuildingIndex: number; // Number index of the first building object inside this.buildings
     secondBuildingIndex: number; // Number index of the second building object inside this.buildings
 }
@@ -24,12 +26,15 @@ class App extends Component<{}, AppState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            buildings: {},
-            firstBuildingIndex: 0,
-            secondBuildingIndex: 0,
+            buildings: {}, // A mapping of all buildings from their short names to their long names.
+            firstBuildingIndex: 0, // Number index of the first building object inside this.buildings
+            secondBuildingIndex: 0, // Number index of the second building object inside this.buildings
         };
     }
 
+    /**
+     *
+     */
     componentDidMount() {
         this.makeRequestForBuildings();
     }
