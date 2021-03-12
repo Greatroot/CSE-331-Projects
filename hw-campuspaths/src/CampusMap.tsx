@@ -11,66 +11,79 @@
 
 import React, {Component} from 'react';
 import "./CampusMap.css";
+import useScale from "./useScale";
 
 interface CampusMapState {
-    backgroundImage: HTMLImageElement | null;
-    path: Path;
+    backgroundImage: HTMLImageElement | null; // The campus map image.
+    path: Path; // The path of points on our campus map from the starting building to the ending building.
 }
 
 interface CampusMapProps {
-    buildings: Record<string, string>;
-    firstBuildingIndex: number;
-    secondBuildingIndex: number;
+    buildings: Record<string, string>; // A mapping of all buildings from their short names to their long names.
+    firstBuildingIndex: number; // Numbered index of the starting building inside this.buildings that is on our path.
+    secondBuildingIndex: number; // Numbered index of the second building inside this.buildings that is on our path.
 }
 
+/**
+ * An interface that describes the path object between the start building and end building that is
+ *  given to us by our Java Spark server.
+ *
+ *  The start and end points of a segment are cartesian coordinates on our
+ *  campus map with a distance cost of feet in between. A path is a series of connected segments that
+ *  take us from one point (i.e. a building) to another on our campus, with the total distance in feet
+ *  of all those segments (i.e. the distance someone has to travel) being the path's total cost.
+ */
 interface Path {
-    cost: number;
-    start: {
-        x: number,
-        y: number,
+    cost: number; // The total distance in feet the path is.
+    start: { // The starting point of our path (i.e. a building)
+        x: number, // The x-coordinate of our starting point.
+        y: number, // The y-coordinate of our starting point.
     },
-    path: Segment[],
+    path: Segment[], // A connected series of segments that make up our overall path.
 }
 
+/**
+ * An interface that describes one segment in a whole string of connected segments that make up a path
+ *  from one point to another. The start and end points of a segment are cartesian coordinates on our
+ *  campus map with a distance cost of feet in between. A path is a series of connected segments that
+ *  take us from one point (i.e. a building) to another on our campus.
+ */
 interface Segment {
-    cost: number,
-    start: {
-        x: number,
-        y: number,
+    cost: number, // The total distance in feet the segment is.
+    start: { // The starting point of our path (i.e. a building, side walk, cross walk, etc.)
+        x: number, // The x-coordinate of the starting point of this segment.
+        y: number, // The y-coordinate of the starting point of this segment.
     },
     end: {
-        x: number,
-        y: number,
+        x: number, // The x-coordinate of the ending point of this segment.
+        y: number, // The y-coordinate of the ending point of this segment.
     }
 }
 
+/**
+ *  A map of the University of Washington's campus that can draw visible
+ *  paths between two buildings.
+ */
 class CampusMap extends Component<CampusMapProps, CampusMapState> {
 
-    // NOTE:
-    // This component is a suggestion for you to use, if you would like to.
-    // It has some skeleton code that helps set up some of the more difficult parts
-    // of getting <canvas> elements to display nicely with large images.
-    //
-    // If you don't want to use this component, you're free to delete it.
-
-    canvas: React.RefObject<HTMLCanvasElement>;
-    firstTime: boolean;
+    canvas: React.RefObject<HTMLCanvasElement>; // The canvas where the map and paths are drawn in.
+    firstTime: boolean; // A flag that denotes if this is the first time componentDidUpdate() has been run.
 
     constructor(props: CampusMapProps) {
         super(props);
         this.state = {
-            backgroundImage: null,
+            backgroundImage: null, // The canvas where the map and paths are drawn in.
             path: {
-                cost: 0,
-                start: {
-                    x: 0,
-                    y: 0
+                cost: 0, // The total distance in feet the path is.
+                start: { // The starting point of our path (i.e. a building)
+                    x: 0, // The x-coordinate of our starting point.
+                    y: 0 // The y-coordinate of our starting point.
                 },
-                path: []
+                path: [] // A connected series of segments that make up our overall path.
             },
         };
-        this.canvas = React.createRef();
-        this.firstTime = true;
+        this.canvas = React.createRef(); // The canvas where the map and paths are drawn in.
+        this.firstTime = true; // A flag that denotes if this is the first time componentDidUpdate() has been run.
     }
 
     componentDidMount() {
@@ -78,10 +91,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
         this.drawBackgroundImage();
     }
 
-    // TODO: use componentDidUpdate() to solve my "background-not-loading-fast-enough-while-mounting-issue"
-    //  for now, but ask a TA if there's a better way.
     componentDidUpdate(prevProps: CampusMapProps, prevState: CampusMapState) {
-        console.log("I just started componentDidUpdate!");
         this.drawBackgroundImage();
 
         if((prevProps.firstBuildingIndex !== this.props.firstBuildingIndex
@@ -126,26 +136,25 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
         }
     }
 
+    /**
+     * Draws the path between the starting building and the ending building the user has selected.
+     */
     drawPath = () => {
         let canvas = this.canvas.current;
         if (canvas === null) throw Error("Unable to draw, no canvas ref.");
         let ctx = canvas.getContext("2d");
         if (ctx === null) throw Error("Unable to draw, no valid graphics context.");
 
-        console.log("I'm in drawPath() and I'm just about to enter the for loop!!!")
         const segments: Segment[] = this.state.path.path;
-        console.log(this.state.path);
-        console.log(segments);
+
+        // Loop through all the segments in our path from the beginning of our path to the end of our path
+        // and draw an edge for each segment.
         for(let segment in segments)
         {
             const x1: number = segments[segment].start.x;
             const y1: number = segments[segment].start.y;
             const x2: number = segments[segment].end.x;
             const y2: number = segments[segment].end.y;
-            // console.log("x1: " + x1); // TODO: Remove this after testing!!!
-            // console.log("y1: " + y1);
-            // console.log("x2: " + x2);
-            // console.log("y2: " + y2);
 
             ctx.beginPath();
             ctx.lineWidth = 10;
@@ -156,26 +165,21 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
         }
 }
 
+    /**
+     * Request the path from the starting building to the ending building from our Java Spark server.
+     */
     makeRequestForPath = async () => {
         try {
             const buildingShortNames = Object.keys(this.props.buildings);
             const firstBuilding = buildingShortNames[this.props.firstBuildingIndex];
             const secondBuilding = buildingShortNames[this.props.secondBuildingIndex];
-            console.log("I'm inside makeRequestForPath!")
-            console.log("firstBuilding: " + this.props.firstBuildingIndex);
-            console.log("secondBuilding: " + this.props.secondBuildingIndex);
-            console.log("firstBuilding: " + firstBuilding);
-            console.log("secondBuilding: " + secondBuilding);
             let response = await fetch("http://localhost:4567/find-shortest-path?start="
                 + firstBuilding + "&end=" + secondBuilding);
-            // TODO: Remove after testing!!!
-            // let response = await fetch("http://localhost:4567/find-shortest-path?start=CSE&end=KNE");
             if(!response.ok) {
                 alert("The status is wrong! Expected: 200, was: " + response.status);
                 return;
             }
             const path: Path = await response.json(); // This takes too long.
-            console.log(path);
             this.setState({
                 path: path,
             });
@@ -189,7 +193,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
     render() {
         return (
             <div>
-                <canvas ref={this.canvas}/>
+                <canvas ref={this.canvas} />
             </div>
         )
     }

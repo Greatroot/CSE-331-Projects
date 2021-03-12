@@ -12,6 +12,8 @@
 import React, {Component} from 'react';
 import CampusMap from "./CampusMap";
 
+import "./App.css";
+
 /**
  * The main component of the app.
  */
@@ -27,18 +29,20 @@ class App extends Component<{}, AppState> {
         super(props);
         this.state = {
             buildings: {}, // A mapping of all buildings from their short names to their long names.
-            firstBuildingIndex: 0, // Number index of the first building object inside this.buildings
-            secondBuildingIndex: 0, // Number index of the second building object inside this.buildings
+            firstBuildingIndex: 0, // Numbered index of the starting building inside this.buildings that is on our path.
+            secondBuildingIndex: 0, // Numbered index of the second building inside this.buildings that is on our path.
         };
     }
 
-    /**
-     *
-     */
     componentDidMount() {
         this.makeRequestForBuildings();
     }
 
+    /**
+     * Calls our Java Spark server and requests a mapping of all of the buildings in the Campus Map.
+     *
+     * Stores the mapping of short building names to long building names in our state object.
+     */
     makeRequestForBuildings = async () => {
         try {
             let response = await fetch("http://localhost:4567/get-building-names");
@@ -47,8 +51,6 @@ class App extends Component<{}, AppState> {
                 return;
             }
             const buildings = (await response.json());
-            // console.log(Object.keys(buildings)); // TODO: Remove these when done!!!
-            // console.log(Object.values(buildings));
 
             this.setState({
                 buildings: buildings,
@@ -59,6 +61,12 @@ class App extends Component<{}, AppState> {
         }
     };
 
+    /**
+     * Takes the new building that the user picked in the drop down menu and stores in the state
+     *  the index of where to find that new building in our campus buildings mapping.
+     *
+     * @param event | The state of our first building drop down menu.
+     */
     onFirstSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const buildingLongNames = Object.values(this.state.buildings);
         const index = buildingLongNames.indexOf(event.target.value);
@@ -68,6 +76,12 @@ class App extends Component<{}, AppState> {
         });
     }
 
+    /**
+     * Takes the new building that the user picked in the drop down menu and stores in the state
+     *  the index of where to find that new building in our campus buildings mapping.
+     *
+     * @param event | The state of our second building drop down menu.
+     */
     onSecondSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const buildingLongNames = Object.values(this.state.buildings);
         const index = buildingLongNames.indexOf(event.target.value);
@@ -77,6 +91,12 @@ class App extends Component<{}, AppState> {
         });
     }
 
+    /**
+     * Resets the app back to the state it was in when the user first opened the app.
+     *
+     * More specifically, the campus map canvas gets wiped of any paths and the starting and ending
+     * buildings get put back to their default values.
+     */
     resetApp = () => {
         this.setState({
             firstBuildingIndex: 0,
@@ -88,7 +108,7 @@ class App extends Component<{}, AppState> {
         const buildingLongNames = Object.values(this.state.buildings);
         return (
             <div>
-                <p>Here's the beginning of your AMAZING CampusPaths GUI!</p>
+                <p>Ben Kosa's AMAZING CampusPaths GUI!</p>
                 <CampusMap buildings={this.state.buildings} firstBuildingIndex={this.state.firstBuildingIndex} secondBuildingIndex={this.state.secondBuildingIndex}/>
                 <p>Source</p>
                 <select onChange={this.onFirstSelectChange} value={buildingLongNames[this.state.firstBuildingIndex]}>
@@ -106,7 +126,8 @@ class App extends Component<{}, AppState> {
                         </option>)
                     }
                 </select>
-                <button onClick={this.resetApp}>Clear</button>
+                <br/>
+                <button id="clear-button" onClick={this.resetApp}>Clear</button>
             </div>
         );
     }
