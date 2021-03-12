@@ -33,11 +33,22 @@ public class SparkServer {
         // comes from a different server.
         // You should leave these two lines at the very beginning of main().
 
-        // TODO: Create all the Spark Java routes you need here.
-        CampusMap campusMap = new CampusMap();
+        CampusMap campusMap = new CampusMap(); // our campus map
 
+        /**
+         * A route that retrieves a mapping of all of the short building names in the campus map to their
+         * long building names.
+         */
         // Requires no query string from client.
         Spark.get("/get-building-names", new Route() {
+            /**
+             * A handler for our route that retrieves a mapping of all of the short building
+             * names in the campus map to their long building names.
+             *
+             * @return A JSON translation of the mapping from all the buildings' short names to
+             * their long names in this campus map.
+             * @see java/pathfinder/CampusMap.java for more information.
+             */
             @Override
             public Object handle(Request request, Response response) throws Exception {
                 Map<String, String> buildings = campusMap.buildingNames();
@@ -47,10 +58,25 @@ public class SparkServer {
             }
         });
 
-        // With this request there must be a query string with two key/value pairs:
-        //  1.) start => value
-        //  2.) end => value
+        /**
+         * A route that retrieves the path between the first queried building and the second queried building.
+         *
+         * With this request there must be a query string with two key/value pairs:
+         * 1.) start => value
+         * 2.) end => value
+         */
         Spark.get("/find-shortest-path", new Route() {
+
+            /**
+             * A handler for our route that retrieves the path between the first queried
+             *  building and the second queried building.
+             *
+             * @return a JSON translation of the path between the first queried building and the second queried
+             *  building in our campus map. If either query strings are null (i.e. they're bad input or DNE),
+             *  then return a 400 "bad request" error. If either query strings are building names not found
+             *  in our campus map, then also return a 400 error.
+             *
+             */
             @Override
             public Object handle(Request request, Response response) throws Exception {
                 String start = request.queryParams("start");
@@ -66,7 +92,7 @@ public class SparkServer {
                 } catch(IllegalArgumentException e)
                 {
                     Spark.halt(400, "Either the start or the end requested don't exist.");
-                } // TODO: Make sure this is correct!
+                }
                 return null; // This should never be reached, since Spark.halt should stop the program?
             }
         });
