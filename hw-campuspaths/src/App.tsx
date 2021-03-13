@@ -21,6 +21,10 @@ interface AppState {
     buildings: Record<string, string>; // A mapping of all buildings from their short names to their long names.
     firstBuildingIndex: number; // Number index of the first building object inside this.buildings
     secondBuildingIndex: number; // Number index of the second building object inside this.buildings
+    offSetX: number; // How much the x value of top right corner of the map background image is offset
+    // from the left-most drawing boundary of the canvas.
+    offSetY: number; // How much the x value of top right corner of the map background image is offset
+                          // from the left-most drawing boundary of the canvas.
 }
 
 class App extends Component<{}, AppState> {
@@ -31,6 +35,10 @@ class App extends Component<{}, AppState> {
             buildings: {}, // A mapping of all buildings from their short names to their long names.
             firstBuildingIndex: 0, // Numbered index of the starting building inside this.buildings that is on our path.
             secondBuildingIndex: 0, // Numbered index of the second building inside this.buildings that is on our path.
+            offSetX: 0, // How much the x value of top right corner of the map background image is offset
+                            // from the left-most drawing boundary of the canvas.
+            offSetY: 0, // How much the x value of top right corner of the map background image is offset
+                            // from the left-most drawing boundary of the canvas.
         };
     }
 
@@ -91,6 +99,13 @@ class App extends Component<{}, AppState> {
         });
     }
 
+    offSet = (newOffSetX: number, newOffSetY: number) => {
+        this.setState({
+            offSetX: newOffSetX,
+            offSetY: newOffSetY,
+        })
+    }
+
     /**
      * Resets the app back to the state it was in when the user first opened the app.
      *
@@ -101,6 +116,8 @@ class App extends Component<{}, AppState> {
         this.setState({
             firstBuildingIndex: 0,
             secondBuildingIndex: 0,
+            offSetX: 0,
+            offSetY: 0,
         });
     }
 
@@ -109,7 +126,12 @@ class App extends Component<{}, AppState> {
         return (
             <div>
                 <p>Ben Kosa's AMAZING CampusPaths GUI!</p>
-                <CampusMap buildings={this.state.buildings} firstBuildingIndex={this.state.firstBuildingIndex} secondBuildingIndex={this.state.secondBuildingIndex}/>
+                <CampusMap buildings={this.state.buildings}
+                           firstBuildingIndex={this.state.firstBuildingIndex}
+                           secondBuildingIndex={this.state.secondBuildingIndex}
+                           offSetX={this.state.offSetX}
+                           offSetY={this.state.offSetY}
+                           onOffSet={this.offSet} />
                 <p>Source</p>
                 <select onChange={this.onFirstSelectChange} value={buildingLongNames[this.state.firstBuildingIndex]}>
                     {buildingLongNames.map((buildingLongName, index) =>

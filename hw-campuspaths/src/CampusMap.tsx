@@ -11,17 +11,22 @@
 
 import React, {Component} from 'react';
 import "./CampusMap.css";
-import useScale from "./useScale";
 
 interface CampusMapState {
     backgroundImage: HTMLImageElement | null; // The campus map image.
     path: Path; // The path of points on our campus map from the starting building to the ending building.
+    scale: number; // The scale of the campus map in our canvas.
 }
 
 interface CampusMapProps {
     buildings: Record<string, string>; // A mapping of all buildings from their short names to their long names.
     firstBuildingIndex: number; // Numbered index of the starting building inside this.buildings that is on our path.
     secondBuildingIndex: number; // Numbered index of the second building inside this.buildings that is on our path.
+    offSetX: number; // How much the x value of top right corner of the map background image is offset
+                        // from the left-most drawing boundary of the canvas.
+    offSetY: number; // How much the x value of top right corner of the map background image is offset
+                        // from the left-most drawing boundary of the canvas.
+    onOffSet(newOffSetX: number, newOffSetY: number): void; // handles offSetX and offSetY getting changed.
 }
 
 /**
@@ -60,6 +65,11 @@ interface Segment {
     }
 }
 
+interface Point {
+    x: number,
+    y: number,
+}
+
 /**
  *  A map of the University of Washington's campus that can draw visible
  *  paths between two buildings.
@@ -68,6 +78,9 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
 
     canvas: React.RefObject<HTMLCanvasElement>; // The canvas where the map and paths are drawn in.
     firstTime: boolean; // A flag that denotes if this is the first time componentDidUpdate() has been run.
+    MIN_SCALE: number;
+    MAX_SCALE: number;
+    isMouseMoving: boolean; // true if the mouse is clicking down over the canvas and being moved.
 
     constructor(props: CampusMapProps) {
         super(props);
@@ -81,9 +94,13 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
                 },
                 path: [] // A connected series of segments that make up our overall path.
             },
+            scale: 1,
         };
         this.canvas = React.createRef(); // The canvas where the map and paths are drawn in.
         this.firstTime = true; // A flag that denotes if this is the first time componentDidUpdate() has been run.
+        this.MIN_SCALE = 0.5;
+        this.MAX_SCALE = 3;
+        this.isMouseMoving = false;
     }
 
     componentDidMount() {
@@ -101,7 +118,8 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             this.firstTime = false;
             this.makeRequestForPath();
         }
-        if(prevState.path !== this.state.path)
+        if(prevState.path !== this.state.path || prevProps.offSetX != this.props.offSetX
+            || prevProps.offSetY != this.props.offSetY)
         {
             this.drawPath();
         }
@@ -132,7 +150,7 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             // This helps the canvas not be blurry.
             canvas.width = this.state.backgroundImage.width;
             canvas.height = this.state.backgroundImage.height;
-            ctx.drawImage(this.state.backgroundImage, 0, 0);
+            ctx.drawImage(this.state.backgroundImage, this.props.offSetX, this.props.offSetY);
         }
     }
 
@@ -146,6 +164,10 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
         if (ctx === null) throw Error("Unable to draw, no valid graphics context.");
 
         const segments: Segment[] = this.state.path.path;
+        const startX = this.state.path.start.x;
+        const startY = this.state.path.start.y;
+        let endX = 0;
+        let endY = 0;
 
         // Loop through all the segments in our path from the beginning of our path to the end of our path
         // and draw an edge for each segment.
@@ -162,8 +184,30 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
             ctx.stroke();
+
+            // endX = x2;
+            // endY = y2;
         }
-}
+
+        // if(this.state.backgroundImage !== null)
+        // {
+        //     canvas.width = Math.abs(endX - startX);
+        //     canvas.height = Math.abs(endY - startY);
+        //     // if the starting point is to the left and above the ending point,
+        //     // we will set the starting point as our top right corner
+        //     if(startX > endX && startY < endY) {
+        //         ctx.drawImage(this.state.backgroundImage, startX, startY);
+        //     } else if(startX > endX) { // The starting point is to the left and below the ending point.
+        //         ctx.drawImage(this.state.backgroundImage, startX, endY);
+        //     } else if(startX < endX && startY > endY) // The ending point is the top right corner.
+        //     {
+        //         ctx.drawImage(this.state.backgroundImage, endX, endY);
+        //     } else if(startX < endX)
+        //     {
+        //         ctx.drawImage(this.state.backgroundImage, endX, startY);
+        //     }
+        // }
+    }
 
     /**
      * Request the path from the starting building to the ending building from our Java Spark server.
@@ -188,12 +232,67 @@ class CampusMap extends Component<CampusMapProps, CampusMapState> {
             alert("There was an error contacting the server.");
             console.log(e);
         }
-}
+    }
+
+    // onWheelScroll = (event: React.WheelEvent<HTMLCanvasElement>) => {
+    //     const currentScale: number = this.state.scale;
+    //     let newScale: number;
+    //     const interval: number = 0.1;
+    //     // Adjust up to or down to the maximum or minimum scale levels by `interval`.
+    //     if (event.deltaY > 0 && currentScale + interval < this.MAX_SCALE) {
+    //         newScale = currentScale + interval;
+    //     } else if (event.deltaY > 0) {
+    //         newScale = this.MAX_SCALE;
+    //     } else if (event.deltaY < 0 && currentScale - interval > this.MIN_SCALE) {
+    //         newScale = currentScale - interval;
+    //     } else if (event.deltaY < 0) {
+    //         newScale = this.MIN_SCALE;
+    //     } else {
+    //         newScale = currentScale
+    //     }
+    //
+    //
+    // }
+
+    /**
+     * Activates panning on the canvas when the user clicks down on the mouse over the canvas.
+     *
+     * @param event captures the properties of the mouse while the user is clicking down.
+     */
+    onMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        this.isMouseMoving = true;
+    }
+
+    /**
+     * Deactivates panning on the canvas when the user clicks up on the mouse over the canvas.
+     *
+     * @param event captures the properties of the mouse at the moment the user "unclicks" their mouse.
+     */
+    onMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        this.isMouseMoving = false;
+    }
+
+    /**
+     * When the user is clicking down on the mouse and moving the mouse, calculates how offset the
+     * x and y cooridnates of where the background map needs to be drawn.
+     *
+     * @param event that captures the properties of the mouse while the mouse is moving across the screen.
+     */
+    onMousePan = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        if(this.isMouseMoving) {
+            const newOffSetX = this.props.offSetX + (event.movementX * 5);
+            const newOffSetY = this.props.offSetY + (event.movementY * 5);
+
+            this.props.onOffSet(newOffSetX, newOffSetY);
+        }
+    }
 
     render() {
         return (
             <div>
-                <canvas ref={this.canvas} />
+                <canvas ref={this.canvas}
+                        onMouseDown={this.onMouseDown} onMouseMove={this.onMousePan}
+                        onMouseUp={this.onMouseUp}/>
             </div>
         )
     }
