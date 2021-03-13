@@ -7,3 +7,4 @@ in your CampusPaths application below. Only things listed here
 will be considered for extra credit.
 
 
+    - I added a panning feature to the campus map.
