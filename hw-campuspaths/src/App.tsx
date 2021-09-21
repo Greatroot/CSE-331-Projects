@@ -13,6 +13,8 @@ import React, {Component} from 'react';
 import CampusMap from "./CampusMap";
 
 import "./App.css";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 
 /**
  * The main component of the app.
@@ -124,32 +126,38 @@ class App extends Component<{}, AppState> {
     render() {
         const buildingLongNames = Object.values(this.state.buildings);
         return (
-            <div>
-                <p>Ben Kosa's AMAZING CampusPaths GUI!</p>
-                <CampusMap buildings={this.state.buildings}
-                           firstBuildingIndex={this.state.firstBuildingIndex}
-                           secondBuildingIndex={this.state.secondBuildingIndex}
-                           offSetX={this.state.offSetX}
-                           offSetY={this.state.offSetY}
-                           onOffSet={this.offSet} />
-                <p>Source</p>
-                <select onChange={this.onFirstSelectChange} value={buildingLongNames[this.state.firstBuildingIndex]}>
-                    {buildingLongNames.map((buildingLongName, index) =>
-                        <option key={index}>
-                            {buildingLongName}
-                        </option>)
-                    }
-                </select>
-                <p>Destination</p>
-                <select onChange={this.onSecondSelectChange} value={buildingLongNames[this.state.secondBuildingIndex]}>
-                    {buildingLongNames.map((buildingLongName, index) =>
-                        <option key={index}>
-                            {buildingLongName}
-                        </option>)
-                    }
-                </select>
-                <br/>
-                <button id="clear-button" onClick={this.resetApp}>Clear</button>
+            <div className="container">
+                <Header bottomBorder={true}/>
+                <div className="campus-map">
+                    <CampusMap buildings={this.state.buildings}
+                               firstBuildingIndex={this.state.firstBuildingIndex}
+                               secondBuildingIndex={this.state.secondBuildingIndex}
+                               offSetX={this.state.offSetX}
+                               offSetY={this.state.offSetY}
+                               onOffSet={this.offSet}
+                    />
+                </div>
+                <div className="drop-down">
+                    <h3>Source</h3>
+                    <select onChange={this.onFirstSelectChange} value={buildingLongNames[this.state.firstBuildingIndex]}>
+                        {buildingLongNames.map((buildingLongName, index) =>
+                            <option key={index}>
+                                {buildingLongName}
+                            </option>)
+                        }
+                    </select>
+                    <h3>Destination</h3>
+                    <select onChange={this.onSecondSelectChange} value={buildingLongNames[this.state.secondBuildingIndex]}>
+                        {buildingLongNames.map((buildingLongName, index) =>
+                            <option key={index}>
+                                {buildingLongName}
+                            </option>)
+                        }
+                    </select>
+                    <br/>
+                    <button id="clear-button" onClick={this.resetApp}>Clear</button>
+                </div>
+                <Footer />
             </div>
         );
     }
