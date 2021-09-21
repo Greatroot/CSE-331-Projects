@@ -10,7 +10,7 @@ that shows you the quickest way to walk between any two buildings on the Univers
 
 ### CampusPaths
   
-![website demo](https://giphy.com/gifs/rJSwXa1GAiuacLU2Dr/giphy.gif)
+![website demo](https://github.com/Greatroot/CSE-331-Projects/blob/main/Animation.gif)
 
 CampusPaths is a single-page webapp that allows you to choose two buildings on the University of Washington's campus and draws the 
 shortest walking path between those two buildings.
